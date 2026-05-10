@@ -2,10 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-import { environment } from '../../../../../environments/environment';
-
+import { InventoryApi } from '../../../infrastructure/inventory-api';
 
 declare global {
     interface Window {
@@ -14,7 +12,6 @@ declare global {
     }
 }
 
-// para el reconocimiento de voz se tiene que decir primero la cantidad, el producto y luego la categoría
 interface SpeechRecognition extends EventTarget {
     lang: string;
     interimResults: boolean;
@@ -35,19 +32,17 @@ type PartialProduct = {
 @Component({
     selector: 'app-inventory-form',
     standalone: true,
-    imports: [CommonModule, FormsModule, HttpClientModule, TranslateModule],
+    imports: [CommonModule, FormsModule, TranslateModule],
     templateUrl: './inventory-form.html',
     styleUrls: ['./inventory-form.css'],
 })
 export class InventoryAddComponent {
-    // IMPORTANTE: este shape es el que se va a mandar al backend
-    // Asegúrate que tu API acepte estos mismos campos (name, description, category, quantity, image)
     product = {
         name: '',
         description: '',
         category: '',
         quantity: 0,
-        image: '',
+        imageUrl: '',
     };
 
     categories = ['Fruit', 'Vegetable', 'Dairy', 'Grain', 'Meat', 'Snack'];
@@ -56,10 +51,8 @@ export class InventoryAddComponent {
     recording = false;
     voiceHint = '';
 
-    private readonly apiUrl = `${environment.apiBaseUrl}/products`;
-
     constructor(
-        private http: HttpClient,
+        private inventoryApi: InventoryApi,
         private router: Router,
         public route: ActivatedRoute
     ) {}
@@ -72,13 +65,13 @@ export class InventoryAddComponent {
             return;
         }
         this.recognition = new SR();
-        this.recognition!.lang = 'es-PE'; // cámbialo si necesitas EN
+        this.recognition!.lang = 'es-PE';
         this.recognition!.interimResults = false;
         this.recognition!.maxAlternatives = 1;
 
         this.recognition!.onresult = (ev: any) => {
             const transcript: string = ev.results[0][0].transcript || '';
-            this.voiceHint = `“${transcript}”`;
+            this.voiceHint = `"${transcript}"`;
             const parsed = this.parseVoiceCommand(transcript);
             this.applyVoice(parsed);
         };
@@ -92,8 +85,7 @@ export class InventoryAddComponent {
     startVoice() {
         this.ensureRecognition();
         if (!this.recognition) return;
-        this.voiceHint =
-            '{{ Escucha… di algo como: "3 bananas" o "2 yogurts" }}';
+        this.voiceHint = 'Escucha… di algo como: "3 bananas" o "2 yogurts"';
         this.recording = true;
         this.recognition.start();
     }
@@ -108,18 +100,8 @@ export class InventoryAddComponent {
         const t = text.toLowerCase().trim();
 
         const numbers: Record<string, number> = {
-            uno: 1,
-            una: 1,
-            un: 1,
-            dos: 2,
-            tres: 3,
-            cuatro: 4,
-            cinco: 5,
-            seis: 6,
-            siete: 7,
-            ocho: 8,
-            nueve: 9,
-            diez: 10,
+            uno: 1, una: 1, un: 1, dos: 2, tres: 3, cuatro: 4,
+            cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10,
         };
 
         let qty = 0;
@@ -131,43 +113,22 @@ export class InventoryAddComponent {
         }
 
         const catMap: Record<string, string> = {
-            fruta: 'Fruit',
-            frutas: 'Fruit',
-            fruit: 'Fruit',
-            vegetal: 'Vegetable',
-            verdura: 'Vegetable',
-            vegetable: 'Vegetable',
-            'lácteos': 'Dairy',
-            lacteos: 'Dairy',
-            yogurt: 'Dairy',
-            queso: 'Dairy',
-            carne: 'Meat',
-            pollo: 'Meat',
-            res: 'Meat',
-            pavo: 'Meat',
-            grano: 'Grain',
-            arroz: 'Grain',
-            pan: 'Grain',
-            cereal: 'Grain',
+            fruta: 'Fruit', frutas: 'Fruit', fruit: 'Fruit',
+            vegetal: 'Vegetable', verdura: 'Vegetable', vegetable: 'Vegetable',
+            'lácteos': 'Dairy', lacteos: 'Dairy', yogurt: 'Dairy', queso: 'Dairy',
+            carne: 'Meat', pollo: 'Meat', res: 'Meat', pavo: 'Meat',
+            grano: 'Grain', arroz: 'Grain', pan: 'Grain', cereal: 'Grain',
             snack: 'Snack',
         };
+
         let category: string | undefined;
         for (const k of Object.keys(catMap)) {
-            if (t.includes(k)) {
-                category = catMap[k];
-                break;
-            }
+            if (t.includes(k)) { category = catMap[k]; break; }
         }
 
         let name = t
-            .replace(
-                /\b(\d+|uno|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\b/g,
-                ''
-            )
-            .replace(
-                /\b(fruta|frutas|fruit|vegetal|verdura|vegetable|lácteos|lacteos|carne|grano|snack|category)\b/g,
-                ''
-            )
+            .replace(/\b(\d+|uno|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\b/g, '')
+            .replace(/\b(fruta|frutas|fruit|vegetal|verdura|vegetable|lácteos|lacteos|carne|grano|snack|category)\b/g, '')
             .trim();
 
         if (!name) {
@@ -185,10 +146,7 @@ export class InventoryAddComponent {
     }
 
     private toTitle(s: string) {
-        return s.replace(
-            /\w\S*/g,
-            (w) => w[0].toUpperCase() + w.slice(1)
-        );
+        return s.replace(/\w\S*/g, (w) => w[0].toUpperCase() + w.slice(1));
     }
 
     onSubmit() {
@@ -197,7 +155,7 @@ export class InventoryAddComponent {
             return;
         }
 
-        this.http.post(this.apiUrl, this.product).subscribe({
+        this.inventoryApi.createProduct(this.product).subscribe({
             next: () => {
                 alert('Product added successfully!');
                 this.router.navigate(['/inventory']);
