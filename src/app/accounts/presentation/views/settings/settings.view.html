@@ -1,0 +1,295 @@
+<section class="wrap">
+    <header class="head">
+        <h2 class="title">{{ 'settings.title' | translate }}</h2>
+        <div class="head-actions">
+            <span class="dirty" *ngIf="dirty()">{{ 'settings.unsaved' | translate }}</span>
+            <button class="btn primary" (click)="saveAll()">{{ 'settings.saveAll' | translate }}</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav class="side">
+            <button
+                    class="side-item"
+                    *ngFor="let t of tabs"
+                    [class.active]="isActive(t.key)"
+                    (click)="setTab(t.key)">
+                <span class="ico">{{ t.icon }}</span> {{ ('settings.tabs.' + t.key) | translate }}
+            </button>
+        </nav>
+
+        <div class="content">
+            <!-- Profile -->
+            <section *ngIf="isActive('profile')" class="card">
+                <h3>{{ 'settings.profile.title' | translate }}</h3>
+                <div class="grid">
+                    <div class="avatar">
+                        <div class="pic" [style.backgroundImage]="'url('+profile().avatarUrl+')'"></div>
+                        <button class="btn ghost" (click)="markDirty()">
+                            {{ 'settings.profile.uploadAvatar' | translate }}
+                        </button>
+                    </div>
+                    <div class="fields">
+                        <label class="field">
+                            <span>{{ 'settings.profile.name' | translate }}</span>
+                            <input type="text" [ngModel]="profile().name" (ngModelChange)="setProfile('name', $event)">
+                        </label>
+                        <label class="field">
+                            <span>{{ 'settings.profile.email' | translate }}</span>
+                            <input type="email" [ngModel]="profile().email" (ngModelChange)="setProfile('email', $event)">
+                        </label>
+                        <label class="field">
+                            <span>{{ 'settings.profile.phone' | translate }}</span>
+                            <input type="text" [ngModel]="profile().phone" (ngModelChange)="setProfile('phone', $event)">
+                        </label>
+                        <label class="field">
+                            <span>{{ 'settings.profile.organization' | translate }}</span>
+                            <input type="text" [ngModel]="profile().org" (ngModelChange)="setProfile('org', $event)">
+                        </label>
+                        <div class="row">
+                            <button class="btn" (click)="saveProfile()">{{ 'settings.profile.save' | translate }}</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Preferences -->
+            <section *ngIf="isActive('preferences')" class="card">
+                <h3>{{ 'settings.preferences.title' | translate }}</h3>
+                <div class="pref-grid">
+                    <label class="field">
+                        <span>{{ 'settings.preferences.language' | translate }}</span>
+                        <select [ngModel]="prefs().language" (ngModelChange)="setPrefs('language', $event)">
+                            <option *ngFor="let l of languages" [value]="l">{{ l.toUpperCase() }}</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'settings.preferences.timezone' | translate }}</span>
+                        <select [ngModel]="prefs().timezone" (ngModelChange)="setPrefs('timezone', $event)">
+                            <option *ngFor="let z of timezones" [value]="z">{{ z }}</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'settings.preferences.units' | translate }}</span>
+                        <select [ngModel]="prefs().units" (ngModelChange)="setPrefs('units', $event)">
+                            <option value="metric">{{ 'settings.preferences.unitsMetric' | translate }}</option>
+                            <option value="imperial">{{ 'settings.preferences.unitsImperial' | translate }}</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'settings.preferences.dateFormat' | translate }}</span>
+                        <select [ngModel]="prefs().dateFormat" (ngModelChange)="setPrefs('dateFormat', $event)">
+                            <option>DD/MM/YYYY</option>
+                            <option>MM/DD/YYYY</option>
+                            <option>YYYY-MM-DD</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>{{ 'settings.preferences.weekStartsOn' | translate }}</span>
+                        <select [ngModel]="prefs().weekStartsOn" (ngModelChange)="setPrefs('weekStartsOn', $event)">
+                            <option value="mon">{{ 'settings.preferences.monday' | translate }}</option>
+                            <option value="sun">{{ 'settings.preferences.sunday' | translate }}</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="row">
+                    <button class="btn" (click)="savePrefs()">{{ 'settings.preferences.save' | translate }}</button>
+                </div>
+            </section>
+
+            <!-- Theme -->
+            <section *ngIf="isActive('theme')" class="card">
+                <h3>{{ 'settings.theme.title' | translate }}</h3>
+                <div class="theme-grid">
+                    <div class="block">
+                        <label class="switch">
+                            <input type="radio" name="mode" value="light" [ngModel]="theme().mode" (ngModelChange)="setTheme('mode', $event)">
+                            <span>{{ 'settings.theme.modeLight' | translate }}</span>
+                        </label>
+                        <label class="switch">
+                            <input type="radio" name="mode" value="dark" [ngModel]="theme().mode" (ngModelChange)="setTheme('mode', $event)">
+                            <span>{{ 'settings.theme.modeDark' | translate }}</span>
+                        </label>
+                        <label class="switch">
+                            <input type="radio" name="mode" value="system" [ngModel]="theme().mode" (ngModelChange)="setTheme('mode', $event)">
+                            <span>System</span>
+                        </label>
+                    </div>
+
+                    <label class="field">
+                        <span>{{ 'settings.theme.primaryColor' | translate }}</span>
+                        <input type="color" [ngModel]="theme().primary" (ngModelChange)="setTheme('primary', $event)">
+                    </label>
+
+                    <label class="switch">
+                        <input type="checkbox" [ngModel]="theme().rounded" (ngModelChange)="setTheme('rounded', $event)">
+                        <span>{{ 'settings.theme.rounded' | translate }}</span>
+                    </label>
+
+                    <label class="field">
+                        <span>{{ 'settings.theme.density' | translate }}</span>
+                        <select [ngModel]="theme().density" (ngModelChange)="setTheme('density', $event)">
+                            <option value="comfortable">{{ 'settings.theme.densityComfortable' | translate }}</option>
+                            <option value="compact">{{ 'settings.theme.densityCompact' | translate }}</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="row">
+                    <button class="btn" (click)="applyTheme()">{{ 'settings.theme.apply' | translate }}</button>
+                </div>
+            </section>
+
+            <!-- Notifications -->
+            <section *ngIf="isActive('notifications')" class="card">
+                <h3>{{ 'settings.notifications.title' | translate }}</h3>
+
+                <div class="toggles">
+                    <label class="switch">
+                        <input type="checkbox" [ngModel]="notif().email" (ngModelChange)="setNotif('email', $event)">
+                        <span>{{ 'settings.notifications.email' | translate }}</span>
+                    </label>
+                    <label class="switch">
+                        <input type="checkbox" [ngModel]="notif().push" (ngModelChange)="setNotif('push', $event)">
+                        <span>{{ 'settings.notifications.push' | translate }}</span>
+                    </label>
+                    <label class="switch">
+                        <input type="checkbox" [ngModel]="notif().weeklyReport" (ngModelChange)="setNotif('weeklyReport', $event)">
+                        <span>{{ 'settings.notifications.weeklyReport' | translate }}</span>
+                    </label>
+                    <label class="switch">
+                        <input type="checkbox" [ngModel]="notif().criticalOnly" (ngModelChange)="setNotif('criticalOnly', $event)">
+                        <span>{{ 'settings.notifications.criticalOnly' | translate }}</span>
+                    </label>
+                </div>
+
+                <div class="sliders">
+                    <label class="field">
+                        <span>{{ 'settings.notifications.ethyleneThreshold' | translate }}</span>
+                        <input type="range" min="0" max="2" step="0.05"
+                               [ngModel]="notif().ethyleneThreshold" (ngModelChange)="setNotif('ethyleneThreshold', $event)">
+                        <b>{{ notif().ethyleneThreshold }}</b>
+                    </label>
+
+                    <label class="field">
+                        <span>{{ 'settings.notifications.temperatureThreshold' | translate }}</span>
+                        <input type="range" min="-5" max="15" step="0.5"
+                               [ngModel]="notif().tempThreshold" (ngModelChange)="setNotif('tempThreshold', $event)">
+                        <b>{{ notif().tempThreshold }}</b>
+                    </label>
+                </div>
+
+                <div class="row">
+                    <button class="btn ghost" (click)="resetNotif()">{{ 'settings.notifications.reset' | translate }}</button>
+                    <button class="btn">{{ 'settings.notifications.save' | translate }}</button>
+                </div>
+
+                <!-- US24: Notificaciones personalizadas (por categoría y canal) -->
+                <section class="subcard">
+                    <h4>{{ 'settings.notify.title' | translate }}</h4>
+                    <p class="muted">{{ 'settings.notify.desc' | translate }}</p>
+
+                    <div class="pref-table">
+                        <div class="pref-row" *ngFor="let k of prefKeys">
+                            <label class="pref-name">
+                                <input type="checkbox" [(ngModel)]="notifyPrefs[k].enabled">
+                                {{ 'settings.notify.keys.'+k | translate }}
+                            </label>
+                            <div class="pref-channels">
+                                <label><input type="checkbox" [checked]="has(k,'inapp')" (change)="toggleCh(k,'inapp',$event)"> In-App</label>
+                                <label><input type="checkbox" [checked]="has(k,'push')"  (change)="toggleCh(k,'push',$event)"> Push</label>
+                                <label><input type="checkbox" [checked]="has(k,'email')" (change)="toggleCh(k,'email',$event)"> Email</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <button class="btn" (click)="savePrefs()">{{ 'common.save' | translate }}</button>
+                        <button class="btn outline" (click)="tryPush()">{{ 'settings.notify.test' | translate }}</button>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Security -->
+            <section *ngIf="isActive('security')" class="card">
+                <h3>{{ 'settings.security.title' | translate }}</h3>
+
+                <div class="sec-grid">
+                    <div class="box">
+                        <h4>{{ 'settings.security.password' | translate }}</h4>
+                        <p class="muted">{{ 'settings.security.passwordHint' | translate }}</p>
+                        <button class="btn" (click)="changePassword()">{{ 'settings.security.changePassword' | translate }}</button>
+                    </div>
+
+                    <div class="box">
+                        <h4>{{ 'settings.security.twoFactor' | translate }}</h4>
+                        <label class="switch">
+                            <input type="checkbox" [ngModel]="twoFA()" (ngModelChange)="twoFA.set($event)">
+                            <span>{{ 'settings.security.enable2fa' | translate }}</span>
+                        </label>
+                        <p class="muted">{{ 'settings.security.twoFactorHint' | translate }}</p>
+                    </div>
+                </div>
+
+                <h4>{{ 'settings.security.activeSessions' | translate }}</h4>
+                <ul class="sessions">
+                    <li *ngFor="let s of sessions(); let i = index" [class.current]="s.current">
+                        <div>
+                            <strong>{{ s.device }}</strong>
+                            <span class="muted">• {{ s.ip }} • {{ s.lastActive }}</span>
+                        </div>
+                        <button class="btn outline" *ngIf="!s.current" (click)="revokeSession(i)">{{ 'settings.security.revoke' | translate }}</button>
+                        <span class="badge" *ngIf="s.current">{{ 'settings.security.current' | translate }}</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Integrations -->
+            <section *ngIf="isActive('integrations')" class="card">
+                <h3>{{ 'settings.integrations.title' | translate }}</h3>
+
+                <!-- listado existente -->
+                <ul class="integrations">
+                    <li *ngFor="let i of integrations()">
+                        <div class="left">
+                            <div class="logo">{{ i.name[0] }}</div>
+                            <div>
+                                <strong>{{ i.name }}</strong>
+                                <div class="muted">{{ i.note || '—' }}</div>
+                            </div>
+                        </div>
+                        <button class="btn" [class.ghost]="i.connected" (click)="connect(i)">
+                            {{ i.connected ? ('settings.integrations.disconnect' | translate) : ('settings.integrations.connect' | translate) }}
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- US22: Smart Fridges -->
+                <section class="subcard">
+                    <h4>{{ 'settings.integrations.smartFridges.title' | translate }}</h4>
+                    <p class="muted">{{ 'settings.integrations.smartFridges.desc' | translate }}</p>
+
+                    <div class="sf-grid">
+                        <div class="sf-item" *ngFor="let p of providers">
+                            <div class="sf-head">
+                                <strong>{{ p.provider }}</strong>
+                                <span class="badge" [class.ok]="status(p)==='connected'">{{ status(p) }}</span>
+                            </div>
+                            <button class="btn small" (click)="toggle(p)">
+                                {{ status(p)==='connected' ? ('settings.integrations.disconnect'|translate) : ('settings.integrations.connect'|translate) }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <button class="btn" (click)="sync()">{{ 'settings.integrations.smartFridges.sync' | translate }}</button>
+                        <span *ngIf="lastSync && importedCount>=0" class="muted">
+              {{ 'settings.integrations.smartFridges.lastSync' | translate }}:
+                            {{ lastSync | date:'short' }} — {{ importedCount }} {{ 'settings.integrations.smartFridges.items' | translate }}
+            </span>
+                    </div>
+                </section>
+            </section>
+        </div>
+    </div>
+</section>

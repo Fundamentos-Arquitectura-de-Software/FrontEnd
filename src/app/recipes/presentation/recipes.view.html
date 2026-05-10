@@ -1,0 +1,135 @@
+<section class="recipes-page">
+
+    <!-- Título -->
+    <h2 class="section-title">{{ 'recipes.title' | translate }}</h2>
+
+    <!-- BUSCADOR -->
+    <form class="search" (submit)="$event.preventDefault()">
+        <input
+                type="text"
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="filterRecipes()"
+                [placeholder]="'recipes.searchPlaceholder' | translate"
+                name="search"
+        />
+        <button type="button" class="search-btn" (click)="filterRecipes()"></button>
+    </form>
+
+    <!-- FILTROS -->
+    <div class="filters">
+        <div class="filter-group">
+            <h4>{{ 'recipes.level' | translate }}</h4>
+            <div class="chips">
+                <button class="chip" [class.active]="selectedLevel === 'All'" (click)="filterLevel('All')">
+                    {{ 'recipes.filters.allLevels' | translate }}
+                </button>
+                <button class="chip" [class.active]="selectedLevel === 'Easy'" (click)="filterLevel('Easy')">
+                    {{ 'recipes.filters.easy' | translate }}
+                </button>
+                <button class="chip" [class.active]="selectedLevel === 'Intermediate'" (click)="filterLevel('Intermediate')">
+                    {{ 'recipes.filters.intermediate' | translate }}
+                </button>
+                <button class="chip" [class.active]="selectedLevel === 'Advanced'" (click)="filterLevel('Advanced')">
+                    {{ 'recipes.filters.advanced' | translate }}
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>{{ 'recipes.type' | translate }}</h4>
+            <div class="chips">
+                <button class="chip" [class.active]="selectedType === 'All'" (click)="filterType('All')">
+                    {{ 'recipes.filters.allTypes' | translate }}
+                </button>
+                <button class="chip" [class.active]="selectedType === 'Breakfast'" (click)="filterType('Breakfast')">
+                    {{ 'recipes.filters.breakfast' | translate }}
+                </button>
+                <button class="chip" [class.active]="selectedType === 'Meals'" (click)="filterType('Meals')">
+                    {{ 'recipes.filters.meals' | translate }}
+                </button>
+                <button class="chip" [class.active]="selectedType === 'Snacks'" (click)="filterType('Snacks')">
+                    {{ 'recipes.filters.snacks' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LISTA DE RECETAS -->
+    <div class="recipes-grid">
+        <div class="card" *ngFor="let r of filteredRecipes" (click)="openModal(r)">
+
+            <div class="card__media">
+                <img
+                        [src]="imageFor(r)"
+                        [alt]="r.title"
+                        (error)="onImgError($event)"
+                />
+            </div>
+
+            <div class="card__body">
+                <h3 class="title">{{ r.title }}</h3>
+                <p class="muted" *ngIf="r.description">{{ r.description }}</p>
+
+                <div class="meta">
+                    <span class="badge" *ngIf="r.level">{{ r.level }}</span>
+                    <span>{{ r.time }}</span>
+                    <span class="dot">•</span>
+                    <span>{{ r.type }}</span>
+                </div>
+
+                <div class="rating" *ngIf="r.rating">
+                    <span *ngFor="let _ of getStars(r.rating)">★</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <p class="muted" *ngIf="filteredRecipes.length === 0">
+        {{ 'recipes.empty' | translate }}
+    </p>
+
+    <!-- MODAL -->
+    <div class="modal" *ngIf="modalOpen" (click)="closeModal()">
+        <div class="dialog" (click)="$event.stopPropagation()">
+
+            <button class="icon-btn close" (click)="closeModal()">×</button>
+
+            <div class="dialog__media">
+                <img
+                        [src]="imageFor(active)"
+                        [alt]="active?.title || ''"
+                        (error)="onImgError($event)"
+                />
+            </div>
+
+            <div class="dialog__body" *ngIf="active">
+                <h2 class="dialog__title">{{ active.title }}</h2>
+
+                <div class="rating" *ngIf="active.rating">
+                    <span *ngFor="let _ of getStars(active.rating)">★</span>
+                </div>
+
+                <div class="meta meta--lg">
+                    <span class="badge">{{ active.level }}</span>
+                    <span>{{ active.time }}</span>
+                    <span class="dot">•</span>
+                    <span>{{ active.type }}</span>
+                </div>
+
+                <h3 class="subttl">{{ 'recipes.ingredients' | translate }}</h3>
+                <ul class="list">
+                    <li *ngFor="let i of active.ingredients">{{ i }}</li>
+                </ul>
+
+                <h3 class="subttl">{{ 'recipes.steps' | translate }}</h3>
+                <ol class="list">
+                    <li *ngFor="let s of active.steps">{{ s }}</li>
+                </ol>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>

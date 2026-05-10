@@ -1,0 +1,134 @@
+<section class="wrap">
+    <header class="head">
+        <h2 class="h1">{{ 'alerts.title' | translate }}</h2>
+
+        <div class="filters">
+            <div class="tabs">
+                <button
+                        class="tab"
+                        *ngFor="let t of tabs"
+                        [class.active]="activeTab() === t.key"
+                        (click)="activeTab.set(t.key)"
+                >
+                    {{ t.label | translate }}
+                </button>
+            </div>
+
+            <div class="row">
+                <input
+                        class="search"
+                        type="search"
+                        [placeholder]="'alerts.searchPlaceholder' | translate"
+                        [ngModel]="query()"
+                        (ngModelChange)="query.set($event)"
+                />
+
+                <select
+                        class="select"
+                        [ngModel]="sevFilter()"
+                        (ngModelChange)="sevFilter.set($event)"
+                >
+                    <option value="all">
+                        {{ 'alerts.filters.severityAll' | translate }}
+                    </option>
+                    <option value="critical">
+                        {{ 'alerts.filters.severityCritical' | translate }}
+                    </option>
+                    <option value="warning">
+                        {{ 'alerts.filters.severityWarning' | translate }}
+                    </option>
+                    <option value="info">
+                        {{ 'alerts.filters.severityInfo' | translate }}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- LISTA DE ALERTAS -->
+    <div class="list" *ngIf="visible().length; else empty">
+
+        <article
+                class="alert-card"
+                *ngFor="let a of visible()"
+                [ngClass]="[
+                    a.severity.toLowerCase(),
+                    (a.state || '').toLowerCase()
+                ]"
+
+        >
+
+            <!-- IZQUIERDA -->
+            <div class="alert__left">
+                <div class="badge" [ngClass]="a.severity.toLowerCase()">
+                    {{ a.severity.toLowerCase() }}
+                </div>
+                <div class="source chip">
+                    {{ a.source }}
+                </div>
+            </div>
+
+            <!-- CUERPO -->
+            <div class="alert__body">
+                <div class="title-row">
+                    <h3 class="title">{{ a.title }}</h3>
+                    <div class="time muted">{{ a.timeAgo }}</div>
+                </div>
+
+                <p class="msg">{{ a.message }}</p>
+
+                <div class="actions">
+                    <button class="btn outline" (click)="mute(a)">
+                        {{ 'alerts.actions.mute' | translate }}
+                    </button>
+                    <button class="btn" (click)="resolve(a)">
+                        {{ 'alerts.actions.resolve' | translate }}
+                    </button>
+                    <button class="btn ghost" (click)="open(a)">
+                        {{ 'alerts.actions.details' | translate }}
+                    </button>
+                </div>
+
+                <!-- DETALLES -->
+                <div class="drawer" *ngIf="isOpen(a)">
+                    <div class="drawer__row">
+                        <span>{{ 'alerts.columns.source' | translate }}</span>
+                        <b>{{ a.source }}</b>
+                    </div>
+
+                    <div class="drawer__row">
+                        <span>{{ 'alerts.columns.severity' | translate }}</span>
+                        <b class="cap">{{ a.severity.toLowerCase() }}</b>
+                    </div>
+
+                    <div class="drawer__row">
+                        <span>{{ 'alerts.columns.status' | translate }}</span>
+                        <b class="cap">{{ (a.state || '').toLowerCase() }}</b>
+                    </div>
+
+                    <div class="drawer__row">
+                        <span>{{ 'alerts.columns.createdAt' | translate }}</span>
+                        <b>{{ a.timeAgo }}</b>
+                    </div>
+
+                    <div class="drawer__foot">
+                        <button class="btn ghost" (click)="close()">
+                            {{ 'common.close' | translate }}
+                        </button>
+                        <button class="btn" (click)="resolve(a)">
+                            {{ 'alerts.actions.markResolved' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- VACÍO -->
+    <ng-template #empty>
+        <div class="empty card">
+            <h3>{{ 'alerts.empty.title' | translate }}</h3>
+            <p class="muted">{{ 'alerts.empty.hint' | translate }}</p>
+        </div>
+    </ng-template>
+</section>

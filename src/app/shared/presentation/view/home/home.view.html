@@ -1,0 +1,37 @@
+<section class="grid">
+    <!-- HERO -->
+    <article class="card hero">
+        <div class="hero__copy">
+            <h2 class="h1">{{ 'home.heroTitle' | translate:{ name: name } }}</h2>
+            <p class="muted">{{ 'home.freshness' | translate }}</p>
+            <div class="gauge">
+                <div class="gauge__value">85%</div>
+            </div>
+        </div>
+        <img class="hero__img"  src="/salade_hero.jpg" alt="{{ 'home.foodAlt' | translate }}">
+
+    </article>
+
+    <!-- WEEKLY STATS -->
+    <article class="card stats">
+        <h3 class="h2">{{ 'home.weeklyStats' | translate }}</h3>
+        <div class="mini-grid">
+            <div class="stat">
+                <strong>{{ 'home.stock' | translate }}<br>{{ 'home.level' | translate }}</strong>
+                <span>54%</span>
+            </div>
+            <div class="stat"><strong>{{ 'home.gain' | translate }}</strong><span>+12%</span></div>
+            <div class="stat"><strong>{{ 'home.loss' | translate }}</strong><span>-3%</span></div>
+        </div>
+    </article>
+
+    <!-- CHALLENGES -->
+    <article class="card side">
+        <h3 class="h2">{{ 'home.challengesTitle' | translate }}</h3>
+        <div class="chips">
+            <button class="chip">{{ 'home.tags.salad' | translate }}</button>
+            <button class="chip">{{ 'home.tags.bowl'  | translate }}</button>
+            <button class="chip">{{ 'home.tags.yogurt'| translate }}</button>
+        </div>
+    </article>
+</section>
