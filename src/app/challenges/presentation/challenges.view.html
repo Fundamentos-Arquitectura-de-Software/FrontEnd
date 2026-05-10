@@ -1,0 +1,105 @@
+<section class="ch-grid">
+    <header class="ch-head">
+        <h2 class="ch-title">{{ 'challenges.title' | translate }}</h2>
+        <div class="ch-tabs">
+            <button class="ch-tab" [class.active]="activeTab() === 'active'" (click)="activeTab.set('active')">
+                {{ 'challenges.tabs.active' | translate }}
+            </button>
+            <button class="ch-tab" [class.active]="activeTab() === 'enrolled'" (click)="activeTab.set('enrolled')">
+                {{ 'challenges.tabs.enrolled' | translate }}
+            </button>
+            <button class="ch-tab" [class.active]="activeTab() === 'leaderboard'" (click)="activeTab.set('leaderboard')">
+                {{ 'challenges.tabs.leaderboard' | translate }}
+            </button>
+        </div>
+    </header>
+
+    <!-- LISTA DE RETOS ACTIVOS -->
+    <div class="ch-list" *ngIf="activeTab() === 'active'">
+        <article class="ch-card" *ngFor="let c of vm.active()">
+            <img class="ch-banner" *ngIf="c.banner" [src]="c.banner" [alt]="c.title" />
+
+            <div class="ch-body">
+                <div class="ch-row">
+                    <h3 class="ch-name">{{ c.title }}</h3>
+                    <span class="ch-badge">{{ c.rewardPts }} pts</span>
+                </div>
+
+                <p class="ch-desc">{{ c.desc }}</p>
+                <p class="ch-period">
+                    {{ 'challenges.period' | translate:{ start: (c.startAt | date:'MMM d'), end: (c.endAt | date:'MMM d') } }}
+                </p>
+
+                <div class="ch-actions">
+                    <button class="btn primary" (click)="vm.enroll(c.id)" *ngIf="!isEnrolled(c.id)()">
+                        {{ 'challenges.enroll' | translate }}
+                    </button>
+                    <button class="btn outline" (click)="vm.leave(c.id)" *ngIf="isEnrolled(c.id)()">
+                        {{ 'challenges.leave' | translate }}
+                    </button>
+                    <button class="btn ghost" (click)="showLeaderboard(c.id)">
+                        {{ 'challenges.viewRanking' | translate }}
+                    </button>
+                </div>
+
+                <div class="ch-progress" *ngIf="isEnrolled(c.id)()">
+                    <span class="bar" [style.width.%]="vm.progressFor(c.id)()"></span>
+                    <em>{{ vm.progressFor(c.id)() }}%</em>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- MIS RETOS -->
+    <div class="ch-list" *ngIf="activeTab() === 'enrolled'">
+        <article class="ch-card" *ngFor="let c of vm.enrolled()">
+            <div class="ch-body">
+                <div class="ch-row">
+                    <h3 class="ch-name">{{ c.title }}</h3>
+                    <span class="ch-badge">{{ c.rewardPts }} pts</span>
+                </div>
+
+                <p class="ch-desc">{{ c.desc }}</p>
+
+                <div class="ch-actions">
+                    <button class="btn ghost" (click)="showLeaderboard(c.id)">
+                        {{ 'challenges.viewRanking' | translate }}
+                    </button>
+                    <button class="btn outline" (click)="vm.leave(c.id)">
+                        {{ 'challenges.leave' | translate }}
+                    </button>
+                </div>
+
+                <div class="ch-progress">
+                    <span class="bar" [style.width.%]="vm.progressFor(c.id)()"></span>
+                    <em>{{ vm.progressFor(c.id)() }}%</em>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- RANKING -->
+    <div *ngIf="activeTab() === 'leaderboard'" class="ch-leader">
+        <h3 class="h2">{{ 'challenges.leaderboard' | translate }}</h3>
+        <div class="table-wrap">
+            <table class="ch-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>{{ 'challenges.player' | translate }}</th>
+                    <th class="right">{{ 'challenges.points' | translate }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let r of vm.leaderboard()">
+                    <td class="rank"> {{ r.rank }} </td>
+                    <td> {{ r.displayName }} </td>
+                    <td class="right"> {{ r.points }} </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p class="ch-error" *ngIf="vm.error()">{{ vm.error() }}</p>
+</section>

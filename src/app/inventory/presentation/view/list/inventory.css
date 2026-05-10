@@ -1,0 +1,235 @@
+/* Estructura base */
+.inventory-page {
+    padding-block: 1.5rem 2.5rem;
+    font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color: #1f2937;
+}
+
+.page-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #132a13;
+}
+
+/* Botón Add Product */
+.btn-add {
+    background: #1b873e;
+    color: #fff;
+    padding: 0.55rem 1.1rem;
+    border: none;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(27, 135, 62, 0.25);
+}
+
+.btn-add:hover {
+    background: #157f34;
+    box-shadow: 0 4px 10px rgba(27, 135, 62, 0.35);
+}
+
+/* Buscador */
+.search {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.search input {
+    width: 100%;
+    border: 1.5px solid #cfd8dc;
+    border-radius: 999px;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search input:focus {
+    border-color: #1b873e;
+    box-shadow: 0 0 0 3px rgba(27, 135, 62, 0.14);
+}
+
+.search-btn {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1b873e;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+/* Filtros */
+.filters {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.filter-group h4 {
+    margin: 0 0 0.35rem;
+    font-size: 0.95rem;
+    color: #44515a;
+    font-weight: 600;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.chip {
+    background: #ffffff;
+    border: 1px solid #1f9c59;
+    color: #1f9c59;
+    border-radius: 0.6rem;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.chip.active {
+    background: #1f9c59;
+    color: #fff;
+}
+
+/* 🔹 Grid de productos */
+.product-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.product-card {
+    border: 1px solid #e6edf0;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    gap: 0.75rem;
+}
+
+.product-img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.product-main {
+    flex: 1;
+}
+
+.product-name {
+    font-weight: 600;
+    color: #132a13;
+    margin: 0;
+}
+
+.product-cat {
+    color: #6b7a86;
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+}
+
+.arrow-btn {
+    background: none;
+    border: none;
+    color: #1b873e;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.arrow-btn:hover {
+    background: rgba(27, 135, 62, 0.08);
+}
+
+/* 🔹 Panel de detalle */
+.product-details {
+    background: #f9fafb;
+    border-top: 1px solid #e6edf0;
+    padding: 1rem;
+    animation: expand 0.25s ease-out;
+}
+
+@keyframes expand {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.btn-outline {
+    background: transparent;
+    color: #1b873e;
+    border: 1.5px solid #1b873e;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btn-outline:hover {
+    background: #1b873e;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .filters {
+        flex-direction: column;
+    }
+
+    .page-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+}
+

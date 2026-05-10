@@ -1,0 +1,37 @@
+<div class="payment-container">
+    <div class="banner-section">
+        <img src="/banneralimentos.jpg" alt="{{ 'billing.payment.bannerAlt' | translate }}" />
+    </div>
+
+    <div class="payment-section">
+        <div class="form-box">
+            <h2>{{ 'billing.payment.title' | translate }}</h2>
+
+            <form (ngSubmit)="pay()" #paymentForm="ngForm">
+                <div class="input-group">
+                    <label for="cardName">{{ 'billing.payment.cardName' | translate }}</label>
+                    <input type="text" id="cardName" name="cardName" required ngModel>
+                </div>
+
+                <div class="input-group">
+                    <label for="cardNumber">{{ 'billing.payment.cardNumber' | translate }}</label>
+                    <input type="text" id="cardNumber" name="cardNumber" maxlength="16" required ngModel>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="expiry">{{ 'billing.payment.expiry' | translate }}</label>
+                        <input type="text" id="expiry" name="expiry" placeholder="MM/AA" required ngModel>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cvv">{{ 'billing.payment.cvv' | translate }}</label>
+                        <input type="password" id="cvv" name="cvv" maxlength="4" required ngModel>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-pay">{{ 'billing.payment.pay' | translate }}</button>
+            </form>
+        </div>
+    </div>
+</div>

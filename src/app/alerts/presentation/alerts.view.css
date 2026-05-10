@@ -1,0 +1,45 @@
+:host { display:block; }
+.wrap { display:flex; flex-direction:column; gap:16px; }
+.card{ background:#fff; border:1px solid #e6ece8; border-radius:16px; padding:16px; text-align:center; }
+
+/* Header + filters */
+.head { display:flex; flex-direction:column; gap:10px; }
+.filters { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.tabs { display:flex; gap:6px; }
+.tab { padding:8px 12px; border-radius:999px; border:1px solid #e6ece8; background:#f6faf8; cursor:pointer; }
+.tab.active { background:#1f9c59; border-color:#1f9c59; color:#fff; }
+.row { display:flex; gap:8px; }
+.search { padding:8px 12px; border:1px solid #e6ece8; border-radius:10px; min-width:260px; }
+.select { padding:8px 10px; border:1px solid #e6ece8; border-radius:10px; }
+
+/* List */
+.list { display:flex; flex-direction:column; gap:14px; }
+.alert-card {
+    display:grid; grid-template-columns: 160px 1fr; gap:14px;
+    border-radius:16px; padding:16px; background:#fff; border:1px solid #e9efec;
+    box-shadow: 0 6px 10px rgb(0 0 0 / 6%);
+}
+.alert-card.critical { background:#ffe3e3; border-color:#ffd0d0; }
+.alert-card.warning  { background:#e6f3e1; border-color:#d6ebcc; }
+.alert-card.info     { background:#e3ebff; border-color:#d3e0ff; }
+
+.alert__left { display:flex; flex-direction:column; gap:8px; }
+.badge { width:max-content; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:700; text-transform: capitalize; }
+.badge.critical{ background:#fff0f0; color:#a32020; }
+.badge.warning{ background:#f6ffde; color:#597a00; }
+.badge.info{ background:#eef3ff; color:#2d7be6; }
+.chip { border:1px solid #d7e6df; background:#fff; padding:4px 8px; border-radius:999px; font-size:12px; }
+
+.title-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.title { margin:0; font-size:18px; }
+.muted { color:var(--fs-muted); }
+.cap { text-transform: capitalize; }
+
+.actions { display:flex; gap:8px; margin-top:6px; }
+.btn { border:none; padding:8px 12px; border-radius:10px; background:#1f9c59; color:#fff; cursor:pointer; }
+.btn.outline { background:#fff; color:#1f9c59; border:1px solid #1f9c59; }
+.btn.ghost { background:transparent; color:#2d3b34; border:1px solid #e6ece8; }
+
+.drawer { margin-top:10px; padding:10px; border:1px dashed #cfe0d9; border-radius:12px; background:#f9fbfa; }
+.drawer__row { display:flex; align-items:center; justify-content:space-between; padding:4px 0; }
+.drawer__foot { display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }

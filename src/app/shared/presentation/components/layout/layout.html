@@ -1,0 +1,62 @@
+<header class="topbar">
+    <div class="brand">
+        <img src="/favicon.ico" class="brand-logo"/>
+        <span>{{ 'app.brand' | translate }}</span>
+    </div>
+
+    <nav class="top-actions">
+        <!-- Language toggle -->
+        <div class="lang-toggle" (click)="toggleLang()" title="{{ 'app.language' | translate }}">
+      <span class="pill" [class.right]="curr()==='es'">
+        <span class="opt" [class.active]="curr()==='en'">EN</span>
+        <span class="opt" [class.active]="curr()==='es'">ES</span>
+      </span>
+        </div>
+
+        <a routerLink="/login" class="btn ghost">{{ 'app.logout' | translate }}</a>
+    </nav>
+</header>
+
+<main class="main-layout">
+    <aside class="sidebar">
+        <nav class="side-nav">
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+                <i class="icon">🏠</i> {{ 'nav.dashboard' | translate }}
+            </a>
+            <a routerLink="/inventory" routerLinkActive="active" class="nav-item">
+                <i class="icon">🥬</i> {{ 'nav.inventory' | translate }}
+            </a>
+            <a routerLink="/monitoring" routerLinkActive="active" class="nav-item">
+                <i class="icon">📈</i> {{ 'nav.monitoring' | translate }}
+            </a>
+            <a routerLink="/alerts" routerLinkActive="active" class="nav-item">
+                <i class="icon">🚨</i> {{ 'nav.alerts' | translate }}
+            </a>
+            <a routerLink="/recipes" routerLinkActive="active" class="nav-item">
+                <i class="icon">🍳</i> {{ 'nav.recipes' | translate }}
+            </a>
+            <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+                <i class="icon">📊</i> {{ 'nav.reports' | translate }}
+            </a>
+            <a routerLink="/achievements" routerLinkActive="active" class="nav-item">
+                <i class="icon">🏅</i> {{ 'nav.achievements' | translate }}
+            </a>
+
+            <a routerLink="/challenges" routerLinkActive="active" class="nav-item">
+                <i class="icon">🎯</i> {{ 'nav.challenges' | translate }}
+            </a>
+
+            <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+                <i class="icon">⚙️</i> {{ 'nav.settings' | translate }}
+            </a>
+        </nav>
+    </aside>
+
+    <section class="content">
+        <router-outlet></router-outlet>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>© 2025 FreshSense — {{ 'app.brand' | translate }}</p>
+</footer>

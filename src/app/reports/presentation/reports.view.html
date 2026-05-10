@@ -1,0 +1,124 @@
+<section class="wrap">
+    <header class="head">
+        <h2 class="h1">{{ 'reports.title' | translate }}</h2>
+
+        <div class="filters">
+            <label class="input">
+                <span>{{ 'reports.from' | translate }}</span>
+                <input type="date" [(ngModel)]="fromDate">
+            </label>
+            <label class="input">
+                <span>{{ 'reports.to' | translate }}</span>
+                <input type="date" [(ngModel)]="toDate">
+            </label>
+            <button class="btn" (click)="applyRange()">{{ 'reports.apply' | translate }}</button>
+        </div>
+    </header>
+
+    <div class="grid">
+        <article class="card span-8">
+            <h3 class="h2">{{ 'reports.weeklyWaste' | translate }}</h3>
+            <div class="bars">
+                <div class="bar" *ngFor="let d of days()" [style.height.%]="(d.wasteKg / maxWaste) * 100">
+                    <span class="bar__value">{{ d.wasteKg }}</span>
+                    <span class="bar__label">{{ d.label }}</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="card span-4">
+            <div class="kpis">
+                <div class="kpi">
+                    <strong>{{ 'reports.kpi.gain' | translate }}</strong>
+                    <div class="kpi__value pos">+{{ gainPct }}%</div>
+                    <small class="muted">{{ 'reports.vsLastWeek' | translate }}</small>
+                </div>
+                <div class="kpi">
+                    <strong>{{ 'reports.kpi.loss' | translate }}</strong>
+                    <div class="kpi__value neg">-{{ lossPct }}%</div>
+                    <small class="muted">{{ 'reports.vsLastWeek' | translate }}</small>
+                </div>
+                <div class="kpi">
+                    <strong>{{ 'reports.kpi.improvement' | translate }}</strong>
+                    <div class="kpi__value pos">+{{ improvementPct }}%</div>
+                    <small class="muted">{{ 'reports.mtd' | translate }}</small>
+                </div>
+            </div>
+        </article>
+
+        <article class="card span-12">
+            <h3 class="h2">{{ 'reports.trends' | translate }}</h3>
+            <div class="legend">
+                <span class="dot blue"></span> {{ 'monitoring.temperature' | translate }}
+                <span class="dot red"></span> {{ 'monitoring.humidity' | translate }}
+            </div>
+
+            <svg class="chart" [attr.viewBox]="'0 0 ' + width + ' ' + height" role="img" [attr.aria-label]="'reports.trends' | translate">
+                <g class="gridlines" *ngFor="let y of [0,25,50,75,100]">
+                    <line [attr.x1]="pad" [attr.x2]="width-pad" [attr.y1]="yScale(y)" [attr.y2]="yScale(y)"></line>
+                </g>
+                <polyline class="hum" [attr.points]="polyline(humidity)"></polyline>
+                <polyline class="temp" [attr.points]="polyline(temperature)"></polyline>
+                <g *ngFor="let d of days(); let i = index">
+                    <text class="tick" [attr.x]="xScale(i)" [attr.y]="height-6">{{ d.label[0] }}</text>
+                </g>
+            </svg>
+        </article>
+
+        <article class="card span-12">
+            <h3 class="h2">{{ 'reports.history.title' | translate }}</h3>
+
+            <div class="filters history-filters">
+                <label class="input">
+                    <span>{{ 'reports.from' | translate }}</span>
+                    <input type="date" [(ngModel)]="hFrom" (change)="applyHistoryFilters()">
+                </label>
+                <label class="input">
+                    <span>{{ 'reports.to' | translate }}</span>
+                    <input type="date" [(ngModel)]="hTo" (change)="applyHistoryFilters()">
+                </label>
+                <label class="input">
+                    <span>{{ 'reports.history.action' | translate }}</span>
+                    <select [(ngModel)]="hAction" (change)="applyHistoryFilters()">
+                        <option value="">{{ 'common.all' | translate }}</option>
+                        <option value="consume">{{ 'reports.history.consume' | translate }}</option>
+                        <option value="discard">{{ 'reports.history.discard' | translate }}</option>
+                        <option value="add">{{ 'reports.history.add' | translate }}</option>
+                    </select>
+                </label>
+                <label class="input">
+                    <span>{{ 'reports.history.category' | translate }}</span>
+                    <input type="text" [(ngModel)]="hCategory" (input)="applyHistoryFilters()" placeholder="Fruit, Meat, Dairy…">
+                </label>
+                <button class="btn" (click)="exportCSV()">{{ 'reports.history.exportCsv' | translate }}</button>
+            </div>
+
+            <div class="table-wrap" *ngIf="filtered.length; else noData">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>{{ 'reports.history.date' | translate }}</th>
+                        <th>{{ 'reports.history.action' | translate }}</th>
+                        <th>{{ 'reports.history.product' | translate }}</th>
+                        <th>{{ 'reports.history.category' | translate }}</th>
+                        <th>{{ 'reports.history.qty' | translate }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let e of filtered">
+                        <td>{{ e.date | date:'yyyy-MM-dd HH:mm' }}</td>
+                        <td>{{ e.action }}</td>
+                        <td>{{ e.productName }}</td>
+                        <td>{{ e.category }}</td>
+                        <td>{{ e.quantity }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <ng-template #noData>
+                <p class="muted">{{ 'reports.history.empty' | translate }}</p>
+            </ng-template>
+        </article>
+    </div>
+</section>
