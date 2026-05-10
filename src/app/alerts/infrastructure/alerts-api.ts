@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface AlertDto {
     id: number;
@@ -12,14 +13,9 @@ export interface AlertDto {
     timeAgo: string;
 }
 
-const BACKEND_BASE =
-    window.location.hostname === 'localhost'
-        ? 'http://localhost:8080'
-        : 'https://1asi0729-2520-7357-g4-senseeat-backend-freshsens-production.up.railway.app';
-
 @Injectable({ providedIn: 'root' })
 export class AlertsApi {
-    private readonly baseUrl = `${BACKEND_BASE}/api/alerts`;
+    private readonly baseUrl = `${environment.apiBaseUrl}/alerts`;
 
     constructor(private http: HttpClient) {}
 
