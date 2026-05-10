@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgFor, NgIf, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { environment } from '../../../../../environments/environment';
+import { InventoryApi } from '../../../infrastructure/inventory-api';
+import { ProductResponse } from '../../../infrastructure/inventory-response';
 
 type Product = {
     id: number;
@@ -16,20 +16,10 @@ type Product = {
     quantity?: number;
 };
 
-// cómo responde tu backend Spring Boot
-type BackendProductResponse = {
-    id: number;
-    name: string;
-    description: string;
-    category: string;
-    quantity: number;
-    imageUrl: string;
-};
-
 @Component({
     selector: 'fs-inventory',
     standalone: true,
-    imports: [NgFor, NgIf, FormsModule, CommonModule, HttpClientModule, TranslateModule],
+    imports: [NgFor, NgIf, FormsModule, CommonModule, TranslateModule],
     templateUrl: './inventory-list.html',
     styleUrls: ['./inventory.css']
 })
@@ -44,32 +34,31 @@ export class FoodInventoryView implements OnInit {
     selectedState = 'All';
     selectedCategory = 'All';
 
-    private readonly apiUrl = `${environment.apiBaseUrl}/products`;
+    selectedProduct: Product | null = null;
 
-    constructor(private http: HttpClient, private router: Router) {}
+    constructor(private inventoryApi: InventoryApi, private router: Router) {}
 
     ngOnInit() {
-        this.http.get<BackendProductResponse[]>(this.apiUrl)
-            .subscribe({
-                next: (data) => {
-                    this.products = (data ?? []).map(p => ({
-                        id: p.id,
-                        name: p.name,
-                        image: p.imageUrl,
-                        state: 'In good condition',   // estado por defecto
-                        category: p.category,
-                        description: p.description,
-                        quantity: typeof p.quantity === 'number' ? p.quantity : 0
-                    })) as Product[];
+        this.inventoryApi.getProducts().subscribe({
+            next: (data: ProductResponse[]) => {
+                this.products = (data ?? []).map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    image: p.imageUrl,
+                    state: 'In good condition',
+                    category: p.category,
+                    description: p.description,
+                    quantity: typeof p.quantity === 'number' ? p.quantity : 0
+                })) as Product[];
 
-                    this.filteredProducts = [...this.products];
-                },
-                error: (err) => {
-                    console.error('Error loading products from backend', err);
-                    this.products = [];
-                    this.filteredProducts = [];
-                }
-            });
+                this.filteredProducts = [...this.products];
+            },
+            error: (err: unknown) => {
+                console.error('Error loading products from backend', err);
+                this.products = [];
+                this.filteredProducts = [];
+            }
+        });
     }
 
     filterProducts() {
@@ -109,8 +98,6 @@ export class FoodInventoryView implements OnInit {
         (ev.target as HTMLImageElement).src =
             'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1';
     }
-
-    selectedProduct: Product | null = null;
 
     openProduct(p: Product) {
         if (this.selectedProduct && this.selectedProduct.id === p.id) {
