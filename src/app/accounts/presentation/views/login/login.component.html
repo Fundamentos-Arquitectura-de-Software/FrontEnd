@@ -1,0 +1,61 @@
+<div class="login-container">
+    <div class="banner-section">
+        <img src="/banneralimentos.jpg" alt="{{ 'auth.brandAlt' | translate }}" />
+    </div>
+
+    <div class="form-section">
+        <div class="form-box">
+            <div class="logo">
+                <img src="/favicon.ico" alt="{{ 'auth.brandAlt' | translate }}" />
+                <h2>{{ 'app.brand' | translate }}</h2>
+                <p class="subtitle">{{ 'auth.login.title' | translate }}</p>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
+                <div class="input-group">
+                    <label for="email">{{ 'auth.login.email' | translate }}</label>
+                    <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            [placeholder]="'auth.login.placeholderEmail' | translate"
+                            [(ngModel)]="loginData.email"
+                            required
+                    />
+                </div>
+
+                <div class="input-group">
+                    <label for="password">{{ 'auth.login.password' | translate }}</label>
+                    <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            [placeholder]="'auth.login.placeholderPassword' | translate"
+                            [(ngModel)]="loginData.password"
+                            required
+                    />
+                </div>
+
+                <!-- Mensaje de error opcional -->
+                <p class="error" *ngIf="loginError">
+                    {{ loginError }}
+                </p>
+
+                <p class="link">
+                    {{ 'auth.login.noAccount' | translate }}
+                    <a (click)="goToRegister()">
+                        {{ 'auth.login.goRegister' | translate }}
+                    </a>
+                </p>
+
+                <button
+                        type="submit"
+                        class="btn-login"
+                        [disabled]="loginForm.invalid || isSubmitting"
+                >
+                    {{ 'auth.login.cta' | translate }}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="register-container">
+    <div class="banner-section">
+        <img src="/banneralimentos.jpg" alt="{{ 'auth.brandAlt' | translate }}" />
+    </div>
+
+    <div class="form-section">
+        <div class="form-box">
+            <div class="logo">
+                <img src="/favicon.ico" alt="{{ 'auth.brandAlt' | translate }}" />
+                <h1>{{ 'app.brand' | translate }}</h1>
+                <h3>{{ 'auth.register.title' | translate }}</h3>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+                <div class="input-group">
+                    <label for="name">{{ 'auth.register.name' | translate }}</label>
+                    <input type="text" name="name"
+                           [placeholder]="'auth.register.placeholderName' | translate"
+                           [(ngModel)]="user.name" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">{{ 'auth.register.email' | translate }}</label>
+                    <input type="email" name="email"
+                           [placeholder]="'auth.register.placeholderEmail' | translate"
+                           [(ngModel)]="user.email" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">{{ 'auth.register.password' | translate }}</label>
+                    <input type="password" name="password"
+                           [placeholder]="'auth.register.placeholderPassword' | translate"
+                           [(ngModel)]="user.password" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirm">{{ 'auth.register.confirm' | translate }}</label>
+                    <input type="password" name="confirmPassword"
+                           [placeholder]="'auth.register.placeholderPassword' | translate"
+                           [(ngModel)]="confirmPassword" required>
+                </div>
+
+                <p class="link">
+                    {{ 'auth.register.haveAccount' | translate }}
+                    <a (click)="goToLogin()">{{ 'auth.register.goLogin' | translate }}</a>
+                </p>
+
+                <button type="submit" class="btn-register">{{ 'auth.register.cta' | translate }}</button>
+            </form>
+        </div>
+    </div>
+</div>

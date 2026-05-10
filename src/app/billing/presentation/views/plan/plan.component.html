@@ -1,0 +1,32 @@
+<div class="plan-container">
+    <div class="banner-section">
+        <img src="/banneralimentos.jpg" alt="{{ 'plans.bannerAlt' | translate }}" />
+    </div>
+
+    <div class="plans-section">
+        <h2>{{ 'plans.title' | translate }}</h2>
+
+        <div class="plans-grid">
+            <div class="plan-card">
+                <h3>{{ 'plans.basic.title' | translate }}</h3>
+                <p>{{ 'plans.basic.desc' | translate }}</p>
+                <h4>{{ 'plans.basic.price' | translate }}</h4>
+                <button (click)="selectPlan('basic')">{{ 'plans.select' | translate }}</button>
+            </div>
+
+            <div class="plan-card featured">
+                <h3>{{ 'plans.premium.title' | translate }}</h3>
+                <p>{{ 'plans.premium.desc' | translate }}</p>
+                <h4>{{ 'plans.premium.price' | translate }}</h4>
+                <button (click)="selectPlan('premium')">{{ 'plans.select' | translate }}</button>
+            </div>
+
+            <div class="plan-card">
+                <h3>{{ 'plans.family.title' | translate }}</h3>
+                <p>{{ 'plans.family.desc' | translate }}</p>
+                <h4>{{ 'plans.family.price' | translate }}</h4>
+                <button (click)="selectPlan('family')">{{ 'plans.select' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,318 @@
+{
+  "home": {
+    "heroTitle": "Hola {{name}}, ¡bienvenido/a a FreshSense! 👋",
+    "freshness": "Nivel general de frescura",
+    "foodAlt": "Comida",
+    "weeklyStats": "Estadísticas semanales",
+    "stock": "STOCK",
+    "level": "NIVEL",
+    "gain": "GANANCIA",
+    "loss": "PÉRDIDA",
+    "challengesTitle": "Acepta estos desafíos",
+    "tags": {
+      "salad": "Ensalada",
+      "bowl": "Bowl",
+      "yogurt": "Yogur"
+    }
+  },
+  "app": {
+    "brand": "FreshSense",
+    "login": "Ingresar",
+    "logout": "Salir",
+    "language": "Idioma",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventario",
+    "monitoring": "Monitoreo",
+    "alerts": "Alertas",
+    "recipes": "Recetas",
+    "reports": "Reportes",
+    "achievements": "Logros",
+    "settings": "Configuración"
+  },
+  "auth": {
+    "brandAlt": "Logo de FreshSense",
+    "login": {
+      "title": "Inicia sesión",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "placeholderEmail": "tucorreo@ejemplo.com",
+      "placeholderPassword": "**********",
+      "cta": "Iniciar sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "goRegister": "Regístrate"
+    },
+    "register": {
+      "title": "Crea una cuenta",
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirm": "Confirmar contraseña",
+      "placeholderName": "Nombre",
+      "placeholderEmail": "tucorreo@ejemplo.com",
+      "placeholderPassword": "**********",
+      "cta": "Registrarse",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "goLogin": "Inicia sesión"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "unsaved": "Cambios sin guardar",
+    "saveAll": "Guardar todo",
+    "tabs": {
+      "profile": "Perfil",
+      "preferences": "Preferencias",
+      "theme": "Tema",
+      "notifications": "Notificaciones",
+      "security": "Seguridad",
+      "integrations": "Integraciones"
+    },
+    "profile": {
+      "title": "Perfil",
+      "uploadAvatar": "Subir avatar",
+      "name": "Nombre",
+      "email": "Correo",
+      "phone": "Teléfono",
+      "organization": "Organización",
+      "save": "Guardar perfil"
+    },
+    "preferences": {
+      "title": "Preferencias",
+      "language": "Idioma",
+      "timezone": "Zona horaria",
+      "units": "Unidades",
+      "unitsMetric": "Métrico (°C, kg)",
+      "unitsImperial": "Imperial (°F, lb)",
+      "dateFormat": "Formato de fecha",
+      "weekStartsOn": "La semana empieza en",
+      "monday": "Lunes",
+      "sunday": "Domingo",
+      "save": "Guardar preferencias"
+    },
+    "theme": {
+      "title": "Tema",
+      "modeLight": "Claro",
+      "modeDark": "Oscuro",
+      "primaryColor": "Color principal",
+      "rounded": "Esquinas redondeadas",
+      "density": "Densidad",
+      "densityComfortable": "Cómodo",
+      "densityCompact": "Compacto",
+      "apply": "Aplicar tema"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "email": "Correo",
+      "push": "Push",
+      "weeklyReport": "Reporte semanal",
+      "criticalOnly": "Solo críticas",
+      "ethyleneThreshold": "Umbral de etileno (ppm)",
+      "temperatureThreshold": "Umbral de temperatura (°C)",
+      "reset": "Reiniciar",
+      "save": "Guardar notificaciones"
+    },
+    "security": {
+      "title": "Seguridad",
+      "password": "Contraseña",
+      "passwordHint": "Usa una contraseña fuerte y única.",
+      "changePassword": "Cambiar contraseña",
+      "twoFactor": "Autenticación de dos factores",
+      "enable2fa": "Activar 2FA",
+      "twoFactorHint": "Agrega una capa extra de seguridad.",
+      "activeSessions": "Sesiones activas",
+      "revoke": "Revocar",
+      "current": "Actual"
+    },
+    "integrations": {
+      "title": "Integraciones",
+      "connect": "Conectar",
+      "disconnect": "Desconectar",
+      "smartFridges": {
+        "title": "Integraciones: Refrigeradores inteligentes",
+        "desc": "Conecta tu refrigerador para importar productos y vencimientos.",
+        "sync": "Sincronizar ahora",
+        "lastSync": "Última sincronización",
+        "items": "ítems"
+      }
+    },
+    "notify": {
+      "title": "Notificaciones personalizadas",
+      "desc": "Elige qué alertas recibir y por qué canal.",
+      "test": "Probar notificación",
+      "keys": {
+        "inventory.low": "Inventario bajo",
+        "inventory.expiring": "Productos por vencer",
+        "recipes.new": "Nuevas recetas",
+        "achievements.unlocked": "Logros desbloqueados"
+      }
+    }
+  },
+  "achievements": {
+    "title": "Logros",
+    "congratsTitle": "¡Felicidades! ¡Nuevo logro!",
+    "completed": "Completado",
+    "locked": "Bloqueado"
+  },
+  "alerts": {
+    "title": "Alertas",
+    "searchPlaceholder": "Buscar alertas…",
+    "filters": {
+      "severityAll": "Todas las severidades",
+      "severityCritical": "Críticas",
+      "severityWarning": "Advertencias",
+      "severityInfo": "Informativas"
+    },
+    "columns": {
+      "source": "Fuente",
+      "severity": "Severidad",
+      "status": "Estado",
+      "createdAt": "Última vez"
+    },
+    "actions": {
+      "mute": "Silenciar",
+      "resolve": "Resolver",
+      "details": "Detalles",
+      "markResolved": "Marcar como resuelta"
+    },
+    "empty": {
+      "title": "No se encontraron alertas",
+      "hint": "Prueba cambiando la pestaña, el filtro de severidad o tu búsqueda."
+    }
+  },
+  "billing": {
+    "payment": {
+      "bannerAlt": "Banner de pago",
+      "title": "Método de Pago",
+      "cardName": "Nombre en la tarjeta",
+      "cardNumber": "Número de tarjeta",
+      "expiry": "Expira",
+      "cvv": "CVV",
+      "pay": "Pagar"
+    }
+  },
+  "plans": {
+    "bannerAlt": "Banner de planes",
+    "title": "Elige tu Plan",
+    "select": "Seleccionar",
+    "basic": {
+      "title": "Plan Básico",
+      "desc": "Ideal para usuarios individuales que desean reducir desperdicios en casa.",
+      "price": "S/ 19.90 / mes"
+    },
+    "premium": {
+      "title": "Plan Premium",
+      "desc": "Incluye herramientas avanzadas de análisis y recetas inteligentes.",
+      "price": "S/ 39.90 / mes"
+    },
+    "family": {
+      "title": "Plan Familiar",
+      "desc": "Comparte tu cuenta con hasta 4 miembros de tu hogar.",
+      "price": "S/ 59.90 / mes"
+    }
+  },
+  "inventory": {
+    "title": "Inventario de Alimentos",
+    "add": {
+      "title": "Agregar nuevo producto",
+      "name": "Nombre del producto *",
+      "description": "Descripción",
+      "category": "Categoría *",
+      "selectCategory": "Selecciona categoría",
+      "quantity": "Cantidad",
+      "image": "URL de imagen",
+      "cta": "Agregar producto"
+    },
+    "state": "Estado",
+    "category": "Categoría",
+    "uncategorized": "Sin categoría",
+    "openDetailsAria": "Abrir detalles del producto",
+    "details": {
+      "description": "Descripción",
+      "noDescription": "Sin descripción.",
+      "state": "Condición",
+      "notSpecified": "No especificado",
+      "quantity": "Cantidad"
+    },
+    "searchAria": "Buscar productos"
+  },
+  "reports": {
+    "title": "Reports",
+    "from": "From",
+    "to": "To",
+    "apply": "Apply",
+    "weeklyWaste": "Weekly Food Waste",
+    "trends": "Trends",
+    "vsLastWeek": "vs last week",
+    "mtd": "month to date",
+    "kpi": {
+      "gain": "Gain",
+      "loss": "Loss",
+      "improvement": "Percentage Improvement"
+    },
+    "history": {
+      "title": "Consumption History",
+      "date": "Date",
+      "action": "Action",
+      "product": "Product",
+      "category": "Category",
+      "qty": "Quantity",
+      "empty": "No records available.",
+      "consume": "Consume",
+      "discard": "Discard",
+      "add": "Added",
+      "exportCsv": "Export CSV"
+    }
+  },
+  "recipes": {
+    "title": "Recetas",
+    "searchPlaceholder": "Buscar receta...",
+    "level": "Nivel",
+    "type": "Tipo de comida",
+    "foodType": "Tipo de comida",
+    "seeRecipe": "Ver receta",
+    "imageAlt": "Imagen de la receta",
+    "ingredients": "Ingredientes",
+    "steps": "Pasos",
+    "empty": "No se encontraron recetas. Prueba cambiando los filtros o la búsqueda.",
+    "filters": {
+      "allLevels": "Todos los niveles",
+      "easy": "Fácil",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado",
+      "allTypes": "Todos los tipos",
+      "breakfast": "Desayuno",
+      "meals": "Comidas",
+      "snacks": "Snacks"
+    }
+  },
+  "monitoring": {
+    "temperature": "Temperatura",
+    "humidity": "Humedad",
+    "title": "Monitoreo de Alimentos",
+    "status": { "healthy": "Estado de sensores: Saludables" },
+    "lastSync": "Última sincronización hace {{minutes}} min",
+    "category": "Categoría",
+    "kpi": {
+      "openIssues": "Incidencias abiertas",
+      "avgHumidity": "Humedad prom.",
+      "avgTemp": "Temp. prom."
+    },
+    "history": {
+      "title": "Historial",
+      "last": "Último monitoreo {{date}}"
+    },
+    "exportCsv": "Exportar CSV",
+    "viewLast": "Ver último monitoreo"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "all": "Todo"
+  }
+}

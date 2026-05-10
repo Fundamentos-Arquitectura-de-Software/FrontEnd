@@ -1,0 +1,777 @@
+{
+  "users": [
+    {
+      "id": "09f3",
+      "name": "",
+      "email": "",
+      "password": ""
+    },
+    {
+      "id": "d47e",
+      "name": "Jorge",
+      "email": "jorge@gmail.com",
+      "password": "1234"
+    },
+    {
+      "id": "61d4",
+      "name": "luis",
+      "email": "luis@gmail.com",
+      "password": "1234",
+      "paid": false
+    },
+    {
+      "id": "5153",
+      "name": "joeel",
+      "email": "joeel@gmail.com",
+      "password": "1234",
+      "paid": true
+    },
+    {
+      "id": "2da5",
+      "name": "Maria",
+      "email": "maria@gmail.com",
+      "password": "1234",
+      "paid": true
+    }
+  ],
+  "recipes": [
+    {
+      "id": "1",
+      "title": "Waffles",
+      "rating": 5,
+      "level": "Easy",
+      "type": "Breakfast",
+      "time": "20 min",
+      "description": "Crispy golden waffles topped with berries and syrup.",
+      "ingredients": [
+        "Flour",
+        "Eggs",
+        "Milk",
+        "Butter",
+        "Maple Syrup"
+      ],
+      "steps": [
+        "Mix batter",
+        "Cook in waffle maker",
+        "Serve with berries and syrup"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Fruit Salad",
+      "rating": 5,
+      "level": "Easy",
+      "type": "Desserts",
+      "time": "10 min",
+      "description": "Refreshing mix of seasonal fruits with honey-lemon dressing.",
+      "ingredients": [
+        "Apple",
+        "Banana",
+        "Grapes",
+        "Berries",
+        "Honey",
+        "Lemon"
+      ],
+      "steps": [
+        "Dice fruits",
+        "Mix in bowl",
+        "Dress with honey and lemon"
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Chicken Salad",
+      "rating": 4,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "25 min",
+      "description": "Healthy chicken salad with avocado and light dressing.",
+      "ingredients": [
+        "Chicken Breast",
+        "Lettuce",
+        "Avocado",
+        "Olive Oil",
+        "Lemon"
+      ],
+      "steps": [
+        "Grill chicken",
+        "Slice and mix with greens",
+        "Dress and serve"
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Avocado Toast",
+      "rating": 5,
+      "level": "Easy",
+      "type": "Breakfast",
+      "time": "8 min",
+      "description": "Toasted bread with creamy avocado and seeds.",
+      "ingredients": [
+        "Bread",
+        "Avocado",
+        "Lime",
+        "Salt",
+        "Pepper",
+        "Seeds"
+      ],
+      "steps": [
+        "Toast bread",
+        "Mash avocado with lime",
+        "Spread and top with seeds"
+      ]
+    },
+    {
+      "id": "5",
+      "title": "Pancake Stack",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Breakfast",
+      "time": "18 min",
+      "description": "Fluffy pancakes with butter and maple syrup.",
+      "ingredients": [
+        "Flour",
+        "Eggs",
+        "Milk",
+        "Baking Powder",
+        "Sugar",
+        "Butter"
+      ],
+      "steps": [
+        "Prepare batter",
+        "Cook on skillet",
+        "Serve with syrup"
+      ]
+    },
+    {
+      "id": "6",
+      "title": "Smoothie Bowl",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Breakfast",
+      "time": "7 min",
+      "description": "Thick berry smoothie topped with granola and fruit.",
+      "ingredients": [
+        "Frozen Berries",
+        "Banana",
+        "Yogurt",
+        "Granola"
+      ],
+      "steps": [
+        "Blend fruits and yogurt",
+        "Pour into bowl",
+        "Top with granola"
+      ]
+    },
+    {
+      "id": "7",
+      "title": "Omelette",
+      "rating": 5,
+      "level": "Easy",
+      "type": "Breakfast",
+      "time": "10 min",
+      "description": "Classic omelette with cheese and herbs.",
+      "ingredients": [
+        "Eggs",
+        "Cheese",
+        "Milk",
+        "Salt",
+        "Pepper",
+        "Chives"
+      ],
+      "steps": [
+        "Whisk eggs",
+        "Cook and add cheese",
+        "Fold and serve"
+      ]
+    },
+    {
+      "id": "8",
+      "title": "Yogurt Parfait",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Breakfast",
+      "time": "6 min",
+      "description": "Layers of yogurt, fruit, and crunchy granola.",
+      "ingredients": [
+        "Yogurt",
+        "Granola",
+        "Berries",
+        "Honey"
+      ],
+      "steps": [
+        "Layer yogurt and fruits",
+        "Top with granola and honey"
+      ]
+    },
+    {
+      "id": "9",
+      "title": "Quinoa Bowl",
+      "rating": 4,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "30 min",
+      "description": "High-protein quinoa with veggies and lemon dressing.",
+      "ingredients": [
+        "Quinoa",
+        "Cucumber",
+        "Tomato",
+        "Chickpeas",
+        "Lemon",
+        "Olive Oil"
+      ],
+      "steps": [
+        "Cook quinoa",
+        "Chop veggies",
+        "Mix and dress"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Pasta Primavera",
+      "rating": 5,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "28 min",
+      "description": "Pasta with seasonal vegetables and light sauce.",
+      "ingredients": [
+        "Pasta",
+        "Zucchini",
+        "Bell Pepper",
+        "Tomato",
+        "Garlic",
+        "Parmesan"
+      ],
+      "steps": [
+        "Boil pasta",
+        "Sauté veggies",
+        "Combine and serve with cheese"
+      ]
+    },
+    {
+      "id": "11",
+      "title": "Grilled Salmon",
+      "rating": 5,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "20 min",
+      "description": "Juicy salmon fillet with herbs and lemon.",
+      "ingredients": [
+        "Salmon",
+        "Olive Oil",
+        "Garlic",
+        "Lemon",
+        "Parsley"
+      ],
+      "steps": [
+        "Season salmon",
+        "Grill until flaky",
+        "Finish with lemon"
+      ]
+    },
+    {
+      "id": "12",
+      "title": "Veggie Wrap",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Meals",
+      "time": "12 min",
+      "description": "Tortilla wrap with hummus and crunchy vegetables.",
+      "ingredients": [
+        "Tortilla",
+        "Hummus",
+        "Lettuce",
+        "Carrot",
+        "Cucumber"
+      ],
+      "steps": [
+        "Spread hummus",
+        "Add veggies",
+        "Roll and slice"
+      ]
+    },
+    {
+      "id": "13",
+      "title": "Turkey Burger",
+      "rating": 4,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "25 min",
+      "description": "Lean turkey patty with avocado and lettuce.",
+      "ingredients": [
+        "Turkey",
+        "Buns",
+        "Avocado",
+        "Lettuce",
+        "Tomato"
+      ],
+      "steps": [
+        "Form patties",
+        "Grill",
+        "Assemble burger"
+      ]
+    },
+    {
+      "id": "14",
+      "title": "Chicken Stir-fry",
+      "rating": 4,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "22 min",
+      "description": "Colorful stir-fried chicken with veggies.",
+      "ingredients": [
+        "Chicken",
+        "Bell Pepper",
+        "Broccoli",
+        "Soy Sauce",
+        "Garlic"
+      ],
+      "steps": [
+        "Stir-fry chicken",
+        "Add veggies and sauce",
+        "Serve with rice"
+      ]
+    },
+    {
+      "id": "15",
+      "title": "Beef Tacos",
+      "rating": 5,
+      "level": "Easy",
+      "type": "Meals",
+      "time": "20 min",
+      "description": "Soft tortillas with seasoned beef and toppings.",
+      "ingredients": [
+        "Tortillas",
+        "Beef",
+        "Onion",
+        "Tomato",
+        "Lettuce",
+        "Cheese"
+      ],
+      "steps": [
+        "Cook beef with spices",
+        "Warm tortillas",
+        "Assemble tacos"
+      ]
+    },
+    {
+      "id": "16",
+      "title": "Veggie Tacos",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Meals",
+      "time": "18 min",
+      "description": "Tacos filled with roasted vegetables and salsa.",
+      "ingredients": [
+        "Tortillas",
+        "Zucchini",
+        "Corn",
+        "Pepper",
+        "Salsa"
+      ],
+      "steps": [
+        "Roast veggies",
+        "Warm tortillas",
+        "Assemble with salsa"
+      ]
+    },
+    {
+      "id": "17",
+      "title": "Chickpea Curry",
+      "rating": 5,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "30 min",
+      "description": "Creamy coconut curry with chickpeas.",
+      "ingredients": [
+        "Chickpeas",
+        "Coconut Milk",
+        "Curry Paste",
+        "Onion",
+        "Garlic"
+      ],
+      "steps": [
+        "Sauté aromatics",
+        "Add chickpeas and coconut milk",
+        "Simmer"
+      ]
+    },
+    {
+      "id": "18",
+      "title": "Lentil Soup",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Meals",
+      "time": "28 min",
+      "description": "Comforting red lentil soup with spices.",
+      "ingredients": [
+        "Lentils",
+        "Carrot",
+        "Onion",
+        "Tomato",
+        "Cumin"
+      ],
+      "steps": [
+        "Sauté veggies",
+        "Add lentils and water",
+        "Simmer until tender"
+      ]
+    },
+    {
+      "id": "19",
+      "title": "Ramen Bowl",
+      "rating": 5,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "35 min",
+      "description": "Savory ramen with egg and vegetables.",
+      "ingredients": [
+        "Ramen Noodles",
+        "Broth",
+        "Soy Sauce",
+        "Mushrooms",
+        "Egg"
+      ],
+      "steps": [
+        "Prepare broth",
+        "Cook noodles",
+        "Assemble bowl"
+      ]
+    },
+    {
+      "id": "20",
+      "title": "Poke Bowl",
+      "rating": 5,
+      "level": "Intermediate",
+      "type": "Meals",
+      "time": "25 min",
+      "description": "Fresh marinated fish with rice and toppings.",
+      "ingredients": [
+        "Rice",
+        "Tuna/Salmon",
+        "Soy Sauce",
+        "Sesame",
+        "Avocado"
+      ],
+      "steps": [
+        "Cook rice",
+        "Marinate fish",
+        "Assemble with toppings"
+      ]
+    },
+    {
+      "id": "21",
+      "title": "Mushroom Risotto",
+      "rating": 5,
+      "level": "Advanced",
+      "type": "Meals",
+      "time": "40 min",
+      "description": "Creamy risotto with sautéed mushrooms.",
+      "ingredients": [
+        "Arborio Rice",
+        "Mushrooms",
+        "Onion",
+        "Stock",
+        "Parmesan"
+      ],
+      "steps": [
+        "Toast rice",
+        "Add stock gradually",
+        "Stir with mushrooms and cheese"
+      ]
+    },
+    {
+      "id": "22",
+      "title": "Banana Bread",
+      "rating": 5,
+      "level": "Intermediate",
+      "type": "Desserts",
+      "time": "55 min",
+      "description": "Moist banana bread with a hint of cinnamon.",
+      "ingredients": [
+        "Bananas",
+        "Flour",
+        "Eggs",
+        "Sugar",
+        "Butter",
+        "Cinnamon"
+      ],
+      "steps": [
+        "Make batter",
+        "Bake until golden",
+        "Cool and slice"
+      ]
+    },
+    {
+      "id": "23",
+      "title": "Chocolate Mousse",
+      "rating": 5,
+      "level": "Advanced",
+      "type": "Desserts",
+      "time": "40 min",
+      "description": "Airy chocolate mousse with whipped cream.",
+      "ingredients": [
+        "Chocolate",
+        "Cream",
+        "Eggs",
+        "Sugar",
+        "Vanilla"
+      ],
+      "steps": [
+        "Melt chocolate",
+        "Fold with whipped cream",
+        "Chill"
+      ]
+    },
+    {
+      "id": "24",
+      "title": "Tiramisu",
+      "rating": 5,
+      "level": "Advanced",
+      "type": "Desserts",
+      "time": "50 min",
+      "description": "Classic Italian dessert with mascarpone and coffee.",
+      "ingredients": [
+        "Ladyfingers",
+        "Coffee",
+        "Mascarpone",
+        "Eggs",
+        "Cocoa"
+      ],
+      "steps": [
+        "Dip ladyfingers",
+        "Layer with mascarpone",
+        "Chill and dust cocoa"
+      ]
+    },
+    {
+      "id": "25",
+      "title": "Caesar Salad",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Salads",
+      "time": "15 min",
+      "description": "Romaine lettuce, croutons, and creamy dressing.",
+      "ingredients": [
+        "Romaine",
+        "Croutons",
+        "Parmesan",
+        "Caesar Dressing"
+      ],
+      "steps": [
+        "Chop lettuce",
+        "Toss with dressing",
+        "Top with croutons and cheese"
+      ]
+    },
+    {
+      "id": "26",
+      "title": "Greek Salad",
+      "rating": 5,
+      "level": "Easy",
+      "type": "Salads",
+      "time": "12 min",
+      "description": "Tomato, cucumber, olives, and feta with oregano.",
+      "ingredients": [
+        "Tomato",
+        "Cucumber",
+        "Olives",
+        "Feta",
+        "Oregano",
+        "Olive Oil"
+      ],
+      "steps": [
+        "Chop ingredients",
+        "Dress with oil and oregano",
+        "Serve fresh"
+      ]
+    },
+    {
+      "id": "27",
+      "title": "Caprese Salad",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Salads",
+      "time": "8 min",
+      "description": "Tomato, mozzarella, and basil with balsamic.",
+      "ingredients": [
+        "Tomato",
+        "Mozzarella",
+        "Basil",
+        "Olive Oil",
+        "Balsamic"
+      ],
+      "steps": [
+        "Slice and layer",
+        "Drizzle with oil and balsamic"
+      ]
+    },
+    {
+      "id": "28",
+      "title": "Tuna Salad",
+      "rating": 4,
+      "level": "Easy",
+      "type": "Salads",
+      "time": "10 min",
+      "description": "Protein-packed tuna salad with crunchy veggies.",
+      "ingredients": [
+        "Tuna",
+        "Celery",
+        "Onion",
+        "Mayo",
+        "Lemon"
+      ],
+      "steps": [
+        "Mix tuna and veggies",
+        "Add mayo and lemon",
+        "Serve"
+      ]
+    },
+    {
+      "id": "29",
+      "title": "Garden Salad",
+      "rating": 3,
+      "level": "Easy",
+      "type": "Salads",
+      "time": "10 min",
+      "description": "Mixed greens with seasonal vegetables.",
+      "ingredients": [
+        "Mixed Greens",
+        "Tomato",
+        "Cucumber",
+        "Carrot",
+        "Vinaigrette"
+      ],
+      "steps": [
+        "Chop vegetables",
+        "Toss with greens and dressing"
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Banana",
+      "description": "Fresh ripe bananas",
+      "category": "Fruit",
+      "quantity": 24,
+      "image": "https://example.com/banana.jpg"
+    },
+    {
+      "id": "c098",
+      "name": "orange",
+      "description": "es una naranja",
+      "category": "Fruit",
+      "quantity": 10,
+      "image": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Ffotos%2Fnaranja&psig=AOvVaw3xpTNVyl9BzL6vqnbAXp-1&ust=1760157672602000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLicirnomJADFQAAAAAdAAAAABAE"
+    },
+    {
+      "name": "Manzana",
+      "description": "oña",
+      "category": "Fruit",
+      "quantity": 3,
+      "image": "",
+      "id": "7Osk_Dg"
+    }
+  ],
+  "history": [
+    {
+      "id": "1",
+      "productId": 101,
+      "productName": "Banana",
+      "category": "Fruit",
+      "action": "consume",
+      "quantity": 1,
+      "date": "2025-11-08T10:15:00Z"
+    },
+    {
+      "id": "a99d",
+      "productId": "1",
+      "productName": "Banana",
+      "category": "Fruit",
+      "action": "consume",
+      "quantity": 1,
+      "date": "2025-11-09T00:30:29.757Z"
+    }
+  ],
+  "challenges": [
+    {
+      "id": "c1",
+      "title": "Semana Cero Desperdicio",
+      "desc": "Reduce tu desperdicio por debajo del 5% durante 7 días.",
+      "rewardPts": 200,
+      "startAt": "2025-11-01T00:00:00Z",
+      "endAt": "2025-11-30T23:59:59Z",
+      "goalType": "percent",
+      "goalTarget": 5,
+      "status": "active",
+      "banner": "/banneralimentos.jpg"
+    },
+    {
+      "id": "c2",
+      "title": "Héroe del Refrigerador",
+      "desc": "Mantén temperatura promedio < 5°C por 10 días seguidos.",
+      "rewardPts": 180,
+      "startAt": "2025-11-01T00:00:00Z",
+      "endAt": "2025-12-10T23:59:59Z",
+      "goalType": "streak",
+      "goalTarget": 10,
+      "status": "active"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "e1",
+      "challengeId": "c1",
+      "userId": "u-001",
+      "progress": 34,
+      "status": "enrolled",
+      "joinedAt": "2025-11-05T12:00:00Z"
+    }
+  ],
+  "leaderboards": [
+    {
+      "challengeId": "c1",
+      "userId": "u-002",
+      "displayName": "María G.",
+      "points": 320,
+      "rank": 1
+    },
+    {
+      "challengeId": "c1",
+      "userId": "u-001",
+      "displayName": "Tú",
+      "points": 280,
+      "rank": 2
+    },
+    {
+      "challengeId": "c1",
+      "userId": "u-003",
+      "displayName": "Luis P.",
+      "points": 210,
+      "rank": 3
+    },
+    {
+      "challengeId": "c2",
+      "userId": "u-004",
+      "displayName": "Ana M.",
+      "points": 150,
+      "rank": 1
+    },
+    {
+      "challengeId": "c2",
+      "userId": "u-001",
+      "displayName": "Tú",
+      "points": 120,
+      "rank": 2
+    }
+  ],
+  "integrations": [
+    { "id": 1, "provider": "Samsung SmartThings", "status": "disconnected" },
+    { "id": 2, "provider": "LG ThinQ", "status": "disconnected" }
+  ],
+  "fridgeSamples": [
+    { "id": "f1", "name": "Leche", "qty": 1, "unit": "lt", "expiresAt": "2025-11-15" },
+    { "id": "f2", "name": "Huevos", "qty": 12, "unit": "un", "expiresAt": "2025-11-20" }
+  ]
+}

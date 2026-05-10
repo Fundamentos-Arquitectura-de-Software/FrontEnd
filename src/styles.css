@@ -1,0 +1,19 @@
+:root {
+    --fs-bg:#f6faf8; --fs-text:#1d2b2a; --fs-muted:#6b7f7b;
+    --fs-primary:#1f9c59; --fs-primary-weak:#e5f5ed; --fs-card:#fff; --fs-border:#e6ece8;
+    --border: #dcdcdc;
+}
+*{ box-sizing: border-box; }
+html,body{ margin:0; height:100%; background:var(--fs-bg); color:var(--fs-text);
+    font: 14px/1.45 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+a{ color:inherit; text-decoration:none; }
+
+.container{ max-width: 1280px; margin-inline:auto; width:100%; }
+.h1,h1{ font-size: clamp(18px, 2vw, 22px); margin:0 0 8px; }
+.h2,h2{ font-size: clamp(16px, 1.6vw, 18px); margin:0 0 6px; }
+.muted{ color: var(--fs-muted); }
+.card{
+    background:var(--fs-card); border:1px solid var(--fs-border);
+    border-radius:16px; padding:16px;
+}
