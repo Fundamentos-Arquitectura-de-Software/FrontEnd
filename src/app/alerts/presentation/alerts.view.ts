@@ -1,7 +1,8 @@
-import { Component, computed, signal, inject, OnInit } from '@angular/core';
+import { Component, computed, signal, inject, OnInit, DestroyRef } from '@angular/core';
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AlertsApi, AlertDto } from '../infrastructure/alerts-api';
 
@@ -28,6 +29,7 @@ interface AlertCard {
 export class AlertsView implements OnInit {
 
     private api = inject(AlertsApi);
+    private destroyRef = inject(DestroyRef);
 
     // Todas las alertas (mock + api)
     private _all = signal<AlertCard[]>([]);
@@ -69,7 +71,7 @@ export class AlertsView implements OnInit {
      * LOAD API ALERTS
      */
     private loadApiAlerts() {
-        this.api.getAll().subscribe((data: AlertDto[]) => {
+        this.api.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data: AlertDto[]) => {
             const converted = data.map(this.fromDto);
             this._all.set([...this._all(), ...converted]); // merge mock + API
         });

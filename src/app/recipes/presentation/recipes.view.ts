@@ -1,8 +1,9 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, DestroyRef, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
 
 type Recipe = {
@@ -25,21 +26,19 @@ type Recipe = {
     styleUrl: './recipes.view.css',
     imports: [NgFor, NgIf, FormsModule, TranslateModule],
 })
-
 export class RecipesView implements OnInit {
     recipes: Recipe[] = [];
     filteredRecipes: Recipe[] = [];
 
-    /** Filtros y búsqueda */
     searchTerm = '';
     selectedLevel = 'All';
     selectedType = 'All';
 
-    /** Modal de detalle */
     modalOpen = false;
     active: Recipe | null = null;
 
     private readonly apiUrl = `${environment.apiBaseUrl}/recipes`;
+    private destroyRef = inject(DestroyRef);
 
     constructor(private http: HttpClient) {}
 
@@ -48,7 +47,7 @@ export class RecipesView implements OnInit {
     }
 
     private loadRecipes(): void {
-        this.http.get<Recipe[]>(this.apiUrl).subscribe({
+        this.http.get<Recipe[]>(this.apiUrl).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (data) => {
                 this.recipes = data ?? [];
                 this.filteredRecipes = [...this.recipes];
@@ -61,9 +60,6 @@ export class RecipesView implements OnInit {
         });
     }
 
-    // ==========================
-    //   FILTROS Y BÚSQUEDA
-    // ==========================
     filterRecipes(): void {
         const term = this.searchTerm.trim().toLowerCase();
 
@@ -95,9 +91,6 @@ export class RecipesView implements OnInit {
         this.filterRecipes();
     }
 
-    // ==========================
-    //   IMÁGENES Y RATING
-    // ==========================
     imageFor(recipe: Recipe | null | undefined): string {
         if (!recipe) return this.defaultFoodImage();
         if (recipe.image && recipe.image.trim().length > 0) return recipe.image;
@@ -120,9 +113,6 @@ export class RecipesView implements OnInit {
         return 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=960&h=720&dpr=1';
     }
 
-    // ==========================
-    //   MODAL
-    // ==========================
     openModal(recipe: Recipe): void {
         this.active = recipe;
         this.modalOpen = true;

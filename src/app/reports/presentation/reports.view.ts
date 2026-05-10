@@ -1,9 +1,10 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, DestroyRef, inject } from '@angular/core';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import {environment} from '../../../environments/environment';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { environment } from '../../../environments/environment';
 
 export interface HistoryEntry {
     id?: number;
@@ -31,6 +32,7 @@ export interface HistoryEntry {
 export class ReportsView {
 
     private readonly historyUrl = `${environment.apiBaseUrl}/history`;
+    private destroyRef = inject(DestroyRef);
 
     constructor(private http: HttpClient) {
         this.loadHistory();
@@ -90,13 +92,14 @@ export class ReportsView {
 
     loadHistory(): void {
         this.http.get<HistoryEntry[]>(this.historyUrl)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (data) => {
                     this.history = data ?? [];
                     this.applyHistoryFilters();
                 },
                 error: () => {
-                    console.warn('No se pudo cargar historial; usando arreglo vacío.');
+                    console.warn('Could not load history; using empty array.');
                     this.history = [];
                     this.filtered = [];
                 }

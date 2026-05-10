@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { NgFor, NgIf, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { InventoryApi } from '../../../infrastructure/inventory-api';
 import { ProductResponse } from '../../../infrastructure/inventory-response';
 
@@ -36,10 +37,12 @@ export class FoodInventoryView implements OnInit {
 
     selectedProduct: Product | null = null;
 
+    private destroyRef = inject(DestroyRef);
+
     constructor(private inventoryApi: InventoryApi, private router: Router) {}
 
     ngOnInit() {
-        this.inventoryApi.getProducts().subscribe({
+        this.inventoryApi.getProducts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (data: ProductResponse[]) => {
                 this.products = (data ?? []).map(p => ({
                     id: p.id,
