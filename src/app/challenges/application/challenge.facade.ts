@@ -1,45 +1,51 @@
-import { Injectable, computed, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, computed, signal, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { Challenge } from '../domain/challenge';
+import { LeaderboardEntry } from '../domain/leaderboard';
+import { ChallengeApi } from '../infrastructure/challenge.api';
+import { AccountStore } from '../../accounts/application/accounts.store';
 
-export type ChallengeStatus = 'upcoming' | 'active' | 'finished';
-export type GoalType = 'count' | 'percent' | 'streak';
+export type { ChallengeStatus, GoalType } from '../domain/challenge';
 
-export interface Challenge { id:string; title:string; desc:string; rewardPts:number; startAt:string; endAt:string; goalType:GoalType; goalTarget:number; status:ChallengeStatus; banner?:string; }
-export type EnrollmentStatus = 'enrolled' | 'left' | 'completed';
-export interface Enrollment { id:string; challengeId:string; userId:string; progress:number; status:EnrollmentStatus; joinedAt:string; leftAt?:string; }
-export interface LeaderboardEntry { challengeId:string; userId:string; displayName:string; points:number; rank:number; }
+export interface Enrollment {
+    id: string;
+    challengeId: string;
+    userId: string;
+    progress: number;
+    status: 'enrolled' | 'left' | 'completed';
+    joinedAt: string;
+    leftAt?: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ChallengeFacade {
-    private readonly userId = 'u-001';
+    private readonly api = inject(ChallengeApi);
+    private readonly accountStore = inject(AccountStore);
+
     private _challenges = signal<Challenge[]>([]);
-    private _enrollments = signal<Enrollment[]>([]);
+    private _enrolledIds = signal<Set<string>>(new Set());
     private _leaderboard = signal<LeaderboardEntry[]>([]);
     readonly loading = signal(false);
     readonly error = signal<string | null>(null);
 
-    constructor(private http: HttpClient) {}
-
     readonly active = computed(() => this._challenges().filter(c => c.status === 'active'));
-    readonly enrolled = computed(() => {
-        const ids = new Set(this._enrollments().filter(e => e.status === 'enrolled').map(e => e.challengeId));
-        return this._challenges().filter(c => ids.has(c.id));
-    });
-    readonly progressFor = (id: string) => computed(() => {
-        const e = this._enrollments().find(x => x.challengeId === id && x.userId === this.userId && x.status === 'enrolled');
-        return e?.progress ?? 0;
-    });
+    readonly enrolled = computed(() =>
+        this._challenges().filter(c => this._enrolledIds().has(String(c.id)))
+    );
+    readonly progressFor = (id: string) => computed(() => 0);
     readonly leaderboard = computed(() => this._leaderboard());
 
     async init() {
         try {
             this.loading.set(true);
             this.error.set(null);
-            const data = await firstValueFrom(this.http.get<any>('/db.json'));
-            this._challenges.set(data.challenges ?? []);
-            const mine = (data.enrollments ?? []).filter((e: Enrollment) => e.userId === this.userId);
-            this._enrollments.set(mine);
+            const challenges = await firstValueFrom(this.api.getAll());
+            this._challenges.set(challenges.map(c => ({
+                ...c,
+                id: String(c.id),
+                desc: (c as any).description ?? '',
+                banner: (c as any).bannerUrl,
+            })));
         } catch {
             this.error.set('Failed to load challenges');
         } finally {
@@ -47,36 +53,48 @@ export class ChallengeFacade {
         }
     }
 
-    setActiveChallenge(id: string) { this.refreshLeaderboard(id); }
-
     async enroll(challengeId: string) {
-        const already = this._enrollments().some(e => e.challengeId === challengeId && e.status === 'enrolled');
-        if (already) return;
-        const created: Enrollment = {
-            id: crypto.randomUUID(), userId: this.userId, challengeId,
-            progress: 0, status: 'enrolled', joinedAt: new Date().toISOString()
-        };
-        this._enrollments.update(list => [created, ...list]);
+        const user = this.accountStore.getCurrentUser();
+        if (!user) return;
+        try {
+            await firstValueFrom(this.api.enroll(challengeId, user.id));
+            this._enrolledIds.update(s => new Set([...s, challengeId]));
+        } catch {
+            this.error.set('No se pudo inscribir en el desafío');
+        }
     }
 
     async leave(challengeId: string) {
-        this._enrollments.update(list =>
-            list.map(e => e.challengeId === challengeId && e.status === 'enrolled'
-                ? { ...e, status: 'left', leftAt: new Date().toISOString() }
-                : e
-            )
-        );
-        this._leaderboard.set([]);
+        const user = this.accountStore.getCurrentUser();
+        if (!user) return;
+        try {
+            await firstValueFrom(this.api.leave(challengeId, user.id));
+            this._enrolledIds.update(s => {
+                const next = new Set(s);
+                next.delete(challengeId);
+                return next;
+            });
+            this._leaderboard.set([]);
+        } catch {
+            this.error.set('No se pudo salir del desafío');
+        }
     }
+
+    setActiveChallenge(id: string) { this.refreshLeaderboard(id); }
 
     async refreshLeaderboard(challengeId: string) {
         this.loading.set(true);
         try {
-            const data = await firstValueFrom(this.http.get<any>('/db.json'));
-            const lb = (data.leaderboards ?? [])
-                .filter((r: LeaderboardEntry) => r.challengeId === challengeId)
-                .sort((a: LeaderboardEntry, b: LeaderboardEntry) => a.rank - b.rank);
-            this._leaderboard.set(lb);
+            const entries = await firstValueFrom(this.api.getLeaderboard(challengeId));
+            this._leaderboard.set(entries.map(e => ({
+                challengeId: String(e.challengeId),
+                userId: String(e.userId),
+                displayName: `User ${e.userId}`,
+                points: e.progress,
+                rank: e.rank,
+            })));
+        } catch {
+            this._leaderboard.set([]);
         } finally {
             this.loading.set(false);
         }
