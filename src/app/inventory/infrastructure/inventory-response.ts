@@ -14,3 +14,7 @@ export interface CreateProductRequest {
     quantity: number;
     imageUrl: string;
 }
+
+export interface UpdateProductRequest {
+    quantity: number;
+}

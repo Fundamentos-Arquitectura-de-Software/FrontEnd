@@ -4,8 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HttpClient } from '@angular/common/http';
 import { InventoryApi } from '../../../infrastructure/inventory-api';
 import { ProductResponse } from '../../../infrastructure/inventory-response';
+import { environment } from '../../../../../environments/environment';
 
 type Product = {
     id: number;
@@ -38,10 +40,19 @@ export class FoodInventoryView implements OnInit {
     selectedProduct: Product | null = null;
 
     private destroyRef = inject(DestroyRef);
+    private readonly historyUrl = `${environment.apiBaseUrl}/history`;
 
-    constructor(private inventoryApi: InventoryApi, private router: Router) {}
+    constructor(
+        private inventoryApi: InventoryApi,
+        private router: Router,
+        private http: HttpClient
+    ) {}
 
     ngOnInit() {
+        this.loadProducts();
+    }
+
+    private loadProducts() {
         this.inventoryApi.getProducts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (data: ProductResponse[]) => {
                 this.products = (data ?? []).map(p => ({
@@ -52,12 +63,10 @@ export class FoodInventoryView implements OnInit {
                     category: p.category,
                     description: p.description,
                     quantity: typeof p.quantity === 'number' ? p.quantity : 0
-                })) as Product[];
-
+                }));
                 this.filteredProducts = [...this.products];
             },
-            error: (err: unknown) => {
-                console.error('Error loading products from backend', err);
+            error: () => {
                 this.products = [];
                 this.filteredProducts = [];
             }
@@ -111,18 +120,40 @@ export class FoodInventoryView implements OnInit {
     }
 
     logAction(p: Product, action: string) {
-        console.log('Action on product', { productId: p.id, action });
+        if (action === 'consume') {
+            const newQty = Math.max((p.quantity ?? 0) - 1, 0);
+            this.inventoryApi.updateProduct(p.id, { quantity: newQty })
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
+                    next: (updated) => {
+                        p.quantity = updated.quantity;
+                        this.postHistory(p, 'consume', 1);
+                        this.filterProducts();
+                    }
+                });
+        }
 
         if (action === 'discard') {
-            p.state = 'Bad condition';
+            this.inventoryApi.deleteProduct(p.id)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
+                    next: () => {
+                        this.postHistory(p, 'discard', p.quantity ?? 0);
+                        this.products = this.products.filter(x => x.id !== p.id);
+                        if (this.selectedProduct?.id === p.id) this.selectedProduct = null;
+                        this.filterProducts();
+                    }
+                });
         }
-        if (action === 'consume') {
-            const currentQty = p.quantity ?? 0;
-            p.quantity = Math.max(currentQty - 1, 0);
-            if (p.quantity === 0) {
-                p.state = 'Regular condition';
-            }
-        }
-        this.filterProducts();
+    }
+
+    private postHistory(p: Product, action: string, quantity: number) {
+        this.http.post(this.historyUrl, {
+            productId: p.id,
+            productName: p.name,
+            category: p.category ?? '',
+            action,
+            quantity
+        }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 }
