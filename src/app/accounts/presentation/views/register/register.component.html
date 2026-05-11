@@ -1,41 +1,55 @@
 <div class="register-container">
     <div class="banner-section">
         <img src="/banneralimentos.jpg" alt="{{ 'auth.brandAlt' | translate }}" />
+        <div class="banner-overlay">
+            <p class="banner-tagline">Join FreshSense.<br/>Start saving today.</p>
+            <p class="banner-sub">Track freshness, reduce waste, eat better.</p>
+        </div>
     </div>
 
     <div class="form-section">
         <div class="form-box">
             <div class="logo">
-                <img src="/favicon.ico" alt="{{ 'auth.brandAlt' | translate }}" />
-                <h1>{{ 'app.brand' | translate }}</h1>
-                <h3>{{ 'auth.register.title' | translate }}</h3>
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2C8 2 4 6 4 10c0 5 8 12 8 12s8-7 8-12c0-4-4-8-8-8z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>{{ 'app.brand' | translate }}</h2>
+                    <p>{{ 'auth.register.title' | translate }}</p>
+                </div>
             </div>
+
+            <h1 class="form-heading">{{ 'auth.register.title' | translate }}</h1>
+            <p class="form-sub">{{ 'auth.register.subtitle' | translate }}</p>
 
             <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
                 <div class="input-group">
                     <label for="name">{{ 'auth.register.name' | translate }}</label>
-                    <input type="text" name="name"
+                    <input type="text" id="name" name="name"
                            [placeholder]="'auth.register.placeholderName' | translate"
                            [(ngModel)]="user.name" required>
                 </div>
 
                 <div class="input-group">
                     <label for="email">{{ 'auth.register.email' | translate }}</label>
-                    <input type="email" name="email"
+                    <input type="email" id="email" name="email"
                            [placeholder]="'auth.register.placeholderEmail' | translate"
                            [(ngModel)]="user.email" required>
                 </div>
 
                 <div class="input-group">
                     <label for="password">{{ 'auth.register.password' | translate }}</label>
-                    <input type="password" name="password"
+                    <input type="password" id="password" name="password"
                            [placeholder]="'auth.register.placeholderPassword' | translate"
                            [(ngModel)]="user.password" required>
                 </div>
 
                 <div class="input-group">
                     <label for="confirm">{{ 'auth.register.confirm' | translate }}</label>
-                    <input type="password" name="confirmPassword"
+                    <input type="password" id="confirm" name="confirmPassword"
                            [placeholder]="'auth.register.placeholderPassword' | translate"
                            [(ngModel)]="confirmPassword" required>
                 </div>
@@ -45,7 +59,10 @@
                     <a (click)="goToLogin()">{{ 'auth.register.goLogin' | translate }}</a>
                 </p>
 
-                <button type="submit" class="btn-register">{{ 'auth.register.cta' | translate }}</button>
+                <button type="submit" class="btn-register"
+                        [disabled]="registerForm.invalid">
+                    {{ 'auth.register.cta' | translate }}
+                </button>
             </form>
         </div>
     </div>

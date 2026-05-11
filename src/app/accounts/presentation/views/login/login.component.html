@@ -1,15 +1,29 @@
 <div class="login-container">
     <div class="banner-section">
         <img src="/banneralimentos.jpg" alt="{{ 'auth.brandAlt' | translate }}" />
+        <div class="banner-overlay">
+            <p class="banner-tagline">Reduce waste.<br/>Eat smarter.</p>
+            <p class="banner-sub">Monitor your food freshness in real time.</p>
+        </div>
     </div>
 
     <div class="form-section">
         <div class="form-box">
             <div class="logo">
-                <img src="/favicon.ico" alt="{{ 'auth.brandAlt' | translate }}" />
-                <h2>{{ 'app.brand' | translate }}</h2>
-                <p class="subtitle">{{ 'auth.login.title' | translate }}</p>
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2C8 2 4 6 4 10c0 5 8 12 8 12s8-7 8-12c0-4-4-8-8-8z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>{{ 'app.brand' | translate }}</h2>
+                    <p>{{ 'auth.login.title' | translate }}</p>
+                </div>
             </div>
+
+            <h1 class="form-heading">{{ 'auth.login.heading' | translate }}</h1>
+            <p class="form-sub">{{ 'auth.login.sub' | translate }}</p>
 
             <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
                 <div class="input-group">
