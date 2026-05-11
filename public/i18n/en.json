@@ -9,6 +9,7 @@
     "gain": "GAIN",
     "loss": "LOSS",
     "challengesTitle": "Meet these challenges",
+    "na": "N/A",
     "tags": {
       "salad": "Salad",
       "bowl": "Bowl",
@@ -38,6 +39,8 @@
     "brandAlt": "FreshSense logo",
     "login": {
       "title": "Sign in",
+      "heading": "Welcome back",
+      "sub": "Sign in to continue to FreshSense",
       "email": "Email",
       "password": "Password",
       "placeholderEmail": "you@example.com",
@@ -47,7 +50,8 @@
       "goRegister": "Sign up"
     },
     "register": {
-      "title": "Create an account",
+      "title": "Create account",
+      "subtitle": "Start tracking your food freshness today",
       "name": "Full name",
       "email": "Email",
       "password": "Password",

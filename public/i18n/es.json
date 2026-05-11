@@ -9,6 +9,7 @@
     "gain": "GANANCIA",
     "loss": "PÉRDIDA",
     "challengesTitle": "Acepta estos desafíos",
+    "na": "N/D",
     "tags": {
       "salad": "Ensalada",
       "bowl": "Bowl",
@@ -37,6 +38,8 @@
     "brandAlt": "Logo de FreshSense",
     "login": {
       "title": "Inicia sesión",
+      "heading": "Bienvenido de vuelta",
+      "sub": "Inicia sesión para continuar en FreshSense",
       "email": "Correo electrónico",
       "password": "Contraseña",
       "placeholderEmail": "tucorreo@ejemplo.com",
@@ -46,7 +49,8 @@
       "goRegister": "Regístrate"
     },
     "register": {
-      "title": "Crea una cuenta",
+      "title": "Crear cuenta",
+      "subtitle": "Empieza a monitorear la frescura de tus alimentos hoy",
       "name": "Nombre completo",
       "email": "Correo electrónico",
       "password": "Contraseña",

@@ -5,11 +5,13 @@
             <h2 class="h1">{{ 'home.heroTitle' | translate:{ name: name } }}</h2>
             <p class="muted">{{ 'home.freshness' | translate }}</p>
             <div class="gauge">
-                <div class="gauge__value">85%</div>
+                <div class="gauge__bar">
+                    <div class="gauge__fill" [style.width.%]="freshnessScore()"></div>
+                </div>
+                <div class="gauge__value">{{ freshnessScore() }}%</div>
             </div>
         </div>
-        <img class="hero__img"  src="/salade_hero.jpg" alt="{{ 'home.foodAlt' | translate }}">
-
+        <img class="hero__img" src="/salade_hero.jpg" alt="{{ 'home.foodAlt' | translate }}">
     </article>
 
     <!-- WEEKLY STATS -->
@@ -18,10 +20,16 @@
         <div class="mini-grid">
             <div class="stat">
                 <strong>{{ 'home.stock' | translate }}<br>{{ 'home.level' | translate }}</strong>
-                <span>54%</span>
+                <span class="stat__value">{{ totalProducts() }}</span>
             </div>
-            <div class="stat"><strong>{{ 'home.gain' | translate }}</strong><span>+12%</span></div>
-            <div class="stat"><strong>{{ 'home.loss' | translate }}</strong><span>-3%</span></div>
+            <div class="stat">
+                <strong>{{ 'home.gain' | translate }}</strong>
+                <span class="stat__value stat__value--up">{{ 'home.na' | translate }}</span>
+            </div>
+            <div class="stat">
+                <strong>{{ 'home.loss' | translate }}</strong>
+                <span class="stat__value stat__value--down">{{ 'home.na' | translate }}</span>
+            </div>
         </div>
     </article>
 

@@ -1,148 +1,217 @@
-/* --- Contenedor centrado igual que register --- */
 :host {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: #f4f6f8;
-    padding: 24px;
+  display: flex;
+  min-height: 100dvh;
+  background: var(--fs-bg);
 }
 
-/* Caja principal (idéntica a la de register) */
 .login-container {
-    width: 90%;
-    max-width: 600px;      /* mismo ancho visual grande */
-    background: #ffffff;
-    border-radius: 18px;
-    box-shadow: 0 12px 30px rgba(10, 25, 47, 0.08);
-    overflow: hidden;
+  display: flex;
+  width: 100%;
+  min-height: 100dvh;
 }
 
-/* --- Banner (franja decorativa dentro del cuadro) --- */
+/* Panel izquierdo - visual */
 .banner-section {
-    width: 100%;
-    height: 120px;                 /* franja decorativa pequeña */
-    overflow: hidden;
-    border-bottom: 4px solid #4CAF50; /* línea verde decorativa como en tu imagen */
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .banner-section { display: block; }
 }
 
 .banner-section img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* --- Formulario debajo del banner --- */
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(20, 114, 63, 0.75) 0%,
+    rgba(26, 145, 80, 0.55) 60%,
+    transparent 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 48px;
+  color: #fff;
+}
+
+.banner-tagline {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  max-width: 320px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.banner-sub {
+  margin-top: 12px;
+  font-size: 15px;
+  opacity: 0.88;
+  max-width: 280px;
+}
+
+/* Panel derecho - formulario */
 .form-section {
-    padding: 32px 40px;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 40px;
+  background: var(--fs-surface);
 }
 
-.form-box {
-    width: 100%;
-    max-width: 520px; /* ajusta si quieres más estrecho */
-    text-align: center;
+@media (min-width: 900px) {
+  .form-section { border-left: 1px solid var(--fs-border); }
 }
 
-/* Logo y títulos (igual que register) */
+.form-box { width: 100%; }
+
+/* Logo */
 .logo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
 }
 
-.logo img {
-    width: 76px;
-    height: 76px;
-    object-fit: contain;
-    border-radius: 50%;
-    background: white;
-    padding: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  background: var(--fs-primary);
+  border-radius: var(--fs-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
 }
 
-.logo h2 {
-    font-size: 22px;
-    margin: 6px 0 0;
-    font-weight: 700;
-    color: #1f2937;
+.logo-mark svg {
+  width: 22px;
+  height: 22px;
 }
 
-.subtitle {
-    margin: 6px 0 22px;
-    color: #4b5563;
-    font-weight: 500;
+.logo-text h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fs-text);
+  line-height: 1.1;
 }
 
-/* Inputs y etiquetas */
+.logo-text p {
+  font-size: 13px;
+  color: var(--fs-text-muted);
+  margin-top: 2px;
+}
+
+/* Form heading */
+.form-heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--fs-text);
+  margin-bottom: 6px;
+}
+
+.form-sub {
+  font-size: 14px;
+  color: var(--fs-text-muted);
+  margin-bottom: 28px;
+}
+
+/* Fields */
 .input-group {
-    margin-bottom: 14px;
-    text-align: left;
+  margin-bottom: 16px;
 }
 
 .input-group label {
-    display: block;
-    font-size: 13px;
-    color: #374151;
-    margin-bottom: 6px;
-    font-weight: 600;
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fs-text-secondary);
+  margin-bottom: 6px;
 }
 
 .input-group input {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: 8px;
-    border: 1px solid #e6e9ee;
-    font-size: 14px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--fs-border);
+  border-radius: var(--fs-radius-md);
+  font-size: 14px;
+  color: var(--fs-text);
+  background: var(--fs-surface);
+  outline: none;
+  transition: border-color var(--fs-dur) var(--fs-ease),
+              box-shadow var(--fs-dur) var(--fs-ease);
 }
 
 .input-group input:focus {
-    outline: none;
-    border-color: #9fe1bf;
-    box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.06);
+  border-color: var(--fs-primary);
+  box-shadow: 0 0 0 3px var(--fs-primary-muted);
 }
 
-/* Link inferior */
+.input-group input::placeholder { color: var(--fs-text-muted); }
+
+/* Error */
+.error {
+  font-size: 13px;
+  color: var(--fs-danger);
+  background: var(--fs-danger-bg);
+  border: 1px solid rgba(220,38,38,0.2);
+  border-radius: var(--fs-radius-md);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+/* Register link */
 .link {
-    font-size: 14px;
-    margin: 12px 0;
-    color: #374151;
+  font-size: 13px;
+  color: var(--fs-text-muted);
+  margin-bottom: 20px;
 }
 
 .link a {
-    color: #4CAF50;
-    text-decoration: none;
-    font-weight: 600;
+  color: var(--fs-primary);
+  font-weight: 600;
+  cursor: pointer;
 }
 
-/* Botón (idéntico al register) */
+.link a:hover { text-decoration: underline; }
+
+/* Submit button */
 .btn-login {
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: 10px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    margin-top: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--fs-radius-md);
+  background: var(--fs-primary);
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(26,145,80,0.25);
+  transition: background var(--fs-dur) var(--fs-ease),
+              box-shadow var(--fs-dur) var(--fs-ease),
+              transform var(--fs-dur) var(--fs-ease);
 }
 
-.btn-login:hover {
-    background: #3D8A40;}
-
-/* Responsive */
-@media (max-width: 640px) {
-    .register-container {
-        max-width: 95%;
-    }
-    .banner-section { height: 90px; }
-    .form-box { padding: 0 8px; }
+.btn-login:hover:not(:disabled) {
+  background: var(--fs-primary-dark);
+  box-shadow: 0 4px 12px rgba(26,145,80,0.30);
 }
 
+.btn-login:active:not(:disabled) { transform: scale(0.98); }
+
+.btn-login:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
