@@ -244,31 +244,31 @@
     "searchAria": "Buscar productos"
   },
   "reports": {
-    "title": "Reports",
-    "from": "From",
-    "to": "To",
-    "apply": "Apply",
-    "weeklyWaste": "Weekly Food Waste",
-    "trends": "Trends",
-    "vsLastWeek": "vs last week",
-    "mtd": "month to date",
+    "title": "Reportes",
+    "from": "Desde",
+    "to": "Hasta",
+    "apply": "Aplicar",
+    "weeklyWaste": "Desperdicio semanal de alimentos",
+    "trends": "Tendencias",
+    "vsLastWeek": "vs semana anterior",
+    "mtd": "mes hasta la fecha",
     "kpi": {
-      "gain": "Gain",
-      "loss": "Loss",
-      "improvement": "Percentage Improvement"
+      "gain": "Ganancia",
+      "loss": "Pérdida",
+      "improvement": "Porcentaje de mejora"
     },
     "history": {
-      "title": "Consumption History",
-      "date": "Date",
-      "action": "Action",
-      "product": "Product",
-      "category": "Category",
-      "qty": "Quantity",
-      "empty": "No records available.",
-      "consume": "Consume",
-      "discard": "Discard",
-      "add": "Added",
-      "exportCsv": "Export CSV"
+      "title": "Historial de consumo",
+      "date": "Fecha",
+      "action": "Acción",
+      "product": "Producto",
+      "category": "Categoría",
+      "qty": "Cantidad",
+      "empty": "No hay registros disponibles.",
+      "consume": "Consumido",
+      "discard": "Descartado",
+      "add": "Agregado",
+      "exportCsv": "Exportar CSV"
     }
   },
   "recipes": {

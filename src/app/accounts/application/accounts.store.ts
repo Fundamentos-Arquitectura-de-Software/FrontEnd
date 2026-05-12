@@ -43,7 +43,6 @@ export class AccountStore {
     }
 
     private saveSession(resp: AuthResponse): void {
-        // Store only non-sensitive user info; token lives in HttpOnly cookie set by backend
         const { token: _token, ...userInfo } = resp;
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userInfo));
     }
