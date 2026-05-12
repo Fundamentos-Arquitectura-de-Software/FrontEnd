@@ -9,27 +9,27 @@ export const routes: Routes = [
         path: 'register',
         loadComponent: () =>
             import('./accounts/presentation/views/register/register.component')
-                .then(m => m.RegisterComponent),
+                .then(m => m.RegisterView),
     },
     {
         path: 'login',
         loadComponent: () =>
             import('./accounts/presentation/views/login/login.component')
-                .then(m => m.LoginComponent),
+                .then(m => m.LoginView),
     },
     {
         path: 'plan',
         canActivate: [authGuard],
         loadComponent: () =>
             import('./billing/presentation/views/plan/plan.component')
-                .then(m => m.PlanComponent),
+                .then(m => m.PlanView),
     },
     {
         path: 'payment',
         canActivate: [authGuard],
         loadComponent: () =>
             import('./billing/presentation/views/payment/payment.component')
-                .then(m => m.PaymentComponent),
+                .then(m => m.PaymentView),
     },
     {
         path: '',

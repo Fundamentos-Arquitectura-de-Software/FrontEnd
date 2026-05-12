@@ -2,7 +2,8 @@ import { Component, OnInit, computed, signal, inject, DestroyRef } from '@angula
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MonitoringApi, MonitoringReadingDto } from '../infrastructure/monitoring-api';
+import { MonitoringApi } from '../infrastructure/monitoring-api';
+import { MonitoringReading } from '../domain/monitoring-reading.model';
 
 type Category = 'Environment' | 'Quality' | 'Safety';
 
@@ -66,7 +67,7 @@ export class MonitoringView implements OnInit {
 
     ngOnInit(): void {
         this.api.getLatest().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-            next: (data: MonitoringReadingDto) => {
+            next: (data: MonitoringReading) => {
                 this.lastMonitoringDate = data.recordedAt
                     ? new Date(data.recordedAt).toLocaleDateString()
                     : '—';
