@@ -7,14 +7,12 @@ import { TranslateModule } from '@ngx-translate/core';
     standalone: true,
     templateUrl: './plan.component.html',
     styleUrls: ['./plan.component.css'],
-    imports: [TranslateModule] // ⬅️ agregado
+    imports: [TranslateModule]
 })
 export class PlanView {
     constructor(private router: Router) {}
 
     selectPlan(plan: string) {
-        console.log('Plan seleccionado:', plan);
-        // Guardar el plan en localStorage si lo necesitas
         localStorage.setItem('selectedPlan', plan);
         this.router.navigate(['/payment']);
     }

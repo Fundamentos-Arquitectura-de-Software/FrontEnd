@@ -41,9 +41,7 @@ export class RegisterView {
 
         if (success) {
             alert('Usuario registrado correctamente ✅');
-            // Guardar correo en localStorage para usarlo en Plan/Payment
-            localStorage.setItem('registerEmail', this.user.email);
-            this.router.navigate(['/plan']); // ⬅️ pantalla de selección de plan
+            this.router.navigate(['/plan']);
         } else {
             alert('Usuario ya registrado. Registra uno nuevo ❌');
         }
