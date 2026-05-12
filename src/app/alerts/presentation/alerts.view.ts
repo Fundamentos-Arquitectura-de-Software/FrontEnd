@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { AlertsApi, AlertDto } from '../infrastructure/alerts-api';
+import { AlertsApi } from '../infrastructure/alerts-api';
+import { Alert as AlertDto } from '../domain/alert.model';
 
 type Severity = 'critical' | 'warning' | 'info';
 type State = 'active' | 'muted' | 'resolved';

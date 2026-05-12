@@ -4,7 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SocialShareService } from '../application/social-share.service';
 import { captureElementToPngBlob } from '../infrastructure/capture.util';
-import { AchievementsApi, AchievementDto } from '../infrastructure/achievements-api';
+import { AchievementsApi } from '../infrastructure/achievements-api';
+import { Achievement as AchievementDto } from '../domain/achievement.model';
 import { AccountStore } from '../../accounts/application/accounts.store';
 
 type AchievementStatus = 'in-progress' | 'pending' | 'completed';

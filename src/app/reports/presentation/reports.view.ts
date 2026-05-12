@@ -6,16 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
-
-export interface HistoryEntry {
-    id?: number;
-    productId: number;
-    productName: string;
-    category: string;
-    action: 'consume' | 'discard' | 'add';
-    quantity: number;
-    date: string;
-}
+import { HistoryEntry } from '../domain/history.model';
 
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 

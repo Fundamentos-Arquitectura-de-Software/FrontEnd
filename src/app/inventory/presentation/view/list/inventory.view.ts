@@ -7,17 +7,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { InventoryApi } from '../../../infrastructure/inventory-api';
 import { ProductResponse } from '../../../infrastructure/inventory-response';
+import { Product } from '../../../domain/product.model';
 import { environment } from '../../../../../environments/environment';
-
-type Product = {
-    id: number;
-    name: string;
-    image?: string;
-    state?: string;
-    category?: string;
-    description?: string;
-    quantity?: number;
-};
 
 @Component({
     selector: 'fs-inventory',

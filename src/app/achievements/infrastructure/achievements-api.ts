@@ -2,14 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-export interface AchievementDto {
-    id: string;
-    userId: number;
-    name: string;
-    completionPercentage: number;
-    isDefault: boolean;
-}
+import { Achievement } from '../domain/achievement.model';
 
 @Injectable({ providedIn: 'root' })
 export class AchievementsApi {
@@ -21,12 +14,12 @@ export class AchievementsApi {
         return this.http.post<void>(`${this.base}/${userId}/achievements/init`, {});
     }
 
-    list(userId: number): Observable<AchievementDto[]> {
-        return this.http.get<AchievementDto[]>(`${this.base}/${userId}/achievements`);
+    list(userId: number): Observable<Achievement[]> {
+        return this.http.get<Achievement[]>(`${this.base}/${userId}/achievements`);
     }
 
-    updateProgress(userId: number, achievementId: string, completionPercentage: number): Observable<AchievementDto> {
-        return this.http.patch<AchievementDto>(
+    updateProgress(userId: number, achievementId: string, completionPercentage: number): Observable<Achievement> {
+        return this.http.patch<Achievement>(
             `${this.base}/${userId}/achievements/${achievementId}`,
             { completionPercentage }
         );

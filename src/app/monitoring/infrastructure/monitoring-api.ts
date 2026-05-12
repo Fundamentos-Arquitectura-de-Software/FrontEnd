@@ -2,17 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-export interface MonitoringReadingDto {
-    id: number;
-    temperature: number;
-    humidity: number;
-    ethyleneLevel: number;
-    oxygenLevel: number;
-    ripeness: number;
-    cleanliness: number;
-    recordedAt: string;
-}
+import { MonitoringReading } from '../domain/monitoring-reading.model';
 
 @Injectable({ providedIn: 'root' })
 export class MonitoringApi {
@@ -20,11 +10,11 @@ export class MonitoringApi {
 
     constructor(private http: HttpClient) {}
 
-    getLatest(): Observable<MonitoringReadingDto> {
-        return this.http.get<MonitoringReadingDto>(`${this.base}/latest`);
+    getLatest(): Observable<MonitoringReading> {
+        return this.http.get<MonitoringReading>(`${this.base}/latest`);
     }
 
-    getAll(): Observable<MonitoringReadingDto[]> {
-        return this.http.get<MonitoringReadingDto[]>(this.base);
+    getAll(): Observable<MonitoringReading[]> {
+        return this.http.get<MonitoringReading[]>(this.base);
     }
 }

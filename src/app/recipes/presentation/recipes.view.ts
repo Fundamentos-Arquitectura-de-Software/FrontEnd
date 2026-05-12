@@ -5,19 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
-
-type Recipe = {
-    id: number;
-    title: string;
-    description?: string;
-    image?: string;
-    rating?: number;
-    level?: string;
-    type?: string;
-    time?: string;
-    ingredients?: string[];
-    steps?: string[];
-};
+import { Recipe } from '../domain/recipe.model';
 
 @Component({
     standalone: true,
