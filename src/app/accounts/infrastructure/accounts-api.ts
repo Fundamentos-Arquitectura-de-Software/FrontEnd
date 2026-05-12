@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AccountApiEndpoints } from './account-api-endpoints';
-import { User } from '../domain/model/user.entity';
 import { Observable } from 'rxjs';
 import { AuthResponse } from './account-response';
 
@@ -9,12 +8,15 @@ import { AuthResponse } from './account-response';
 export class AccountApis {
     constructor(private http: HttpClient) {}
 
-    // Payload que espera el backend (UserRegistrationRequest)
     register(payload: { email: string; password: string; fullName: string }): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(AccountApiEndpoints.register, payload);
+        return this.http.post<AuthResponse>(AccountApiEndpoints.register, payload, { withCredentials: true });
     }
 
     login(email: string, password: string): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(AccountApiEndpoints.login, { email, password });
+        return this.http.post<AuthResponse>(AccountApiEndpoints.login, { email, password }, { withCredentials: true });
+    }
+
+    logout(): Observable<void> {
+        return this.http.post<void>(AccountApiEndpoints.logout, {}, { withCredentials: true });
     }
 }
