@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-plan',
+    selector: 'fs-plan',
     standalone: true,
     templateUrl: './plan.component.html',
     styleUrls: ['./plan.component.css'],
     imports: [TranslateModule] // ⬅️ agregado
 })
-export class PlanComponent {
+export class PlanView {
     constructor(private router: Router) {}
 
     selectPlan(plan: string) {

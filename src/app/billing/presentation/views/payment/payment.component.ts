@@ -5,13 +5,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AccountStore } from '../../../../accounts/application/accounts.store'; //
 
 @Component({
-    selector: 'app-payment',
+    selector: 'fs-payment',
     standalone: true,
     templateUrl: './payment.component.html',
     imports: [FormsModule, TranslateModule], // ⬅️ agregado
     styleUrls: ['./payment.component.css']
 })
-export class PaymentComponent {
+export class PaymentView {
     constructor(private accountStore: AccountStore, private router: Router) {}
 
     async pay() {

@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-login',
+    selector: 'fs-login',
     standalone: true,
     imports: [
         FormsModule,
@@ -17,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginView {
     loginData = {
         email: '',
         password: '',
