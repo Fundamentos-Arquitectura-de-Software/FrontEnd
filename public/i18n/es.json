@@ -1,6 +1,6 @@
 {
   "home": {
-    "heroTitle": "Hola {{name}}, ¡bienvenido/a a FreshSense! 👋",
+    "heroTitle": "Hola {{name}}, ¡bienvenido/a a FreshSense!",
     "freshness": "Nivel general de frescura",
     "foodAlt": "Comida",
     "weeklyStats": "Estadísticas semanales",
@@ -14,6 +14,30 @@
       "salad": "Ensalada",
       "bowl": "Bowl",
       "yogurt": "Yogur"
+    },
+    "kpi": {
+      "products": "Productos en Stock",
+      "activeAlerts": "Alertas Activas",
+      "temperature": "Temperatura",
+      "humidity": "Humedad",
+      "critical": "crítica(s)",
+      "noProducts": "Agrega productos a tu inventario para ver el nivel de frescura."
+    },
+    "sensor": {
+      "title": "Lecturas de Sensores",
+      "ethylene": "Etileno",
+      "cleanliness": "Limpieza",
+      "oxygen": "Oxígeno",
+      "ripeness": "Madurez",
+      "ok": "Normal",
+      "warn": "Advertencia",
+      "crit": "Crítico",
+      "off": "Sin datos"
+    },
+    "alerts": {
+      "recent": "Alertas Recientes",
+      "viewAll": "Ver todas",
+      "none": "Sin alertas activas"
     }
   },
   "app": {
@@ -297,7 +321,9 @@
     "temperature": "Temperatura",
     "humidity": "Humedad",
     "title": "Monitoreo de Alimentos",
-    "status": { "healthy": "Estado de sensores: Saludables" },
+    "status": {
+      "healthy": "Estado de sensores: Saludables"
+    },
     "lastSync": "Última sincronización hace {{minutes}} min",
     "category": "Categoría",
     "kpi": {

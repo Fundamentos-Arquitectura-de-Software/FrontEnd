@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AccountStore } from '../../../../accounts/application/accounts.store';
+import { ToastService } from '../../../../shared/application/toast.service';
 
 @Component({
     selector: 'fs-payment',
@@ -12,20 +13,21 @@ import { AccountStore } from '../../../../accounts/application/accounts.store';
     styleUrls: ['./payment.component.css']
 })
 export class PaymentView {
-    constructor(private accountStore: AccountStore, private router: Router) {}
+    constructor(
+        private accountStore: AccountStore,
+        private router: Router,
+        private toast: ToastService
+    ) {}
 
     async pay() {
         const user = this.accountStore.getCurrentUser();
         if (!user) {
-            alert('Error: no se encontró usuario registrado ❌');
+            this.toast.error('No se encontró usuario registrado.');
             return;
         }
-
         await this.accountStore.markAsPaid(user.email);
-
-        alert('Pago realizado con éxito ✅');
+        this.toast.success('Pago realizado con éxito.');
         localStorage.removeItem('selectedPlan');
-
         this.router.navigate(['/login']);
     }
 }

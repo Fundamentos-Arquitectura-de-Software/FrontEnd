@@ -5,10 +5,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SocialShareService } from '../application/social-share.service';
 import { captureElementToPngBlob } from '../infrastructure/capture.util';
 import { AchievementsApi } from '../infrastructure/achievements-api';
-import { Achievement as AchievementDto } from '../domain/achievement.model';
+import { Achievement as AchievementDto, AchievementStatus } from '../domain/achievement.model';
 import { AccountStore } from '../../accounts/application/accounts.store';
-
-type AchievementStatus = 'in-progress' | 'pending' | 'completed';
 
 interface Achievement {
     id: string;

@@ -1,45 +1,116 @@
-<section class="grid">
-    <!-- HERO -->
-    <article class="card hero">
-        <div class="hero__copy">
-            <h2 class="h1">{{ 'home.heroTitle' | translate:{ name: name } }}</h2>
-            <p class="muted">{{ 'home.freshness' | translate }}</p>
-            <div class="gauge">
-                <div class="gauge__bar">
-                    <div class="gauge__fill" [style.width.%]="freshnessScore()"></div>
-                </div>
-                <div class="gauge__value">{{ freshnessScore() }}%</div>
-            </div>
-        </div>
-        <img class="hero__img" src="/salade_hero.jpg" alt="{{ 'home.foodAlt' | translate }}">
-    </article>
+<div class="dashboard">
 
-    <!-- WEEKLY STATS -->
-    <article class="card stats">
-        <h3 class="h2">{{ 'home.weeklyStats' | translate }}</h3>
-        <div class="mini-grid">
-            <div class="stat">
-                <strong>{{ 'home.stock' | translate }}<br>{{ 'home.level' | translate }}</strong>
-                <span class="stat__value">{{ totalProducts() }}</span>
-            </div>
-            <div class="stat">
-                <strong>{{ 'home.gain' | translate }}</strong>
-                <span class="stat__value stat__value--up">{{ 'home.na' | translate }}</span>
-            </div>
-            <div class="stat">
-                <strong>{{ 'home.loss' | translate }}</strong>
-                <span class="stat__value stat__value--down">{{ 'home.na' | translate }}</span>
-            </div>
-        </div>
-    </article>
+  <!-- HEADER -->
+  <div class="dash-header">
+    <div>
+      <p class="dash-date">{{ today }}</p>
+      <h1 class="dash-greeting">{{ 'home.heroTitle' | translate:{ name: name } }}</h1>
+    </div>
+  </div>
 
-    <!-- CHALLENGES -->
-    <article class="card side">
-        <h3 class="h2">{{ 'home.challengesTitle' | translate }}</h3>
-        <div class="chips">
-            <button class="chip">{{ 'home.tags.salad' | translate }}</button>
-            <button class="chip">{{ 'home.tags.bowl'  | translate }}</button>
-            <button class="chip">{{ 'home.tags.yogurt'| translate }}</button>
+  <!-- ROW 1: score + kpis -->
+  <div class="row-top">
+
+    <!-- Freshness score -->
+    <div class="block-score">
+      <span class="score-label">{{ 'home.freshness' | translate }}</span>
+      <span class="score-number">{{ freshnessScore() }}</span>
+      <span class="score-total">/100</span>
+      <span class="score-verdict" [ngClass]="{
+        'verdict--ok':   freshnessScore() >= 70,
+        'verdict--warn': freshnessScore() >= 40 && freshnessScore() < 70,
+        'verdict--crit': freshnessScore() < 40 && totalProducts() > 0,
+        'verdict--off':  totalProducts() === 0
+      }">{{ scoreVerdict() }}</span>
+    </div>
+
+    <!-- Secondary KPIs -->
+    <div class="block-kpis">
+
+      <div class="kpi">
+        <span class="kpi-val">{{ totalProducts() }}</span>
+        <span class="kpi-name">{{ 'home.kpi.products' | translate }}</span>
+      </div>
+
+      <div class="kpi" [class.kpi--alert]="criticalCount() > 0">
+        <span class="kpi-val">{{ activeAlerts().length }}</span>
+        <span class="kpi-name">{{ 'home.kpi.activeAlerts' | translate }}</span>
+        <span class="kpi-sub" *ngIf="criticalCount() > 0">{{ criticalCount() }} {{ 'home.kpi.critical' | translate }}</span>
+      </div>
+
+      <div class="kpi">
+        <span class="kpi-val" [ngClass]="'val--' + tempStatus()">
+          {{ fmt(sensorData()?.temperature ?? null) }}<small>°C</small>
+        </span>
+        <span class="kpi-name">{{ 'home.kpi.temperature' | translate }}</span>
+        <span class="kpi-sub kpi-sub--status" [ngClass]="'status--' + tempStatus()">
+          {{ 'home.sensor.' + tempStatus() | translate }}
+        </span>
+      </div>
+
+      <div class="kpi">
+        <span class="kpi-val" [ngClass]="'val--' + humidityStatus()">
+          {{ fmt(sensorData()?.humidity ?? null, 0) }}<small>%</small>
+        </span>
+        <span class="kpi-name">{{ 'home.kpi.humidity' | translate }}</span>
+        <span class="kpi-sub kpi-sub--status" [ngClass]="'status--' + humidityStatus()">
+          {{ 'home.sensor.' + humidityStatus() | translate }}
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROW 2: sensors + alerts -->
+  <div class="row-bottom">
+
+    <!-- Sensor readings -->
+    <div class="block block--sensors">
+      <h2 class="block-title">{{ 'home.sensor.title' | translate }}</h2>
+      <table class="sensor-table">
+        <tr>
+          <td class="sensor-name">{{ 'home.sensor.ethylene' | translate }}</td>
+          <td class="sensor-val">{{ fmt(sensorData()?.ethyleneLevel ?? null) }} ppm</td>
+          <td><span class="sdot" [ngClass]="'sdot--' + ethyleneStatus()"></span></td>
+        </tr>
+        <tr>
+          <td class="sensor-name">{{ 'home.sensor.cleanliness' | translate }}</td>
+          <td class="sensor-val">{{ fmt(cleanliness(), 0) }}%</td>
+          <td><span class="sdot" [ngClass]="'sdot--' + cleanlinessStatus()"></span></td>
+        </tr>
+        <tr>
+          <td class="sensor-name">{{ 'home.sensor.oxygen' | translate }}</td>
+          <td class="sensor-val">{{ fmt(sensorData()?.oxygenLevel ?? null) }}%</td>
+          <td><span class="sdot sdot--ok"></span></td>
+        </tr>
+        <tr>
+          <td class="sensor-name">{{ 'home.sensor.ripeness' | translate }}</td>
+          <td class="sensor-val">{{ fmt(sensorData()?.ripeness ?? null, 0) }}%</td>
+          <td><span class="sdot sdot--ok"></span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Recent alerts -->
+    <div class="block block--alerts">
+      <div class="block-head">
+        <h2 class="block-title">{{ 'home.alerts.recent' | translate }}</h2>
+        <a class="block-link" routerLink="/alerts">{{ 'home.alerts.viewAll' | translate }}</a>
+      </div>
+
+      <p class="alerts-empty" *ngIf="recentAlerts().length === 0">
+        {{ 'home.alerts.none' | translate }}
+      </p>
+
+      <div class="alert-row" *ngFor="let a of recentAlerts()">
+        <span class="sev" [ngClass]="'sev--' + a.severity"></span>
+        <div class="alert-body">
+          <span class="alert-name">{{ a.title }}</span>
+          <span class="alert-meta">{{ a.source }}&nbsp;&middot;&nbsp;{{ a.timeAgo }}</span>
         </div>
-    </article>
-</section>
+      </div>
+    </div>
+
+  </div>
+
+</div>

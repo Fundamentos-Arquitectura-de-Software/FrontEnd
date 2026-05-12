@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Alert } from '../domain/alert.model';
 
+const opts = { withCredentials: true };
+
 @Injectable({ providedIn: 'root' })
 export class AlertsApi {
     private readonly baseUrl = `${environment.apiBaseUrl}/alerts`;
@@ -11,10 +13,10 @@ export class AlertsApi {
     constructor(private http: HttpClient) {}
 
     getAll(): Observable<Alert[]> {
-        return this.http.get<Alert[]>(this.baseUrl);
+        return this.http.get<Alert[]>(this.baseUrl, opts);
     }
 
     update(id: number, alert: Alert): Observable<Alert> {
-        return this.http.put<Alert>(`${this.baseUrl}/${id}`, alert);
+        return this.http.put<Alert>(`${this.baseUrl}/${id}`, alert, opts);
     }
 }

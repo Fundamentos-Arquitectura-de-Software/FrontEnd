@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { MonitoringReading } from '../domain/monitoring-reading.model';
 
+const opts = { withCredentials: true };
+
 @Injectable({ providedIn: 'root' })
 export class MonitoringApi {
     private base = `${environment.apiBaseUrl}/monitoring`;
@@ -11,10 +13,10 @@ export class MonitoringApi {
     constructor(private http: HttpClient) {}
 
     getLatest(): Observable<MonitoringReading> {
-        return this.http.get<MonitoringReading>(`${this.base}/latest`);
+        return this.http.get<MonitoringReading>(`${this.base}/latest`, opts);
     }
 
     getAll(): Observable<MonitoringReading[]> {
-        return this.http.get<MonitoringReading[]>(this.base);
+        return this.http.get<MonitoringReading[]>(this.base, opts);
     }
 }

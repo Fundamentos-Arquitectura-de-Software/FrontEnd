@@ -1,66 +1,82 @@
 <section class="wrap inventory-page" aria-labelledby="inventory-title">
+
     <header class="page-head">
         <h2 id="inventory-title" class="section-title">{{ 'inventory.title' | translate }}</h2>
-        <button class="btn btn-add" (click)="onAddProduct()">+ {{ 'inventory.add.cta' | translate }}</button>
+        <button class="btn-add" (click)="onAddProduct()">+ {{ 'inventory.add.cta' | translate }}</button>
     </header>
 
-    <form class="search" (submit)="$event.preventDefault()">
-        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="filterProducts()"
-               [placeholder]="'common.search' | translate" name="search"
-               [attr.aria-label]="'inventory.searchAria' | translate" />
-    </form>
+    <div class="toolbar">
+        <input type="text" class="search-input" [(ngModel)]="searchTerm"
+               (ngModelChange)="filterProducts()"
+               [placeholder]="'common.search' | translate"
+               name="search" />
 
-    <div class="filters">
-        <div class="filter-group">
-            <h4>{{ 'inventory.state' | translate }}</h4>
-            <div class="chips">
-                <button type="button" *ngFor="let state of states" class="chip"
-                        [class.active]="selectedState === state" (click)="filterState(state)">
-                    {{ state }}
-                </button>
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">{{ 'inventory.state' | translate }}</span>
+                <div class="chips">
+                    <button type="button" *ngFor="let state of states" class="chip"
+                            [class.active]="selectedState === state"
+                            (click)="filterState(state)">{{ state }}</button>
+                </div>
             </div>
-        </div>
-
-        <div class="filter-group">
-            <h4>{{ 'inventory.category' | translate }}</h4>
-            <div class="chips">
-                <button type="button" *ngFor="let cat of categories" class="chip"
-                        [class.active]="selectedCategory === cat" (click)="filterCategory(cat)">
-                    {{ cat }}
-                </button>
+            <div class="filter-group">
+                <span class="filter-label">{{ 'inventory.category' | translate }}</span>
+                <div class="chips">
+                    <button type="button" *ngFor="let cat of categories" class="chip"
+                            [class.active]="selectedCategory === cat"
+                            (click)="filterCategory(cat)">{{ cat }}</button>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="product-grid">
-        <article class="product-card" *ngFor="let p of filteredProducts; trackBy: trackByProductId">
-            <div class="card-header">
-                <img [src]="imageFor(p)" [alt]="p.name" loading="lazy" (error)="onImgError($event)" class="product-img" />
-                <div class="product-main">
+        <article class="product-card"
+                 *ngFor="let p of filteredProducts; trackBy: trackByProductId"
+                 [class.product-card--open]="selectedProduct?.id === p.id">
+
+            <div class="card-header" (click)="openProduct(p)">
+                <div class="product-thumb" [style.background]="thumbBg(p.category ?? '')">
+                    <span *ngIf="!p.image">{{ initial(p.name) }}</span>
+                    <img *ngIf="p.image" [src]="p.image" [alt]="p.name" loading="lazy"
+                         (error)="onImgError($event)" />
+                </div>
+                <div class="product-meta">
                     <h4 class="product-name">{{ p.name }}</h4>
                     <p class="product-cat">{{ p.category || ('inventory.uncategorized' | translate) }}</p>
                 </div>
-                <button class="arrow-btn" type="button"
-                        [attr.aria-label]="('inventory.openDetailsAria' | translate) + ' ' + p.name"
-                        (click)="openProduct(p)">›</button>
+                <span class="product-qty">{{ p.quantity ?? 0 }}</span>
+                <span class="toggle-icon" [class.toggle-icon--open]="selectedProduct?.id === p.id">›</span>
             </div>
 
-            <div *ngIf="selectedProduct?.id === p.id" class="product-details">
-                <p><strong>{{ 'inventory.details.description' | translate }}:</strong> {{ p.description || ('inventory.details.noDescription' | translate) }}</p>
-                <p><strong>{{ 'inventory.details.state' | translate }}:</strong> {{ p.state || ('inventory.details.notSpecified' | translate) }}</p>
-                <p><strong>{{ 'inventory.details.quantity' | translate }}:</strong> {{ p.quantity ?? 'N/A' }}</p>
+            <div class="product-detail" *ngIf="selectedProduct?.id === p.id">
+                <div class="detail-row" *ngIf="p.description">
+                    <span class="detail-label">{{ 'inventory.details.description' | translate }}</span>
+                    <span class="detail-val">{{ p.description }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">{{ 'inventory.details.state' | translate }}</span>
+                    <span class="detail-val">{{ p.state || ('inventory.details.notSpecified' | translate) }}</span>
+                </div>
                 <div class="detail-actions">
-                    <button class="btn-outline" (click)="logAction(p, 'consume')">
+                    <button class="action-btn action-btn--consume" (click)="logAction(p, 'consume')">
                         {{ 'reports.history.consume' | translate }}
                     </button>
-                    <button class="btn-outline" (click)="logAction(p, 'discard')">
+                    <button class="action-btn action-btn--discard" (click)="logAction(p, 'discard')">
                         {{ 'reports.history.discard' | translate }}
                     </button>
-                    <button class="btn-outline" (click)="selectedProduct = null">
+                    <button class="action-btn action-btn--close" (click)="selectedProduct = null">
                         {{ 'common.close' | translate }}
                     </button>
                 </div>
             </div>
+
         </article>
+
+        <p class="inv-empty" *ngIf="filteredProducts.length === 0">
+            {{ 'alerts.empty.title' | translate }}
+        </p>
     </div>
+
 </section>

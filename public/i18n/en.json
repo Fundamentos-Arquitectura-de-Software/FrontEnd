@@ -1,6 +1,6 @@
 {
   "home": {
-    "heroTitle": "Hi {{name}}, welcome to FreshSense 👋",
+    "heroTitle": "Hi {{name}}, welcome to FreshSense",
     "freshness": "General Freshness Level",
     "foodAlt": "Food",
     "weeklyStats": "Weekly Statistics",
@@ -14,6 +14,30 @@
       "salad": "Salad",
       "bowl": "Bowl",
       "yogurt": "Yogurt"
+    },
+    "kpi": {
+      "products": "Products in Stock",
+      "activeAlerts": "Active Alerts",
+      "temperature": "Temperature",
+      "humidity": "Humidity",
+      "critical": "critical",
+      "noProducts": "Add products to your inventory to see the freshness score."
+    },
+    "sensor": {
+      "title": "Sensor Readings",
+      "ethylene": "Ethylene",
+      "cleanliness": "Cleanliness",
+      "oxygen": "Oxygen",
+      "ripeness": "Ripeness",
+      "ok": "Normal",
+      "warn": "Warning",
+      "crit": "Critical",
+      "off": "No data"
+    },
+    "alerts": {
+      "recent": "Recent Alerts",
+      "viewAll": "View all",
+      "none": "No active alerts"
     }
   },
   "app": {
@@ -306,7 +330,9 @@
     "temperature": "Temperature",
     "humidity": "Humidity",
     "title": "Food Monitoring",
-    "status": { "healthy": "Sensors status: Healthy" },
+    "status": {
+      "healthy": "Sensors status: Healthy"
+    },
     "lastSync": "Last sync {{minutes}} min ago",
     "category": "Category",
     "kpi": {
@@ -330,7 +356,11 @@
   },
   "challenges": {
     "title": "Challenges",
-    "tabs": { "active": "Active", "enrolled": "My challenges", "leaderboard": "Leaderboard" },
+    "tabs": {
+      "active": "Active",
+      "enrolled": "My challenges",
+      "leaderboard": "Leaderboard"
+    },
     "enroll": "Enroll",
     "leave": "Leave",
     "viewRanking": "View ranking",

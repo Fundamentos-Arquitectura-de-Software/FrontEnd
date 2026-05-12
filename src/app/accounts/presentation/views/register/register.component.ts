@@ -5,6 +5,7 @@ import { User } from '../../../domain/model/user.entity';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { ToastService } from '../../../../shared/application/toast.service';
 
 @Component({
     selector: 'fs-register',
@@ -14,39 +15,42 @@ import { TranslateModule } from '@ngx-translate/core';
     styleUrls: ['./register.component.css']
 })
 export class RegisterView {
-    user: User = {
-        name: '',
-        email: '',
-        password: ''
-    };
+    user: User = { name: '', email: '', password: '' };
+    confirmPassword = '';
 
-    confirmPassword: string = '';
+    constructor(
+        private accountStore: AccountStore,
+        private router: Router,
+        private toast: ToastService
+    ) {}
 
-    constructor(private accountStore: AccountStore, private router: Router) {}
-    goToLogin() {
-        this.router.navigate(['/login']);
+    goToLogin() { this.router.navigate(['/login']); }
 
-    }async onSubmit() {
+    async onSubmit() {
         if (!this.user.name || !this.user.email || !this.user.password || !this.confirmPassword) {
-            alert('No ha llenado todos los campos ❌');
+            this.toast.error('Por favor completa todos los campos.');
             return;
         }
-
         if (this.user.password !== this.confirmPassword) {
-            alert('Las contraseñas no coinciden ❌');
+            this.toast.error('Las contraseñas no coinciden.');
+            return;
+        }
+        if (this.user.password.length < 8) {
+            this.toast.error('La contraseña debe tener al menos 8 caracteres.');
+            return;
+        }
+        if (!/[A-Z]/.test(this.user.password) || !/\d/.test(this.user.password)) {
+            this.toast.error('La contraseña debe contener al menos una mayúscula y un número.');
             return;
         }
 
-        const success = await this.accountStore.register(this.user);
+        const result = await this.accountStore.register(this.user);
 
-        if (success) {
-            alert('Usuario registrado correctamente ✅');
+        if (result.ok) {
+            this.toast.success('Cuenta creada correctamente.');
             this.router.navigate(['/plan']);
         } else {
-            alert('Usuario ya registrado. Registra uno nuevo ❌');
+            this.toast.error(result.message ?? 'El correo ya está registrado.');
         }
     }
-
-
-
 }
