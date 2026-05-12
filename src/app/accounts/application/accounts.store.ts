@@ -5,7 +5,6 @@ import { AccountApis } from '../infrastructure/accounts-api';
 import { AuthResponse } from '../infrastructure/account-response';
 
 const CURRENT_USER_KEY = 'currentUser';
-const TOKEN_KEY = 'authToken';
 
 @Injectable({ providedIn: 'root' })
 export class AccountStore {
@@ -44,32 +43,27 @@ export class AccountStore {
     }
 
     private saveSession(resp: AuthResponse): void {
-        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(resp));
-        if (resp.token) {
-            localStorage.setItem(TOKEN_KEY, resp.token);
-        }
+        // Store only non-sensitive user info; token lives in HttpOnly cookie set by backend
+        const { token: _token, ...userInfo } = resp;
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userInfo));
     }
 
-    getCurrentUser(): AuthResponse | null {
+    getCurrentUser(): Omit<AuthResponse, 'token'> | null {
         const raw = localStorage.getItem(CURRENT_USER_KEY);
         if (!raw) return null;
         try {
-            return JSON.parse(raw) as AuthResponse;
+            return JSON.parse(raw) as Omit<AuthResponse, 'token'>;
         } catch {
             return null;
         }
     }
 
-    getToken(): string | null {
-        return localStorage.getItem(TOKEN_KEY);
-    }
-
     logout(): void {
         localStorage.removeItem(CURRENT_USER_KEY);
-        localStorage.removeItem(TOKEN_KEY);
+        this.api.logout().subscribe({ error: () => {} });
     }
 
     isLogged(): boolean {
-        return !!this.getToken();
+        return !!localStorage.getItem(CURRENT_USER_KEY);
     }
 }
