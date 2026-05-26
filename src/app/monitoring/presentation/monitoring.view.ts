@@ -68,6 +68,7 @@ export class MonitoringView implements OnInit {
     ngOnInit(): void {
         this.api.getLatest().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (data: MonitoringReading) => {
+                if (!data) { this.loading.set(false); this.noData.set(true); return; }
                 this.lastMonitoringDate = data.recordedAt
                     ? new Date(data.recordedAt).toLocaleDateString()
                     : '—';

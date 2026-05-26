@@ -5,10 +5,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AlertsApi } from '../infrastructure/alerts-api';
-import { Alert as AlertDto } from '../domain/alert.model';
+import { Alert as AlertDto, AlertSeverity, AlertState } from '../domain/alert.model';
 
-type Severity = 'critical' | 'warning' | 'info';
-type State = 'active' | 'muted' | 'resolved';
+type Severity = AlertSeverity;
+type State = AlertState;
 
 interface AlertCard {
     id: string;

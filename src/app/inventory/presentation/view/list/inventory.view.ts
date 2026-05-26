@@ -23,7 +23,7 @@ export class FoodInventoryView implements OnInit {
     searchTerm = '';
 
     states = ['All', 'In good condition', 'Regular condition', 'Bad condition'];
-    categories = ['All', 'Vegetables', 'Fruits', 'Lactates', 'Meats'];
+    categories = ['All', 'Fruit', 'Vegetable', 'Dairy', 'Grain', 'Meat', 'Snack'];
 
     selectedState = 'All';
     selectedCategory = 'All';
@@ -92,14 +92,30 @@ export class FoodInventoryView implements OnInit {
         this.filterProducts();
     }
 
-    imageFor(p: Product) {
-        return p.image ||
-            'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1';
+
+
+    private static readonly THUMB_COLORS: Record<string, string> = {
+        fruit:     '#dceede',
+        vegetable: '#e2edda',
+        dairy:     '#dde8f5',
+        grain:     '#f2e9d8',
+        meat:      '#f5dede',
+        snack:     '#ecddf5',
+        default:   '#e6eeea',
+    };
+
+    thumbBg(category: string): string {
+        const key = category.toLowerCase();
+        return FoodInventoryView.THUMB_COLORS[key] ?? FoodInventoryView.THUMB_COLORS['default'];
+    }
+
+    initial(name: string): string {
+        return (name ?? '?').trim().charAt(0).toUpperCase();
     }
 
     onImgError(ev: Event) {
-        (ev.target as HTMLImageElement).src =
-            'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1';
+        const img = ev.target as HTMLImageElement;
+        img.style.display = 'none';
     }
 
     openProduct(p: Product) {

@@ -204,3 +204,54 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--fs-border);
+}
+
+.divider span {
+  font-size: 12px;
+  color: var(--fs-text-muted);
+  white-space: nowrap;
+}
+
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  border: 1.5px solid var(--fs-border);
+  border-radius: var(--fs-radius-md);
+  background: var(--fs-surface);
+  color: var(--fs-text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--fs-dur) var(--fs-ease),
+              border-color var(--fs-dur) var(--fs-ease);
+}
+
+.btn-google:hover {
+  background: var(--fs-bg);
+  border-color: var(--fs-text-muted);
+}
+
+.btn-google svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}

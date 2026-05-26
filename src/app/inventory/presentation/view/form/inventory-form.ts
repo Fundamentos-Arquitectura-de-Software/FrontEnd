@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { InventoryApi } from '../../../infrastructure/inventory-api';
+import { ToastService } from '../../../../shared/application/toast.service';
 
 declare global {
     interface Window {
@@ -23,11 +24,7 @@ interface SpeechRecognition extends EventTarget {
     onend: ((event: any) => void) | null;
 }
 
-type PartialProduct = {
-    name?: string;
-    quantity?: number;
-    category?: string;
-};
+type PartialProduct = { name?: string; quantity?: number; category?: string; };
 
 @Component({
     selector: 'app-inventory-form',
@@ -37,14 +34,7 @@ type PartialProduct = {
     styleUrls: ['./inventory-form.css'],
 })
 export class InventoryAddComponent {
-    product = {
-        name: '',
-        description: '',
-        category: '',
-        quantity: 0,
-        imageUrl: '',
-    };
-
+    product = { name: '', description: '', category: '', quantity: 0, imageUrl: '' };
     categories = ['Fruit', 'Vegetable', 'Dairy', 'Grain', 'Meat', 'Snack'];
 
     private recognition?: SpeechRecognition;
@@ -54,88 +44,42 @@ export class InventoryAddComponent {
     constructor(
         private inventoryApi: InventoryApi,
         private router: Router,
-        public route: ActivatedRoute
+        public route: ActivatedRoute,
+        private toast: ToastService
     ) {}
 
     private ensureRecognition() {
         if (this.recognition) return;
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) {
-            this.voiceHint = 'Speech Recognition not supported in this browser.';
-            return;
-        }
+        if (!SR) { this.voiceHint = 'Speech Recognition not supported in this browser.'; return; }
         this.recognition = new SR();
         this.recognition!.lang = 'es-PE';
         this.recognition!.interimResults = false;
         this.recognition!.maxAlternatives = 1;
-
         this.recognition!.onresult = (ev: any) => {
             const transcript: string = ev.results[0][0].transcript || '';
             this.voiceHint = `"${transcript}"`;
-            const parsed = this.parseVoiceCommand(transcript);
-            this.applyVoice(parsed);
+            this.applyVoice(this.parseVoiceCommand(transcript));
         };
-        this.recognition!.onerror = () => {
-            this.voiceHint = 'No pude escuchar bien, intenta de nuevo.';
-            this.recording = false;
-        };
+        this.recognition!.onerror = () => { this.voiceHint = 'No pude escuchar bien, intenta de nuevo.'; this.recording = false; };
         this.recognition!.onend = () => (this.recording = false);
     }
 
-    startVoice() {
-        this.ensureRecognition();
-        if (!this.recognition) return;
-        this.voiceHint = 'Escucha… di algo como: "3 bananas" o "2 yogurts"';
-        this.recording = true;
-        this.recognition.start();
-    }
-
-    stopVoice() {
-        if (!this.recognition) return;
-        this.recognition.stop();
-        this.recording = false;
-    }
+    startVoice() { this.ensureRecognition(); if (!this.recognition) return; this.voiceHint = 'Escucha… di algo como: "3 bananas" o "2 yogurts"'; this.recording = true; this.recognition.start(); }
+    stopVoice()  { if (!this.recognition) return; this.recognition.stop(); this.recording = false; }
 
     private parseVoiceCommand(text: string): PartialProduct {
         const t = text.toLowerCase().trim();
-
-        const numbers: Record<string, number> = {
-            uno: 1, una: 1, un: 1, dos: 2, tres: 3, cuatro: 4,
-            cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10,
-        };
-
+        const numbers: Record<string, number> = { uno:1,una:1,un:1,dos:2,tres:3,cuatro:4,cinco:5,seis:6,siete:7,ocho:8,nueve:9,diez:10 };
         let qty = 0;
         const mNum = t.match(/\b(\d+)\b/);
         if (mNum) qty = parseInt(mNum[1], 10);
-        else {
-            const found = Object.entries(numbers).find(([w]) => t.includes(w));
-            if (found) qty = found[1];
-        }
-
-        const catMap: Record<string, string> = {
-            fruta: 'Fruit', frutas: 'Fruit', fruit: 'Fruit',
-            vegetal: 'Vegetable', verdura: 'Vegetable', vegetable: 'Vegetable',
-            'lácteos': 'Dairy', lacteos: 'Dairy', yogurt: 'Dairy', queso: 'Dairy',
-            carne: 'Meat', pollo: 'Meat', res: 'Meat', pavo: 'Meat',
-            grano: 'Grain', arroz: 'Grain', pan: 'Grain', cereal: 'Grain',
-            snack: 'Snack',
-        };
-
+        else { const found = Object.entries(numbers).find(([w]) => t.includes(w)); if (found) qty = found[1]; }
+        const catMap: Record<string, string> = { fruta:'Fruit',frutas:'Fruit',fruit:'Fruit',vegetal:'Vegetable',verdura:'Vegetable',vegetable:'Vegetable','lácteos':'Dairy',lacteos:'Dairy',yogurt:'Dairy',queso:'Dairy',carne:'Meat',pollo:'Meat',res:'Meat',pavo:'Meat',grano:'Grain',arroz:'Grain',pan:'Grain',cereal:'Grain',snack:'Snack' };
         let category: string | undefined;
-        for (const k of Object.keys(catMap)) {
-            if (t.includes(k)) { category = catMap[k]; break; }
-        }
-
-        let name = t
-            .replace(/\b(\d+|uno|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\b/g, '')
-            .replace(/\b(fruta|frutas|fruit|vegetal|verdura|vegetable|lácteos|lacteos|carne|grano|snack|category)\b/g, '')
-            .trim();
-
-        if (!name) {
-            const parts = t.split(/\s+/);
-            name = parts[parts.length - 1] || '';
-        }
-
+        for (const k of Object.keys(catMap)) { if (t.includes(k)) { category = catMap[k]; break; } }
+        let name = t.replace(/\b(\d+|uno|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\b/g,'').replace(/\b(fruta|frutas|fruit|vegetal|verdura|vegetable|lácteos|lacteos|carne|grano|snack|category)\b/g,'').trim();
+        if (!name) { const parts = t.split(/\s+/); name = parts[parts.length - 1] || ''; }
         return { name, quantity: qty || undefined, category };
     }
 
@@ -145,29 +89,18 @@ export class InventoryAddComponent {
         if (pp.category) this.product.category = pp.category;
     }
 
-    private toTitle(s: string) {
-        return s.replace(/\w\S*/g, (w) => w[0].toUpperCase() + w.slice(1));
-    }
+    private toTitle(s: string) { return s.replace(/\w\S*/g, (w) => w[0].toUpperCase() + w.slice(1)); }
 
     onSubmit() {
         if (!this.product.name || !this.product.category) {
-            alert('Please fill in the required fields.');
+            this.toast.error('Completa los campos obligatorios.');
             return;
         }
-
         this.inventoryApi.createProduct(this.product).subscribe({
-            next: () => {
-                alert('Product added successfully!');
-                this.router.navigate(['/inventory']);
-            },
-            error: (err) => {
-                console.error('Error saving product:', err);
-                alert('Could not save product in the server.');
-            },
+            next: () => { this.toast.success('Producto agregado correctamente.'); this.router.navigate(['/inventory']); },
+            error: () => { this.toast.error('No se pudo guardar el producto.'); },
         });
     }
 
-    cancel() {
-        this.router.navigate(['/inventory']);
-    }
+    cancel() { this.router.navigate(['/inventory']); }
 }
