@@ -70,7 +70,9 @@
       "placeholderPassword": "**********",
       "cta": "Iniciar sesión",
       "noAccount": "¿No tienes una cuenta?",
-      "goRegister": "Regístrate"
+      "goRegister": "Regístrate",
+      "or": "o",
+      "google": "Continuar con Google"
     },
     "register": {
       "title": "Crear cuenta",
@@ -84,7 +86,8 @@
       "placeholderPassword": "**********",
       "cta": "Registrarse",
       "haveAccount": "¿Ya tienes una cuenta?",
-      "goLogin": "Inicia sesión"
+      "goLogin": "Inicia sesión",
+      "google": "Continuar con Google"
     }
   },
   "settings": {

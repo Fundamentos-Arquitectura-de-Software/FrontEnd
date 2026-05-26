@@ -71,7 +71,9 @@
       "placeholderPassword": "**********",
       "cta": "Log in",
       "noAccount": "Don’t have an account?",
-      "goRegister": "Sign up"
+      "goRegister": "Sign up",
+      "or": "or",
+      "google": "Continue with Google"
     },
     "register": {
       "title": "Create account",
@@ -85,7 +87,8 @@
       "placeholderPassword": "**********",
       "cta": "Sign up",
       "haveAccount": "Already have an account?",
-      "goLogin": "Sign in"
+      "goLogin": "Sign in",
+      "google": "Continue with Google"
     }
   },
   "settings": {

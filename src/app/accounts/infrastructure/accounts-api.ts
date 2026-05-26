@@ -19,4 +19,8 @@ export class AccountApis {
     logout(): Observable<void> {
         return this.http.post<void>(AccountApiEndpoints.logout, {}, { withCredentials: true });
     }
+
+    getMe(): Observable<AuthResponse> {
+        return this.http.get<AuthResponse>(AccountApiEndpoints.me, { withCredentials: true });
+    }
 }

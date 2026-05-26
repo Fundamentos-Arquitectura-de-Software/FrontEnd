@@ -66,6 +66,21 @@ export class AccountStore {
     }
 
     isLogged(): boolean {
-        return !!this.getToken();
+        return !!this.getCurrentUser();
+    }
+
+    /**
+     * Intenta restaurar la sesion llamando a GET /me con la cookie HttpOnly.
+     * Usado por el authGuard despues de un login OAuth2 donde localStorage esta vacio.
+     * Retorna true si la sesion fue restaurada, false si no hay sesion activa.
+     */
+    async tryRestoreSession(): Promise<boolean> {
+        try {
+            const resp = await lastValueFrom(this.api.getMe());
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(resp));
+            return true;
+        } catch {
+            return false;
+        }
     }
 }
