@@ -1,0 +1,35 @@
+<section class="notifications-wrap">
+    <header class="notifications-head">
+        <h2>{{ 'notifications.inbox.title' | translate }}</h2>
+        <button class="btn ghost" *ngIf="unread().length > 0" (click)="markAllAsRead()">
+            {{ 'notifications.inbox.markAllRead' | translate }}
+        </button>
+    </header>
+
+    <div class="notifications-loading" *ngIf="loading()">
+        <span class="spinner"></span>
+    </div>
+
+    <p class="notifications-empty" *ngIf="!loading() && all().length === 0">
+        {{ 'notifications.inbox.empty' | translate }}
+    </p>
+
+    <ul class="notifications-list" *ngIf="!loading() && all().length > 0">
+        <li
+            *ngFor="let n of all()"
+            class="notification-item"
+            [class.unread]="!n.isRead"
+            (click)="markAsRead(n)"
+        >
+            <div class="notification-dot" *ngIf="!n.isRead"></div>
+            <div class="notification-body">
+                <p class="notification-title">{{ n.title }}</p>
+                <p class="notification-message">{{ n.message }}</p>
+                <span class="notification-date">{{ n.createdAt | date:'short' }}</span>
+            </div>
+            <button class="btn-mark" *ngIf="!n.isRead" (click)="markAsRead(n); $event.stopPropagation()">
+                {{ 'notifications.inbox.markRead' | translate }}
+            </button>
+        </li>
+    </ul>
+</section>
