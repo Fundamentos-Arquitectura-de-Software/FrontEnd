@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, computed, inject, DestroyRef } from '@angular/core';
 import { NgFor, NgIf, NgClass } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SocialShareService } from '../application/social-share.service';
 import { captureElementToPngBlob } from '../infrastructure/capture.util';
@@ -45,7 +45,7 @@ export class AchievementsView implements OnInit {
     private readonly accountStore = inject(AccountStore);
     private readonly destroyRef = inject(DestroyRef);
 
-    constructor(private shareSvc: SocialShareService) {}
+    constructor(private shareSvc: SocialShareService, private translate: TranslateService) {}
 
     private readonly all = signal<Achievement[]>([]);
     loading = signal(true);
@@ -129,11 +129,11 @@ export class AchievementsView implements OnInit {
                 id: a.id,
                 ok: status === 'ok' || status === 'unsupported',
                 text: status === 'ok'
-                    ? '¡Compartido correctamente!'
-                    : 'Se abrió un enlace para compartir.'
+                    ? this.translate.instant('achievements.shared')
+                    : this.translate.instant('achievements.sharedFallback')
             };
         } catch {
-            this.lastShareMsg = { id: a.id, ok: false, text: 'No se pudo compartir.' };
+            this.lastShareMsg = { id: a.id, ok: false, text: this.translate.instant('achievements.shareFailed') };
         } finally {
             this.sharingId = null;
         }

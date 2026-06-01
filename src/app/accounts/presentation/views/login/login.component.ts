@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountStore } from '../../../application/accounts.store';
+import { environment } from '../../../../../environments/environment';
 
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -26,6 +27,8 @@ export class LoginView {
     isSubmitting = false;
     loginError: string | null = null;
 
+    readonly oauthGoogleUrl = environment.apiBaseUrl.replace('/api', '') + '/oauth2/authorization/google';
+
     constructor(
         private readonly accountStore: AccountStore,
         private readonly router: Router
@@ -35,7 +38,7 @@ export class LoginView {
         if (this.isSubmitting) return;
 
         if (!this.loginData.email || !this.loginData.password) {
-            this.loginError = 'Por favor completa todos los campos.';
+            this.loginError = 'auth.login.errors.required';
             return;
         }
 
@@ -50,10 +53,9 @@ export class LoginView {
         this.isSubmitting = false;
 
         if (success) {
-            // ajusta la ruta si quieres ir a otra página
             this.router.navigate(['/dashboard']);
         } else {
-            this.loginError = 'Correo o contraseña incorrectos o usuario no ha pagado ';
+            this.loginError = 'auth.login.errors.invalid';
         }
     }
 

@@ -32,7 +32,14 @@ export class ChallengeFacade {
     readonly enrolled = computed(() =>
         this._challenges().filter(c => this._enrolledIds().has(String(c.id)))
     );
-    readonly progressFor = (id: string) => computed(() => 0);
+    readonly progressFor = (id: string) => computed(() => {
+        const user = this.accountStore.getCurrentUser();
+        if (!user) return 0;
+        const entry = this._leaderboard().find(
+            e => e.challengeId === id && e.userId === String(user.id)
+        );
+        return entry?.points ?? 0;
+    });
     readonly leaderboard = computed(() => this._leaderboard());
 
     async init() {

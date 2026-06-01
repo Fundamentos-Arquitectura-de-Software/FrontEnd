@@ -38,6 +38,12 @@
       "recent": "Alertas Recientes",
       "viewAll": "Ver todas",
       "none": "Sin alertas activas"
+    },
+    "scoreVerdict": {
+      "empty": "Sin productos aún",
+      "good": "Buen estado",
+      "attention": "Necesita atención",
+      "review": "Revisar inventario"
     }
   },
   "app": {
@@ -56,6 +62,8 @@
     "recipes": "Recetas",
     "reports": "Reportes",
     "achievements": "Logros",
+    "challenges": "Desafíos",
+    "notifications": "Notificaciones",
     "settings": "Configuración"
   },
   "auth": {
@@ -72,7 +80,11 @@
       "noAccount": "¿No tienes una cuenta?",
       "goRegister": "Regístrate",
       "or": "o",
-      "google": "Continuar con Google"
+      "google": "Continuar con Google",
+      "errors": {
+        "required": "Por favor completa todos los campos.",
+        "invalid": "Correo o contraseña incorrectos."
+      }
     },
     "register": {
       "title": "Crear cuenta",
@@ -87,7 +99,15 @@
       "cta": "Registrarse",
       "haveAccount": "¿Ya tienes una cuenta?",
       "goLogin": "Inicia sesión",
-      "google": "Continuar con Google"
+      "google": "Continuar con Google",
+      "errors": {
+        "required": "Por favor completa todos los campos.",
+        "passwordMismatch": "Las contraseñas no coinciden.",
+        "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+        "passwordWeak": "La contraseña debe contener al menos una mayúscula y un número.",
+        "emailTaken": "El correo ya está registrado.",
+        "success": "Cuenta creada correctamente."
+      }
     }
   },
   "settings": {
@@ -133,7 +153,8 @@
       "density": "Densidad",
       "densityComfortable": "Cómodo",
       "densityCompact": "Compacto",
-      "apply": "Aplicar tema"
+      "apply": "Aplicar tema",
+      "modeSystem": "Sistema"
     },
     "notifications": {
       "title": "Notificaciones",
@@ -186,7 +207,33 @@
     "title": "Logros",
     "congratsTitle": "¡Felicidades! ¡Nuevo logro!",
     "completed": "Completado",
-    "locked": "Bloqueado"
+    "locked": "Bloqueado",
+    "share": "Compartir",
+    "sharing": "Compartiendo...",
+    "shared": "¡Compartido correctamente!",
+    "sharedFallback": "Se abrió un enlace para compartir.",
+    "shareFailed": "No se pudo compartir."
+  },
+  "tabs": {
+    "In-Progress": "En progreso",
+    "Pending": "Pendiente",
+    "Completed": "Completado",
+    "All": "Todo"
+  },
+  "challenges": {
+    "title": "Desafíos",
+    "tabs": {
+      "active": "Activos",
+      "enrolled": "Mis desafíos",
+      "leaderboard": "Clasificación"
+    },
+    "enroll": "Inscribirse",
+    "leave": "Salir",
+    "viewRanking": "Ver clasificación",
+    "leaderboard": "Clasificación",
+    "player": "Jugador",
+    "points": "Puntos",
+    "period": "Del {{start}} al {{end}}"
   },
   "alerts": {
     "title": "Alertas",
@@ -268,7 +315,15 @@
       "notSpecified": "No especificado",
       "quantity": "Cantidad"
     },
-    "searchAria": "Buscar productos"
+    "searchAria": "Buscar productos",
+    "form": {
+      "speechNotSupported": "Reconocimiento de voz no compatible en este navegador.",
+      "speechError": "No pude escuchar bien, intenta de nuevo.",
+      "listening": "Escucha… di algo como: \"3 bananas\" o \"2 yogurts\"",
+      "requiredFields": "Completa los campos obligatorios.",
+      "addSuccess": "Producto agregado correctamente.",
+      "addError": "No se pudo guardar el producto."
+    }
   },
   "reports": {
     "title": "Reportes",
@@ -347,5 +402,14 @@
     "close": "Cerrar",
     "search": "Buscar",
     "all": "Todo"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "inbox": {
+      "title": "Bandeja de notificaciones",
+      "empty": "No hay notificaciones.",
+      "markRead": "Marcar como leída",
+      "markAllRead": "Marcar todas como leídas"
+    }
   }
 }

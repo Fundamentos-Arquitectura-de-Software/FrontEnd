@@ -21,7 +21,7 @@
         'verdict--warn': freshnessScore() >= 40 && freshnessScore() < 70,
         'verdict--crit': freshnessScore() < 40 && totalProducts() > 0,
         'verdict--off':  totalProducts() === 0
-      }">{{ scoreVerdict() }}</span>
+      }">{{ scoreVerdict() | translate }}</span>
     </div>
 
     <!-- Secondary KPIs -->

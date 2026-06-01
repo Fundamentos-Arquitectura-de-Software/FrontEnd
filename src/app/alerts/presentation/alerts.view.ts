@@ -88,7 +88,7 @@ export class AlertsView implements OnInit {
             state: dto.state as State,
             title: dto.title,
             message: dto.message,
-            source: dto.source as any,
+            source: dto.source as AlertCard['source'],
             timeAgo: dto.timeAgo
         };
     }
