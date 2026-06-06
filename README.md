@@ -13,6 +13,21 @@ Aplicacion web de FreshSense construida con Angular 20. Permite gestionar invent
 
 ---
 
+## Prerequisito: Backend corriendo
+
+El frontend depende del backend. Antes de levantar el frontend, el backend debe estar completamente operativo con sus cuatro servicios:
+
+| Servicio | Puerto |
+|----------|--------|
+| Eureka Server | 8761 |
+| Alerts Service | 8083 |
+| Recipes Service | 8082 |
+| Monolito principal | 8080 |
+
+Ver el README del backend para instrucciones de setup y orden de arranque.
+
+---
+
 ## Instalacion y ejecucion
 
 ```bash
@@ -23,23 +38,6 @@ npm start
 
 La aplicacion levanta en `http://localhost:4200`.
 
-El backend debe estar corriendo en `http://localhost:8080` antes de usar la app. Ver README del backend para instrucciones de setup.
-
----
-
-## Variables de entorno
-
-El archivo `src/environments/environment.ts` contiene la URL base del API:
-
-```typescript
-export const environment = {
-    production: false,
-    apiBaseUrl: 'http://localhost:8080/api'
-};
-```
-
-Para produccion, editar `src/environments/environment.production.ts` con la URL real del backend desplegado.
-
 ---
 
 ## Comandos disponibles
@@ -49,6 +47,21 @@ npm start        # Servidor de desarrollo (puerto 4200, hot reload)
 npm run build    # Build de produccion (output en dist/)
 npm test         # Tests unitarios con Karma
 ```
+
+---
+
+## Configuracion de entorno
+
+El archivo `src/environments/environment.ts` contiene la URL base del API para desarrollo local:
+
+```typescript
+export const environment = {
+    production: false,
+    apiBaseUrl: 'http://localhost:8080/api'
+};
+```
+
+Para produccion, editar `src/environments/environment.production.ts` con la URL real del backend desplegado. Este archivo **no debe tener URLs hardcodeadas en el repositorio** — debe configurarse en el proceso de CI/CD o build de produccion.
 
 ---
 
@@ -77,7 +90,7 @@ Estructura interna de cada modulo:
 {modulo}/
 ├── domain/             # Modelos de dominio (interfaces/types)
 ├── application/        # Stores con signals, facades, servicios de aplicacion
-├── infrastructure/     # Servicios HTTP (ApiService)
+├── infrastructure/     # Servicios HTTP hacia el backend
 └── presentation/       # Componentes Angular (views)
 ```
 
@@ -85,10 +98,10 @@ Estructura interna de cada modulo:
 
 ## Autenticacion
 
-- El token JWT viaja en cookie HttpOnly `authToken` (seteada por el backend).
+- El token JWT viaja en cookie HttpOnly `authToken` seteada por el backend — el frontend nunca lo almacena en localStorage.
 - Todas las peticiones usan `withCredentials: true` via `auth.interceptor.ts`.
-- El `authGuard` llama a `tryRestoreSession()` antes de redirigir, lo que permite recuperar sesiones OAuth2 sin localStorage.
-- Login con Google: el boton redirige a `{apiBaseUrl}/oauth2/authorization/google`.
+- El `authGuard` llama a `tryRestoreSession()` antes de redirigir, permitiendo recuperar sesiones activas al recargar la pagina.
+- Login con Google: el boton redirige a `{apiBaseUrl}/oauth2/authorization/google`. Requiere que el backend tenga configuradas las credenciales de Google OAuth2.
 
 ### Roles disponibles
 
@@ -100,7 +113,7 @@ Estructura interna de cada modulo:
 
 ---
 
-## Modulos y rutas
+## Rutas
 
 | Ruta              | Componente             | Acceso   |
 |-------------------|------------------------|----------|
@@ -125,23 +138,24 @@ Estructura interna de cada modulo:
 
 Los archivos de traduccion estan en `public/i18n/`:
 
-- `es.json` - Espanol (idioma por defecto)
-- `en.json` - Ingles
+- `es.json` — Espanol (idioma por defecto)
+- `en.json` — Ingles
 
 Se usa `@ngx-translate/core`. El idioma se cambia con el toggle EN/ES del topbar.
 
-No se permiten strings hardcodeados en los componentes. Todos los textos visibles al usuario deben usar claves de traduccion con `| translate` o `TranslateService.instant()`.
+**Convencion:** no se permiten strings hardcodeados en los componentes. Todos los textos visibles al usuario deben usar claves de traduccion con `| translate` o `TranslateService.instant()`.
 
 ---
 
-## Convenciones
+## Convenciones de desarrollo
 
 - Componentes standalone (sin NgModules).
 - Signals de Angular para estado reactivo local.
-- `inject()` en servicios y stores.
+- `inject()` en servicios y stores en lugar de constructor injection.
 - Prettier: comillas simples, `printWidth: 100`.
 - Prefijo `fs-` en todos los selectores CSS de componentes.
 - Sufijo `View` en todas las clases de componentes de vista.
+- `takeUntilDestroyed()` en todas las suscripciones para evitar memory leaks.
 
 ---
 
