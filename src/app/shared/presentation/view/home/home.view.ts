@@ -106,11 +106,11 @@ export class HomeView implements OnInit {
     }
 
     scoreVerdict(): string {
-        if (this.totalProducts() === 0) return 'Sin productos aún';
+        if (this.totalProducts() === 0) return 'home.scoreVerdict.empty';
         const s = this.freshnessScore();
-        if (s >= 70) return 'Buen estado';
-        if (s >= 40) return 'Necesita atención';
-        return 'Revisar inventario';
+        if (s >= 70) return 'home.scoreVerdict.good';
+        if (s >= 40) return 'home.scoreVerdict.attention';
+        return 'home.scoreVerdict.review';
     }
 
     fmt(val: number | null, decimals = 1): string {

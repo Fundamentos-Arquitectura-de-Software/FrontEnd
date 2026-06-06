@@ -1,8 +1,9 @@
-import { Component, signal,inject } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf, DatePipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import { AccountStore } from '../../../application/accounts.store';  // 👈 ESTA ES LA RUTA
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AccountStore } from '../../../application/accounts.store';
+import { ToastService } from '../../../../shared/application/toast.service';
 
 
 type TabKey = 'profile' | 'preferences' | 'theme' | 'notifications' | 'security' | 'integrations';
@@ -28,6 +29,8 @@ type NotifyPrefs = Record<NotifyKey, { enabled:boolean; channels: Channel[] }>;
 })
 export class SettingsView {
     private readonly accountStore = inject(AccountStore);
+    private readonly toast = inject(ToastService);
+    private readonly translate = inject(TranslateService);
 
     // Tabs
     tabs: { key: TabKey; label: string; icon: string }[] = [
@@ -57,8 +60,8 @@ export class SettingsView {
         if (current) {
             this.profile.set({
                 ...this.profile(),
-                name: (current as any).fullName ?? (current as any).name ?? '',
-                email: (current as any).email ?? '',
+                name: current.fullName ?? '',
+                email: current.email ?? '',
             });
         }
     }
@@ -67,7 +70,7 @@ export class SettingsView {
         this.profile.set({ ...this.profile(), [k]: v });
         this.markDirty();
     }
-    saveProfile(){ alert('Profile saved (frontend mock)'); }
+    saveProfile(){ this.toast.success(this.translate.instant('settings.profile.save')); }
 
     // Preferences
     prefs = signal<Prefs>({
@@ -87,7 +90,7 @@ export class SettingsView {
     // NOTE: también guarda preferencias granulares (US24)
     savePrefs(){
         localStorage.setItem('fs.notify.prefs', JSON.stringify(this.notifyPrefs));
-        alert('Preferences saved (frontend mock)');
+        this.toast.success(this.translate.instant('settings.preferences.save'));
     }
 
     // Theme
@@ -101,7 +104,7 @@ export class SettingsView {
         this.theme.set({ ...this.theme(), [k]: v });
         this.markDirty();
     }
-    applyTheme(){ alert('Theme applied (frontend mock)'); }
+    applyTheme(){ this.toast.success(this.translate.instant('settings.theme.apply')); }
 
     // Notifications (básicas)
     notif = signal<Notif>({
@@ -148,7 +151,7 @@ export class SettingsView {
     }
 
     async tryPush(){
-        if (!('Notification' in window)) { alert('Notifications API not available'); return; }
+        if (!('Notification' in window)) { this.toast.warning('Notifications API not available'); return; }
         if (Notification.permission === 'default') await Notification.requestPermission();
         if (Notification.permission === 'granted') {
             new Notification('FreshSense', { body: 'Test notification ✅' });
@@ -162,12 +165,12 @@ export class SettingsView {
         { device: 'iPhone • Mobile App', ip: '177.34.8.10', lastActive: '2d ago' },
         { device: 'MacOS • Safari', ip: '201.22.44.9', lastActive: '1w ago' },
     ]);
-    changePassword(){ alert('Change password (frontend mock)'); }
+    changePassword(){ this.toast.info(this.translate.instant('settings.security.changePassword')); }
     toggle2FA(){ this.twoFA.set(!this.twoFA()); }
     revokeSession(i: number){
         const arr = this.sessions().slice();
         const [s] = arr.splice(i,1);
-        alert(`Session revoked: ${s.device}`);
+        this.toast.warning(`${this.translate.instant('settings.security.revoke')}: ${s.device}`);
         this.sessions.set(arr);
     }
 
@@ -222,9 +225,8 @@ export class SettingsView {
     dirty = signal(false);
     markDirty(){ this.dirty.set(true); }
     saveAll(){
-        // guarda también las prefs granulares
         localStorage.setItem('fs.notify.prefs', JSON.stringify(this.notifyPrefs));
         this.dirty.set(false);
-        alert('Settings saved (frontend mock)');
+        this.toast.success(this.translate.instant('settings.saveAll'));
     }
 }

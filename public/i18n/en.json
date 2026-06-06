@@ -38,6 +38,12 @@
       "recent": "Recent Alerts",
       "viewAll": "View all",
       "none": "No active alerts"
+    },
+    "scoreVerdict": {
+      "empty": "No products yet",
+      "good": "Good condition",
+      "attention": "Needs attention",
+      "review": "Review inventory"
     }
   },
   "app": {
@@ -57,6 +63,7 @@
     "reports": "Reports",
     "achievements": "Achievements",
     "challenges": "Challenges",
+    "notifications": "Notifications",
     "settings": "Settings"
   },
   "auth": {
@@ -73,7 +80,11 @@
       "noAccount": "Don’t have an account?",
       "goRegister": "Sign up",
       "or": "or",
-      "google": "Continue with Google"
+      "google": "Continue with Google",
+      "errors": {
+        "required": "Please fill in all fields.",
+        "invalid": "Incorrect email or password."
+      }
     },
     "register": {
       "title": "Create account",
@@ -88,7 +99,15 @@
       "cta": "Sign up",
       "haveAccount": "Already have an account?",
       "goLogin": "Sign in",
-      "google": "Continue with Google"
+      "google": "Continue with Google",
+      "errors": {
+        "required": "Please fill in all fields.",
+        "passwordMismatch": "Passwords do not match.",
+        "passwordTooShort": "Password must be at least 8 characters.",
+        "passwordWeak": "Password must contain at least one uppercase letter and one number.",
+        "emailTaken": "This email is already registered.",
+        "success": "Account created successfully."
+      }
     }
   },
   "settings": {
@@ -134,7 +153,8 @@
       "density": "Density",
       "densityComfortable": "Comfortable",
       "densityCompact": "Compact",
-      "apply": "Apply theme"
+      "apply": "Apply theme",
+      "modeSystem": "System"
     },
     "notifications": {
       "title": "Notifications",
@@ -189,7 +209,10 @@
     "completed": "Completed",
     "locked": "Locked",
     "share": "Share",
-    "sharing": "Sharing..."
+    "sharing": "Sharing...",
+    "shared": "Shared successfully!",
+    "sharedFallback": "A sharing link was opened.",
+    "shareFailed": "Could not share."
   },
   "tabs": {
     "In-Progress": "In-Progress",
@@ -277,7 +300,15 @@
       "notSpecified": "Not specified",
       "quantity": "Quantity"
     },
-    "searchAria": "Search products"
+    "searchAria": "Search products",
+    "form": {
+      "speechNotSupported": "Speech recognition not supported in this browser.",
+      "speechError": "Could not understand, please try again.",
+      "listening": "Listening… say something like: \"3 bananas\" or \"2 yogurts\"",
+      "requiredFields": "Please fill in all required fields.",
+      "addSuccess": "Product added successfully.",
+      "addError": "Could not save the product."
+    }
   },
   "reports": {
     "title": "Reports",
@@ -371,5 +402,14 @@
     "player": "Player",
     "points": "Points",
     "period": "From {{start}} to {{end}}"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "inbox": {
+      "title": "Notifications Inbox",
+      "empty": "No notifications.",
+      "markRead": "Mark as read",
+      "markAllRead": "Mark all as read"
+    }
   }
 }

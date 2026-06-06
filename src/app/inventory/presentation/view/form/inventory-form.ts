@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { InventoryApi } from '../../../infrastructure/inventory-api';
 import { ToastService } from '../../../../shared/application/toast.service';
 
@@ -45,13 +45,14 @@ export class InventoryAddComponent {
         private inventoryApi: InventoryApi,
         private router: Router,
         public route: ActivatedRoute,
-        private toast: ToastService
+        private toast: ToastService,
+        private translate: TranslateService
     ) {}
 
     private ensureRecognition() {
         if (this.recognition) return;
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) { this.voiceHint = 'Speech Recognition not supported in this browser.'; return; }
+        if (!SR) { this.voiceHint = this.translate.instant('inventory.form.speechNotSupported'); return; }
         this.recognition = new SR();
         this.recognition!.lang = 'es-PE';
         this.recognition!.interimResults = false;
@@ -61,11 +62,11 @@ export class InventoryAddComponent {
             this.voiceHint = `"${transcript}"`;
             this.applyVoice(this.parseVoiceCommand(transcript));
         };
-        this.recognition!.onerror = () => { this.voiceHint = 'No pude escuchar bien, intenta de nuevo.'; this.recording = false; };
+        this.recognition!.onerror = () => { this.voiceHint = this.translate.instant('inventory.form.speechError'); this.recording = false; };
         this.recognition!.onend = () => (this.recording = false);
     }
 
-    startVoice() { this.ensureRecognition(); if (!this.recognition) return; this.voiceHint = 'Escucha… di algo como: "3 bananas" o "2 yogurts"'; this.recording = true; this.recognition.start(); }
+    startVoice() { this.ensureRecognition(); if (!this.recognition) return; this.voiceHint = this.translate.instant('inventory.form.listening'); this.recording = true; this.recognition.start(); }
     stopVoice()  { if (!this.recognition) return; this.recognition.stop(); this.recording = false; }
 
     private parseVoiceCommand(text: string): PartialProduct {
@@ -93,12 +94,12 @@ export class InventoryAddComponent {
 
     onSubmit() {
         if (!this.product.name || !this.product.category) {
-            this.toast.error('Completa los campos obligatorios.');
+            this.toast.error(this.translate.instant('inventory.form.requiredFields'));
             return;
         }
         this.inventoryApi.createProduct(this.product).subscribe({
-            next: () => { this.toast.success('Producto agregado correctamente.'); this.router.navigate(['/inventory']); },
-            error: () => { this.toast.error('No se pudo guardar el producto.'); },
+            next: () => { this.toast.success(this.translate.instant('inventory.form.addSuccess')); this.router.navigate(['/inventory']); },
+            error: () => { this.toast.error(this.translate.instant('inventory.form.addError')); },
         });
     }
 

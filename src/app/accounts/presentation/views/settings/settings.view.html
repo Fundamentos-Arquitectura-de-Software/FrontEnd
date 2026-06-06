@@ -112,7 +112,7 @@
                         </label>
                         <label class="switch">
                             <input type="radio" name="mode" value="system" [ngModel]="theme().mode" (ngModelChange)="setTheme('mode', $event)">
-                            <span>System</span>
+                            <span>{{ 'settings.theme.modeSystem' | translate }}</span>
                         </label>
                     </div>
 

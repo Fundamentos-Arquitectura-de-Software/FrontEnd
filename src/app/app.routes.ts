@@ -85,6 +85,12 @@ export const routes: Routes = [
                         .then(m => m.ChallengesView),
             },
             {
+                path: 'notifications',
+                loadComponent: () =>
+                    import('./notifications/presentation/notifications.view')
+                        .then(m => m.NotificationsView),
+            },
+            {
                 path: 'settings',
                 loadComponent: () =>
                     import('./accounts/presentation/views/settings/settings.view')

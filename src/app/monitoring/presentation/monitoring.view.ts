@@ -34,7 +34,8 @@ export class MonitoringView implements OnInit {
 
     lastMonitoringDate = '—';
     lastSync = '—';
-    get lastSyncMinutes() { return 0; }
+    private _lastSyncMinutes = 0;
+    get lastSyncMinutes() { return this._lastSyncMinutes; }
 
     categories: (Category | 'All')[] = ['All', 'Environment', 'Quality', 'Safety'];
     activeCategory = signal<Category | 'All'>('All');
@@ -72,8 +73,9 @@ export class MonitoringView implements OnInit {
                 this.lastMonitoringDate = data.recordedAt
                     ? new Date(data.recordedAt).toLocaleDateString()
                     : '—';
+                this._lastSyncMinutes = data.recordedAt ? this.minutesAgo(data.recordedAt) : 0;
                 this.lastSync = data.recordedAt
-                    ? this.minutesAgo(data.recordedAt) + ' min ago'
+                    ? this._lastSyncMinutes + ' min ago'
                     : '—';
 
                 this.allCards.set([
