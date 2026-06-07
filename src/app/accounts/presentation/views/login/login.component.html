@@ -65,7 +65,7 @@
                 <button
                         type="submit"
                         class="btn-login"
-                        [disabled]="loginForm.invalid || isSubmitting"
+                        [disabled]="isSubmitting"
                 >
                     {{ 'auth.login.cta' | translate }}
                 </button>

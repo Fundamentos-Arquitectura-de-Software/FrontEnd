@@ -18,6 +18,7 @@ import { environment } from '../../../../../environments/environment';
 export class RegisterView {
     user: User = { name: '', email: '', password: '' };
     confirmPassword = '';
+    isSubmitting = false;
 
     readonly oauthGoogleUrl = environment.apiBaseUrl.replace('/api', '') + '/oauth2/authorization/google';
 
@@ -31,6 +32,7 @@ export class RegisterView {
     goToLogin() { this.router.navigate(['/login']); }
 
     async onSubmit() {
+        if (this.isSubmitting) return;
         if (!this.user.name || !this.user.email || !this.user.password || !this.confirmPassword) {
             this.toast.error(this.translate.instant('auth.register.errors.required'));
             return;
@@ -48,7 +50,9 @@ export class RegisterView {
             return;
         }
 
+        this.isSubmitting = true;
         const result = await this.accountStore.register(this.user);
+        this.isSubmitting = false;
 
         if (result.ok) {
             this.toast.success(this.translate.instant('auth.register.errors.success'));

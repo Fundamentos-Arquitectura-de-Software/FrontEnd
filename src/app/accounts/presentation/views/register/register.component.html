@@ -60,7 +60,7 @@
                 </p>
 
                 <button type="submit" class="btn-register"
-                        [disabled]="registerForm.invalid">
+                        [disabled]="isSubmitting">
                     {{ 'auth.register.cta' | translate }}
                 </button>
             </form>
