@@ -35,7 +35,7 @@ export class RecipesView implements OnInit {
     }
 
     private loadRecipes(): void {
-        this.http.get<Recipe[]>(this.apiUrl).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+        this.http.get<Recipe[]>(this.apiUrl, { withCredentials: true }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (data) => {
                 this.recipes = data ?? [];
                 this.filteredRecipes = [...this.recipes];

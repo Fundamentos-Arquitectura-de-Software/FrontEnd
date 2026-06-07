@@ -11,6 +11,10 @@ export class BillingApi {
   constructor(private http: HttpClient) {}
 
   getPlans(): Observable<Plan[]> {
-    return this.http.get<Plan[]>(`${this.base}/plans`);
+    return this.http.get<Plan[]>(`${this.base}/plans`, { withCredentials: true });
+  }
+
+  subscribe(planId: number, paymentReference: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/subscribe`, { planId, paymentReference }, { withCredentials: true });
   }
 }
