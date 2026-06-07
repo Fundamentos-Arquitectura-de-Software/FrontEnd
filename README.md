@@ -50,6 +50,22 @@ npm test         # Tests unitarios con Karma
 
 ---
 
+## URLs de produccion
+
+| Recurso | URL |
+|---------|-----|
+| Frontend (Azure Static Web Apps) | `https://proud-rock-06bc9ad10.7.azurestaticapps.net` |
+| Backend API | `https://freshsense-backend.mangoground-03a86fb8.eastus.azurecontainerapps.io/api` |
+| Swagger UI | `https://freshsense-backend.mangoground-03a86fb8.eastus.azurecontainerapps.io/swagger-ui/index.html` |
+
+## CI/CD
+
+El repositorio tiene CI/CD automatico via **Azure Static Web Apps**:
+
+- Workflow: `.github/workflows/azure-static-web-apps-proud-rock-06bc9ad10.yml`
+- Cada push a `main` compila el proyecto Angular y despliega a Azure Static Web Apps.
+- Output de build: `dist/frontend/browser`
+
 ## Configuracion de entorno
 
 El archivo `src/environments/environment.ts` contiene la URL base del API para desarrollo local:
@@ -61,7 +77,14 @@ export const environment = {
 };
 ```
 
-Para produccion, editar `src/environments/environment.production.ts` con la URL real del backend desplegado. Este archivo **no debe tener URLs hardcodeadas en el repositorio** — debe configurarse en el proceso de CI/CD o build de produccion.
+El archivo `src/environments/environment.production.ts` apunta al backend desplegado en Azure:
+
+```typescript
+export const environment = {
+    production: true,
+    apiBaseUrl: 'https://freshsense-backend.mangoground-03a86fb8.eastus.azurecontainerapps.io/api'
+};
+```
 
 ---
 
