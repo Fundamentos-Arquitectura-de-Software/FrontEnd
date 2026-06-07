@@ -28,6 +28,6 @@ export class PaymentView {
         await this.accountStore.markAsPaid(user.email);
         this.toast.success('Pago realizado con éxito.');
         localStorage.removeItem('selectedPlan');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/dashboard']);
     }
 }
