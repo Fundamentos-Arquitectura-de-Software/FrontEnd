@@ -5,7 +5,6 @@ import { AccountApis } from '../infrastructure/accounts-api';
 import { AuthResponse } from '../infrastructure/account-response';
 
 const CURRENT_USER_KEY = 'currentUser';
-const TOKEN_KEY = 'authToken';
 
 @Injectable({ providedIn: 'root' })
 export class AccountStore {
@@ -43,9 +42,14 @@ export class AccountStore {
     }
 
     private saveSession(resp: AuthResponse): void {
-        const { token, ...userInfo } = resp;
+        // El token NO se guarda en localStorage: viaja solo en la cookie HttpOnly (seguro ante XSS).
+        const userInfo = {
+            id: resp.id,
+            email: resp.email,
+            fullName: resp.fullName,
+            role: resp.role,
+        };
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userInfo));
-        if (token) localStorage.setItem(TOKEN_KEY, token);
     }
 
     getCurrentUser(): Omit<AuthResponse, 'token'> | null {
@@ -55,18 +59,48 @@ export class AccountStore {
         catch { return null; }
     }
 
-    getToken(): string | null {
-        return localStorage.getItem(TOKEN_KEY);
-    }
-
     logout(): void {
         localStorage.removeItem(CURRENT_USER_KEY);
-        localStorage.removeItem(TOKEN_KEY);
         this.api.logout().subscribe({ error: () => {} });
     }
 
     isLogged(): boolean {
         return !!this.getCurrentUser();
+    }
+
+    /**
+     * Renueva el access token usando el refreshToken (cookie). Devuelve true si se renovó.
+     * Usado por el interceptor ante un 401 antes de desloguear.
+     */
+    async refreshToken(): Promise<boolean> {
+        try {
+            const resp = await lastValueFrom(this.api.refresh());
+            this.saveSession(resp);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Refresca la sesión tras un cambio de rol (ej. upgrade a premium): pide un token nuevo
+     * con el rol actualizado y actualiza el usuario guardado. Necesario para que @PreAuthorize premium aplique.
+     */
+    async refreshAfterRoleChange(): Promise<void> {
+        await this.refreshToken();
+        try {
+            const me = await lastValueFrom(this.api.getMe());
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(me));
+        } catch { /* ignore */ }
+    }
+
+    getRole(): string | null {
+        return this.getCurrentUser()?.role ?? null;
+    }
+
+    isPremium(): boolean {
+        const role = this.getRole();
+        return role === 'USER_PREMIUM' || role === 'ADMIN';
     }
 
     /**

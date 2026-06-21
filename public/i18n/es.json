@@ -58,6 +58,7 @@
     "dashboard": "Dashboard",
     "inventory": "Inventario",
     "monitoring": "Monitoreo",
+    "devices": "Dispositivos",
     "alerts": "Alertas",
     "recipes": "Recetas",
     "reports": "Reportes",

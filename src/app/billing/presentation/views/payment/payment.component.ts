@@ -38,8 +38,11 @@ export class PaymentView {
 
         this.isSubmitting = true;
         try {
+            // Pago simulado (sin pasarela real): referencia de demo. Activa la suscripción premium.
             await firstValueFrom(this.billingApi.subscribe(planId, 'DEMO-REF-' + Date.now()));
-            this.toast.success('Pago realizado con éxito.');
+            // Renueva el token para que el rol USER_PREMIUM surta efecto inmediatamente.
+            await this.accountStore.refreshAfterRoleChange();
+            this.toast.success('Pago realizado con éxito. ¡Ya eres premium!');
             localStorage.removeItem('selectedPlan');
             this.router.navigate(['/dashboard']);
         } catch {
