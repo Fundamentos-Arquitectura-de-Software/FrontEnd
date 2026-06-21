@@ -36,7 +36,10 @@
                  *ngFor="let p of filteredProducts; trackBy: trackByProductId"
                  [class.product-card--open]="selectedProduct?.id === p.id">
 
-            <div class="card-header" (click)="openProduct(p)">
+            <div class="card-header" role="button" tabindex="0"
+                 [attr.aria-expanded]="selectedProduct?.id === p.id"
+                 (click)="openProduct(p)"
+                 (keydown.enter)="openProduct(p)" (keydown.space)="openProduct(p); $event.preventDefault()">
                 <div class="product-thumb" [style.background]="thumbBg(p.category ?? '')">
                     <span *ngIf="!p.image">{{ initial(p.name) }}</span>
                     <img *ngIf="p.image" [src]="p.image" [alt]="p.name" loading="lazy"
@@ -47,7 +50,7 @@
                     <p class="product-cat">{{ p.category || ('inventory.uncategorized' | translate) }}</p>
                 </div>
                 <span class="product-qty">{{ p.quantity ?? 0 }}</span>
-                <span class="toggle-icon" [class.toggle-icon--open]="selectedProduct?.id === p.id">›</span>
+                <span class="toggle-icon" aria-hidden="true" [class.toggle-icon--open]="selectedProduct?.id === p.id">›</span>
             </div>
 
             <div class="product-detail" *ngIf="selectedProduct?.id === p.id">
@@ -75,7 +78,7 @@
         </article>
 
         <p class="inv-empty" *ngIf="filteredProducts.length === 0">
-            {{ 'alerts.empty.title' | translate }}
+            {{ 'inventory.empty.title' | translate }}
         </p>
     </div>
 

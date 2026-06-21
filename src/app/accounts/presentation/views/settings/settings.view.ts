@@ -4,6 +4,7 @@ import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AccountStore } from '../../../application/accounts.store';
 import { ToastService } from '../../../../shared/application/toast.service';
+import { NotificationsApi } from '../../../../notifications/infrastructure/notifications-api';
 
 
 type TabKey = 'profile' | 'preferences' | 'theme' | 'notifications' | 'security' | 'integrations';
@@ -31,6 +32,7 @@ export class SettingsView {
     private readonly accountStore = inject(AccountStore);
     private readonly toast = inject(ToastService);
     private readonly translate = inject(TranslateService);
+    private readonly notificationsApi = inject(NotificationsApi);
 
     // Tabs
     tabs: { key: TabKey; label: string; icon: string }[] = [
@@ -64,6 +66,27 @@ export class SettingsView {
                 email: current.email ?? '',
             });
         }
+        // Carga las preferencias de notificación reales desde el backend.
+        this.notificationsApi.getPreferences().subscribe({
+            next: (p) => this.notif.set({
+                ...this.notif(),
+                email: p.emailEnabled,
+                push: p.pushEnabled,
+            }),
+            error: () => { /* usa los valores por defecto */ },
+        });
+    }
+
+    /** Persiste las preferencias de notificación en el backend (US09/US24). */
+    private persistNotificationPrefs(): void {
+        const n = this.notif();
+        this.notificationsApi.updatePreferences({
+            inAppEnabled: true,
+            emailEnabled: n.email,
+            pushEnabled: n.push,
+            quietStart: null,
+            quietEnd: null,
+        }).subscribe({ error: () => {} });
     }
 
     setProfile<K extends keyof Profile>(k: K, v: Profile[K]) {
@@ -87,9 +110,10 @@ export class SettingsView {
         this.markDirty();
     }
 
-    // NOTE: también guarda preferencias granulares (US24)
+    // Guarda preferencias granulares (US24) y las básicas en el backend (US09)
     savePrefs(){
         localStorage.setItem('fs.notify.prefs', JSON.stringify(this.notifyPrefs));
+        this.persistNotificationPrefs();
         this.toast.success(this.translate.instant('settings.preferences.save'));
     }
 
@@ -160,10 +184,9 @@ export class SettingsView {
 
     // Security
     twoFA = signal(false);
+    // Solo la sesión actual (no inventamos sesiones falsas: no hay backend de gestión de sesiones).
     sessions = signal<SessionInfo[]>([
-        { device: 'Windows • Chrome', ip: '181.65.12.34', lastActive: 'Now', current: true },
-        { device: 'iPhone • Mobile App', ip: '177.34.8.10', lastActive: '2d ago' },
-        { device: 'MacOS • Safari', ip: '201.22.44.9', lastActive: '1w ago' },
+        { device: 'Esta sesión', ip: '—', lastActive: 'Ahora', current: true },
     ]);
     changePassword(){ this.toast.info(this.translate.instant('settings.security.changePassword')); }
     toggle2FA(){ this.twoFA.set(!this.twoFA()); }
@@ -175,11 +198,12 @@ export class SettingsView {
     }
 
     // Integrations
+    // Integraciones disponibles (todas desconectadas: no hay backend de integraciones aún).
     integrations = signal<Integration[]>([
         { key:'google',   name:'Google',   connected:false, note:'Calendar & Drive export' },
-        { key:'slack',    name:'Slack',    connected:true,  note:'#freshsense channel' },
+        { key:'slack',    name:'Slack',    connected:false, note:'#freshsense channel' },
         { key:'zapier',   name:'Zapier',   connected:false },
-        { key:'webhooks', name:'Webhooks', connected:true,  note:'2 active hooks' },
+        { key:'webhooks', name:'Webhooks', connected:false },
     ]);
     connect(i: Integration){
         i.connected = !i.connected;
@@ -226,6 +250,7 @@ export class SettingsView {
     markDirty(){ this.dirty.set(true); }
     saveAll(){
         localStorage.setItem('fs.notify.prefs', JSON.stringify(this.notifyPrefs));
+        this.persistNotificationPrefs();
         this.dirty.set(false);
         this.toast.success(this.translate.instant('settings.saveAll'));
     }

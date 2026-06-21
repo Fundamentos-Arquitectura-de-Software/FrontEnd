@@ -19,18 +19,18 @@ export class ChallengeApi {
     constructor(private http: HttpClient) {}
 
     getAll(): Observable<Challenge[]> {
-        return this.http.get<Challenge[]>(this.base);
+        return this.http.get<Challenge[]>(this.base, { withCredentials: true });
     }
 
     enroll(challengeId: number | string, userId: number): Observable<void> {
-        return this.http.post<void>(`${this.base}/${challengeId}/enroll?userId=${userId}`, {});
+        return this.http.post<void>(`${this.base}/${challengeId}/enroll?userId=${userId}`, {}, { withCredentials: true });
     }
 
     leave(challengeId: number | string, userId: number): Observable<void> {
-        return this.http.delete<void>(`${this.base}/${challengeId}/enroll?userId=${userId}`);
+        return this.http.delete<void>(`${this.base}/${challengeId}/enroll?userId=${userId}`, { withCredentials: true });
     }
 
     getLeaderboard(challengeId: number | string): Observable<LeaderboardEntryDto[]> {
-        return this.http.get<LeaderboardEntryDto[]>(`${this.base}/${challengeId}/leaderboard`);
+        return this.http.get<LeaderboardEntryDto[]>(`${this.base}/${challengeId}/leaderboard`, { withCredentials: true });
     }
 }

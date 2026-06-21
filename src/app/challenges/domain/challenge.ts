@@ -5,6 +5,7 @@ export interface Challenge {
     id: string;
     title: string;
     desc: string;
+    description?: string;  // campo original del backend
     rewardPts: number;
     startAt: string; // ISO
     endAt: string;   // ISO
@@ -12,4 +13,5 @@ export interface Challenge {
     goalTarget: number;   // p.ej. 7 días, 5 acciones, 10%
     status: ChallengeStatus;
     banner?: string;
+    bannerUrl?: string;    // campo original del backend
 }

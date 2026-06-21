@@ -83,14 +83,14 @@ export class AchievementsView implements OnInit {
         const user = this.accountStore.getCurrentUser();
         if (!user) return;
 
-        this.api.init(user.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-            complete: () => this.loadAchievements(user.id),
-            error: () => this.loadAchievements(user.id)
+        this.api.init().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            complete: () => this.loadAchievements(),
+            error: () => this.loadAchievements()
         });
     }
 
-    private loadAchievements(userId: number): void {
-        this.api.list(userId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    private loadAchievements(): void {
+        this.api.list().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (data: AchievementDto[]) => {
                 this.all.set(data.map(a => ({
                     id: a.id,

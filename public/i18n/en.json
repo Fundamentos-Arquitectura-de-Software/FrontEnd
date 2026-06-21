@@ -58,6 +58,7 @@
     "dashboard": "Dashboard",
     "inventory": "Food Inventory",
     "monitoring": "Food Monitoring",
+    "devices": "Devices",
     "alerts": "Alerts",
     "recipes": "Recipes",
     "reports": "Reports",
@@ -307,7 +308,14 @@
       "listening": "Listening… say something like: \"3 bananas\" or \"2 yogurts\"",
       "requiredFields": "Please fill in all required fields.",
       "addSuccess": "Product added successfully.",
-      "addError": "Could not save the product."
+      "addError": "Could not save the product.",
+      "voiceStartAria": "Start voice input",
+      "voiceStopAria": "Stop voice input",
+      "scanSoon": "Barcode scan coming soon"
+    },
+    "empty": {
+      "title": "No products found",
+      "hint": "Add your first product to get started."
     }
   },
   "reports": {

@@ -4,6 +4,15 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Notification } from '../domain/notification.model';
 
+export interface NotificationPreference {
+    userId?: number;
+    inAppEnabled: boolean;
+    emailEnabled: boolean;
+    pushEnabled: boolean;
+    quietStart?: string | null;
+    quietEnd?: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class NotificationsApi {
     private readonly http = inject(HttpClient);
@@ -15,5 +24,13 @@ export class NotificationsApi {
 
     markAsRead(id: number): Observable<void> {
         return this.http.patch<void>(`${this.base}/notifications/${id}/read`, {}, { withCredentials: true });
+    }
+
+    getPreferences(): Observable<NotificationPreference> {
+        return this.http.get<NotificationPreference>(`${this.base}/notifications/preferences`, { withCredentials: true });
+    }
+
+    updatePreferences(prefs: NotificationPreference): Observable<NotificationPreference> {
+        return this.http.put<NotificationPreference>(`${this.base}/notifications/preferences`, prefs, { withCredentials: true });
     }
 }

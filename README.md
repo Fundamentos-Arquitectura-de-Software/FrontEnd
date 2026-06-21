@@ -13,6 +13,23 @@ Aplicacion web de FreshSense construida con Angular 20. Permite gestionar invent
 
 ---
 
+## Opcion rapida: levantar TODO con Docker (recomendado)
+
+Si tienes **Docker Desktop**, puedes levantar el frontend + backend + microservicios + MySQL con un solo comando, sin instalar Node ni Java. Desde la **raiz del proyecto** (carpeta con `docker-compose.yml`):
+
+```bash
+docker compose build
+docker compose up
+```
+
+Luego abre `http://localhost`. Usuario demo: `demo@freshsense.com` / `Demo1234!`.
+
+En este modo, el frontend se compila con la configuracion `docker` (`environment.docker.ts`, `apiBaseUrl: '/api'`) y Nginx hace de reverse proxy hacia el backend. Ver el README del backend para mas detalle.
+
+Si prefieres correr solo el frontend en modo desarrollo (hot reload), sigue las secciones de abajo.
+
+---
+
 ## Prerequisito: Backend corriendo
 
 El frontend depende del backend. Antes de levantar el frontend, el backend debe estar completamente operativo con sus cuatro servicios:
@@ -86,6 +103,15 @@ export const environment = {
 };
 ```
 
+El archivo `src/environments/environment.docker.ts` se usa al construir la imagen Docker (config `docker` en `angular.json`). Apunta a `/api` (mismo origen) porque Nginx hace de reverse proxy hacia el backend:
+
+```typescript
+export const environment = {
+    production: true,
+    apiBaseUrl: '/api'
+};
+```
+
 ---
 
 ## Arquitectura
@@ -145,6 +171,7 @@ Estructura interna de cada modulo:
 | `/dashboard`      | HomeView               | Auth     |
 | `/inventory`      | InventoryView (lazy)   | Auth     |
 | `/monitoring`     | MonitoringView         | Auth     |
+| `/devices`        | DevicesView            | Auth     |
 | `/alerts`         | AlertsView             | Auth     |
 | `/recipes`        | RecipesView            | Auth     |
 | `/reports`        | ReportsView            | Auth     |

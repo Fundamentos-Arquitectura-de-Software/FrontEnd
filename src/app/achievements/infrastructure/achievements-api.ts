@@ -8,21 +8,22 @@ const opts = { withCredentials: true };
 
 @Injectable({ providedIn: 'root' })
 export class AchievementsApi {
-    private base = `${environment.apiBaseUrl}/users`;
+    // El backend resuelve el usuario desde el token (ya no se envía el userId en la URL).
+    private base = `${environment.apiBaseUrl}/achievements`;
 
     constructor(private http: HttpClient) {}
 
-    init(userId: number): Observable<void> {
-        return this.http.post<void>(`${this.base}/${userId}/achievements/init`, {}, opts);
+    init(): Observable<void> {
+        return this.http.post<void>(`${this.base}/init`, {}, opts);
     }
 
-    list(userId: number): Observable<Achievement[]> {
-        return this.http.get<Achievement[]>(`${this.base}/${userId}/achievements`, opts);
+    list(): Observable<Achievement[]> {
+        return this.http.get<Achievement[]>(this.base, opts);
     }
 
-    updateProgress(userId: number, achievementId: string, completionPercentage: number): Observable<Achievement> {
+    updateProgress(achievementId: string, completionPercentage: number): Observable<Achievement> {
         return this.http.patch<Achievement>(
-            `${this.base}/${userId}/achievements/${achievementId}`,
+            `${this.base}/${achievementId}`,
             { completionPercentage },
             opts
         );
