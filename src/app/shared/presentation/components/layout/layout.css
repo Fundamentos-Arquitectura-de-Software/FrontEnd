@@ -195,6 +195,12 @@
   flex-shrink: 0;
   transition: color var(--fs-dur) var(--fs-ease);
 }
+/* El ícono de devices es un SVG inline: font-size no lo dimensiona, así que
+   fijamos width/height para que iguale a los íconos de fuente (20px). */
+svg.nav-icon {
+  width: 20px;
+  height: 20px;
+}
 .nav-item.active .nav-icon { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 
 /* ---- Content area ---- */

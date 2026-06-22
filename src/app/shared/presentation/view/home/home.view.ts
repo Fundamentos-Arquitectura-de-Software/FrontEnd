@@ -73,7 +73,7 @@ export class HomeView implements OnInit {
      */
     private recomputeFreshness(): void {
         const statuses = [
-            this.tempStatus(), this.humidityStatus(), this.ethyleneStatus(), this.cleanlinessStatus(),
+            this.tempStatus(), this.humidityStatus(),
         ].filter(s => s !== 'off');
         if (statuses.length === 0) {
             this.freshnessScore.set(0);
