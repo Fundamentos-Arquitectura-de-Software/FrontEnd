@@ -23,4 +23,8 @@ export class AccountApis {
     getMe(): Observable<AuthResponse> {
         return this.http.get<AuthResponse>(AccountApiEndpoints.me, { withCredentials: true });
     }
+
+    refresh(): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(AccountApiEndpoints.refresh, {}, { withCredentials: true });
+    }
 }

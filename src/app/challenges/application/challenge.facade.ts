@@ -50,8 +50,8 @@ export class ChallengeFacade {
             this._challenges.set(challenges.map(c => ({
                 ...c,
                 id: String(c.id),
-                desc: (c as any).description ?? '',
-                banner: (c as any).bannerUrl,
+                desc: c.description ?? '',
+                banner: c.bannerUrl,
             })));
         } catch {
             this.error.set('Failed to load challenges');

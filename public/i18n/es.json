@@ -47,6 +47,7 @@
     "dashboard": "Dashboard",
     "inventory": "Inventario",
     "monitoring": "Monitoreo",
+    "devices": "Dispositivos",
     "alerts": "Alertas",
     "recipes": "Recetas",
     "reports": "Reportes",
@@ -328,7 +329,14 @@
       "listening": "Escucha… di algo como: \"3 bananas\" o \"2 yogurts\"",
       "requiredFields": "Completa los campos obligatorios.",
       "addSuccess": "Producto agregado correctamente.",
-      "addError": "No se pudo guardar el producto."
+      "addError": "No se pudo guardar el producto.",
+      "voiceStartAria": "Iniciar entrada de voz",
+      "voiceStopAria": "Detener entrada de voz",
+      "scanSoon": "Escaneo de código de barras próximamente"
+    },
+    "empty": {
+      "title": "No se encontraron productos",
+      "hint": "Agrega tu primer producto para comenzar."
     }
   },
   "reports": {

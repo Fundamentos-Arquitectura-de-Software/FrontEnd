@@ -9,6 +9,13 @@ import { InventoryApi } from '../../../infrastructure/inventory-api';
 import { ProductResponse } from '../../../infrastructure/inventory-response';
 import { Product } from '../../../domain/product.model';
 import { environment } from '../../../../../environments/environment';
+import { MonitoringApi } from '../../../../monitoring/infrastructure/monitoring-api';
+
+interface CategoryThreshold {
+    category: string;
+    tempMin: number; tempMax: number;
+    humidityMin: number; humidityMax: number;
+}
 
 @Component({
     selector: 'fs-inventory',
@@ -22,8 +29,9 @@ export class FoodInventoryView implements OnInit {
     filteredProducts: Product[] = [];
     searchTerm = '';
 
-    states = ['All', 'In good condition', 'Regular condition', 'Bad condition'];
-    categories = ['All', 'Fruit', 'Vegetable', 'Dairy', 'Grain', 'Meat', 'Snack'];
+    states = ['All', 'In good condition', 'Regular condition', 'Bad condition', 'No sensor data'];
+    // Categorías derivadas dinámicamente de los productos reales (antes lista fija en inglés que no coincidía).
+    categories: string[] = ['All'];
 
     selectedState = 'All';
     selectedCategory = 'All';
@@ -35,15 +43,34 @@ export class FoodInventoryView implements OnInit {
 
     private destroyRef = inject(DestroyRef);
     private readonly historyUrl = `${environment.apiBaseUrl}/history`;
+    private thresholds: CategoryThreshold[] = [];
+    private lastTemp: number | null = null;
+    private lastHumidity: number | null = null;
 
     constructor(
         private inventoryApi: InventoryApi,
         private router: Router,
-        private http: HttpClient
+        private http: HttpClient,
+        private monitoringApi: MonitoringApi
     ) {}
 
     ngOnInit() {
-        this.loadProducts();
+        // Carga umbrales y última lectura del sensor; luego los productos (para calcular su frescura).
+        this.http.get<CategoryThreshold[]>(`${environment.apiBaseUrl}/thresholds`)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (t) => { this.thresholds = t ?? []; this.loadLatestThenProducts(); },
+                error: () => this.loadLatestThenProducts()
+            });
+    }
+
+    private loadLatestThenProducts() {
+        this.monitoringApi.getLatest()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (r) => { this.lastTemp = r?.temperature ?? null; this.lastHumidity = r?.humidity ?? null; this.loadProducts(); },
+                error: () => this.loadProducts()
+            });
     }
 
     private loadProducts() {
@@ -53,11 +80,12 @@ export class FoodInventoryView implements OnInit {
                     id: p.id,
                     name: p.name,
                     image: p.imageUrl,
-                    state: 'In good condition',
+                    state: this.computeState(p.category),
                     category: p.category,
                     description: p.description,
                     quantity: typeof p.quantity === 'number' ? p.quantity : 0
                 }));
+                this.rebuildCategories();
                 this.filteredProducts = [...this.products];
                 this.loading = false;
             },
@@ -67,6 +95,38 @@ export class FoodInventoryView implements OnInit {
                 this.loading = false;
             }
         });
+    }
+
+    private rebuildCategories() {
+        const unique = Array.from(new Set(this.products.map(p => p.category).filter((c): c is string => !!c)));
+        this.categories = ['All', ...unique];
+    }
+
+    /**
+     * Estado de frescura derivado de la última lectura del sensor vs. el umbral de la categoría.
+     * Sin lectura o sin umbral → 'No sensor data' (en vez de fingir "buen estado").
+     */
+    private computeState(category?: string): string {
+        if (this.lastTemp === null && this.lastHumidity === null) return 'No sensor data';
+        const th = this.thresholds.find(t => t.category.toLowerCase() === (category ?? '').toLowerCase());
+        if (!th) return 'No sensor data';
+
+        const within = (v: number | null, min: number, max: number) => v !== null && v >= min && v <= max;
+        const near = (v: number | null, min: number, max: number) => {
+            if (v === null) return false;
+            const margin = (max - min) * 0.15;
+            return (v >= min - margin && v < min) || (v > max && v <= max + margin);
+        };
+
+        const tempOk = within(this.lastTemp, th.tempMin, th.tempMax);
+        const humOk = within(this.lastHumidity, th.humidityMin, th.humidityMax);
+        if (tempOk && humOk) return 'In good condition';
+
+        const tempNear = tempOk || near(this.lastTemp, th.tempMin, th.tempMax);
+        const humNear = humOk || near(this.lastHumidity, th.humidityMin, th.humidityMax);
+        if (tempNear && humNear) return 'Regular condition';
+
+        return 'Bad condition';
     }
 
     filterProducts() {
@@ -160,11 +220,13 @@ export class FoodInventoryView implements OnInit {
     }
 
     private postHistory(p: Product, action: string, quantity: number) {
+        // El backend (y el análisis premium US17) espera CONSUMED / DISCARDED.
+        const backendAction = action === 'consume' ? 'CONSUMED' : 'DISCARDED';
         this.http.post(this.historyUrl, {
             productId: p.id,
             productName: p.name,
             category: p.category ?? '',
-            action,
+            action: backendAction,
             quantity
         }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }

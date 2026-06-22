@@ -34,8 +34,10 @@ export class HomeView implements OnInit {
     freshnessScore = signal(0);
 
     private _alerts = signal<Alert[]>([]);
-    activeAlerts = computed(() => this._alerts().filter(a => a.state === 'active'));
-    criticalCount = computed(() => this.activeAlerts().filter(a => a.severity === 'critical').length);
+    // Comparación case-insensitive: el backend usa ACTIVE/WARNING/CRITICAL (mayúsculas).
+    activeAlerts = computed(() => this._alerts().filter(a => (a.state ?? '').toLowerCase() === 'active'));
+    criticalCount = computed(() => this.activeAlerts().filter(a => (a.severity ?? '').toLowerCase() === 'critical').length);
+    warningCount = computed(() => this.activeAlerts().filter(a => (a.severity ?? '').toLowerCase() === 'warning').length);
     recentAlerts = computed(() => this.activeAlerts().slice(0, 4));
 
     sensorData = signal<MonitoringReading | null>(null);
@@ -56,16 +58,30 @@ export class HomeView implements OnInit {
             .getProducts()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
+                // El freshnessScore lo deriva recomputeFreshness() desde los sensores.
                 next: products => {
                     this.totalProducts.set(products.length);
-                    const avg = products.length
-                        ? products.reduce((s, p) => s + (p.quantity ?? 0), 0) / products.length
-                        : 0;
-                    this.freshnessScore.set(Math.min(Math.round((avg / 10) * 100), 100));
                     this.loading.set(false);
                 },
                 error: () => this.loading.set(false),
             });
+    }
+
+    /**
+     * Puntaje de frescura (0–100) derivado del estado real de los sensores:
+     * cada métrica aporta ok=100, warn=60, crit=20. Promedio de las métricas disponibles.
+     */
+    private recomputeFreshness(): void {
+        const statuses = [
+            this.tempStatus(), this.humidityStatus(), this.ethyleneStatus(), this.cleanlinessStatus(),
+        ].filter(s => s !== 'off');
+        if (statuses.length === 0) {
+            this.freshnessScore.set(0);
+            return;
+        }
+        const score = (s: SensorStatus) => (s === 'ok' ? 100 : s === 'warn' ? 60 : 20);
+        const avg = statuses.reduce((sum, s) => sum + score(s), 0) / statuses.length;
+        this.freshnessScore.set(Math.round(avg));
     }
 
     private loadAlerts(): void {
@@ -79,7 +95,10 @@ export class HomeView implements OnInit {
         this.monitoringApi
             .getLatest()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({ next: d => this.sensorData.set(d), error: () => {} });
+            .subscribe({
+                next: d => { this.sensorData.set(d); this.recomputeFreshness(); },
+                error: () => {},
+            });
     }
 
     private classifyLinear(val: number | null, warn: number, crit: number): SensorStatus {

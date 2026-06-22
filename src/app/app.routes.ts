@@ -3,7 +3,7 @@ import { LayoutComponent } from './shared/presentation/components/layout/layout'
 import { authGuard } from './shared/infrastructure/auth.guard';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'register', pathMatch: 'full' },
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
 
     {
         path: 'register',
@@ -53,6 +53,12 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./monitoring/presentation/monitoring.view')
                         .then(m => m.MonitoringView),
+            },
+            {
+                path: 'devices',
+                loadComponent: () =>
+                    import('./monitoring/presentation/devices.view')
+                        .then(m => m.DevicesView),
             },
             {
                 path: 'alerts',
