@@ -1,134 +1,46 @@
-.notifications-wrap {
-    padding: 1.5rem;
-    max-width: 720px;
-    margin: 0 auto;
-}
+:host { display: block; }
 
-.notifications-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-}
+.notifications { max-width: 760px; margin: 0 auto; }
 
-.notifications-head h2 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--fs-text, #1a1a2e);
-}
+.notif-list { list-style: none; display: flex; flex-direction: column; }
 
-.notifications-loading {
-    display: flex;
-    justify-content: center;
-    padding: 3rem;
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--fs-space-3);
+  padding: var(--fs-space-4) var(--fs-space-2);
+  border-top: 1px solid var(--fs-border);
+  cursor: pointer;
+  transition: background var(--fs-dur) var(--fs-ease);
 }
+.notif-item:first-child { border-top: none; }
+.notif-item:hover { background: var(--fs-bg); }
 
-.spinner {
-    width: 2rem;
-    height: 2rem;
-    border: 3px solid var(--fs-border, #e2e8f0);
-    border-top-color: var(--fs-primary, #1f9c59);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
+.notif-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--fs-radius-md);
+  background: var(--fs-bg);
+  color: var(--fs-text-muted);
+  flex-shrink: 0;
 }
+.notif-item__icon.unread { background: var(--fs-primary-light); color: var(--fs-primary); }
+.notif-item__icon .fs-icon { font-size: 20px; }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.notifications-empty {
-    text-align: center;
-    color: var(--fs-text-muted, #64748b);
-    padding: 3rem 0;
+.notif-item__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.notif-item__title { font-size: var(--fs-font-size-sm); font-weight: 600; color: var(--fs-text); }
+.notif-item.unread .notif-item__title::after {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--fs-primary);
+  margin-left: 8px;
+  vertical-align: middle;
 }
-
-.notifications-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.notification-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    border-radius: 0.75rem;
-    border: 1px solid var(--fs-border, #e2e8f0);
-    background: var(--fs-surface, #fff);
-    cursor: pointer;
-    transition: background 0.15s;
-}
-
-.notification-item:hover {
-    background: var(--fs-bg, #f8fafc);
-}
-
-.notification-item.unread {
-    border-left: 4px solid var(--fs-primary, #1f9c59);
-    background: #f0faf5;
-}
-
-.notification-dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    min-width: 0.5rem;
-    border-radius: 50%;
-    background: var(--fs-primary, #1f9c59);
-    margin-top: 0.4rem;
-}
-
-.notification-body {
-    flex: 1;
-    min-width: 0;
-}
-
-.notification-title {
-    font-weight: 600;
-    color: var(--fs-text, #1a1a2e);
-    margin: 0 0 0.2rem;
-}
-
-.notification-message {
-    color: var(--fs-text-muted, #64748b);
-    font-size: 0.875rem;
-    margin: 0 0 0.4rem;
-}
-
-.notification-date {
-    font-size: 0.75rem;
-    color: var(--fs-text-muted, #64748b);
-}
-
-.btn-mark {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.6rem;
-    border: 1px solid var(--fs-primary, #1f9c59);
-    border-radius: 0.4rem;
-    color: var(--fs-primary, #1f9c59);
-    background: transparent;
-    cursor: pointer;
-    white-space: nowrap;
-    align-self: center;
-    transition: background 0.15s, color 0.15s;
-}
-
-.btn-mark:hover {
-    background: var(--fs-primary, #1f9c59);
-    color: #fff;
-}
-
-.btn.ghost {
-    background: transparent;
-    border: 1px solid var(--fs-border, #e2e8f0);
-    border-radius: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    font-size: 0.875rem;
-    color: var(--fs-text-muted, #64748b);
-}
-
-.btn.ghost:hover {
-    background: var(--fs-bg, #f8fafc);
-}
+.notif-item__msg { font-size: var(--fs-font-size-sm); color: var(--fs-text-secondary); }
+.notif-item__date { font-size: var(--fs-font-size-xs); color: var(--fs-text-muted); margin-top: 2px; }

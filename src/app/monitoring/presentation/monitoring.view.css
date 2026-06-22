@@ -1,124 +1,118 @@
 :host { display: block; }
-.wrap { display: flex; flex-direction: column; gap: var(--fs-space-4); }
+.monitoring { display: flex; flex-direction: column; }
 
-/* Status / KPI */
-.status {
+/* ---- Status bar ---- */
+.status-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--fs-space-4);
+  gap: var(--fs-space-5);
+  flex-wrap: wrap;
+  margin-bottom: var(--fs-space-5);
+  border-left: 3px solid var(--fs-success);
 }
+.status-bar.is-warn { border-left-color: var(--fs-warning); }
+.status-bar.is-crit { border-left-color: var(--fs-danger); }
 
-.status .left {
-  display: flex;
-  align-items: center;
-  gap: var(--fs-space-3);
-}
+.status-bar__main { display: flex; align-items: center; gap: var(--fs-space-3); }
 
-.dot {
-  width: 10px;
-  height: 10px;
+.status-dot {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: var(--fs-border-strong);
+  flex-shrink: 0;
+  background: var(--fs-success);
+  box-shadow: 0 0 0 4px var(--fs-success-bg);
+}
+.status-dot[data-status='warn'] { background: var(--fs-warning); box-shadow: 0 0 0 4px var(--fs-warning-bg); }
+.status-dot[data-status='crit'] { background: var(--fs-danger); box-shadow: 0 0 0 4px var(--fs-danger-bg); }
+
+.status-bar__kpis { display: flex; gap: var(--fs-space-8); }
+.status-bar__kpis .stat__value { font-size: var(--fs-font-size-xl); }
+
+/* ---- Metric cards ---- */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--fs-space-4);
+  margin-bottom: var(--fs-space-5);
 }
 
-.dot.online { background: var(--fs-primary); }
-
-.kpi-row {
-  display: flex;
-  gap: var(--fs-space-3);
-  flex-wrap: wrap;
+.metric-card { position: relative; overflow: hidden; }
+.metric-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--fs-success);
 }
+.metric-card[data-status='warn']::before { background: var(--fs-warning); }
+.metric-card[data-status='crit']::before { background: var(--fs-danger); }
 
-.kpi {
-  background: var(--fs-bg);
-  border: 1px solid var(--fs-border);
-  border-radius: var(--fs-radius-md);
-  padding: 8px var(--fs-space-3);
-}
-
-.kpi__label {
-  color: var(--fs-text-muted);
-  margin-right: 6px;
-  font-size: var(--fs-font-size-sm);
-}
-
-.kpi__val { font-weight: 700; }
-
-/* Filters */
-.filters {
-  display: flex;
-  align-items: center;
-  gap: var(--fs-space-2);
-  flex-wrap: wrap;
-}
-
-/* Grid */
-.grid { display: grid; gap: var(--fs-space-4); grid-template-columns: repeat(12, 1fr); }
-.tile { grid-column: span 4; }
-@media (max-width: 1200px) { .tile { grid-column: span 6; } }
-@media (max-width: 740px)  { .tile { grid-column: span 12; } }
-.span-12 { grid-column: span 12; }
-
-.tile__head {
+.metric-card__head {
   display: flex;
   align-items: center;
   gap: var(--fs-space-3);
-  margin-bottom: var(--fs-space-2);
+  margin-bottom: var(--fs-space-4);
 }
-
-.tile__icon {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--fs-radius-sm);
-  background: var(--fs-bg);
-  display: flex;
+.metric-card__icon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-}
-
-.tile__title { font-weight: 600; }
-
-.badge { margin-left: auto; font-size: var(--fs-font-size-xs); padding: 4px 8px; border-radius: var(--fs-radius-pill); border: 1px solid var(--fs-border); text-transform: uppercase; letter-spacing: 0.04em; }
-.badge.ok   { background: var(--fs-success-bg); color: var(--fs-success); border-color: var(--fs-success-bg); }
-.badge.warn { background: var(--fs-warning-bg); color: var(--fs-warning); border-color: var(--fs-warning-bg); }
-.badge.crit { background: var(--fs-danger-bg);  color: var(--fs-danger);  border-color: var(--fs-danger-bg); }
-
-.metric strong { font-size: 28px; font-weight: 800; }
-
-.progress {
-  height: 8px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--fs-radius-md);
   background: var(--fs-primary-light);
-  border-radius: var(--fs-radius-pill);
-  overflow: hidden;
-  margin: var(--fs-space-2) 0 4px;
+  color: var(--fs-primary);
+  flex-shrink: 0;
+}
+.metric-card__icon .fs-icon { font-size: 24px; }
+.metric-card[data-status='warn'] .metric-card__icon { background: var(--fs-warning-bg); color: var(--fs-warning); }
+.metric-card[data-status='crit'] .metric-card__icon { background: var(--fs-danger-bg); color: var(--fs-danger); }
+
+.metric-card__title { flex: 1; min-width: 0; }
+.metric-card__title h3 { font-size: var(--fs-font-size-md); font-weight: 600; }
+
+.metric-card__value {
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--fs-space-4);
+}
+.metric-card__unit {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--fs-text-muted);
+  margin-left: 4px;
 }
 
-.progress span {
+.metric-card__spark {
+  width: 100%;
+  height: 48px;
   display: block;
-  height: 100%;
-  background: var(--fs-primary);
 }
-
-/* Sparkline */
-.spark { width: 100%; height: 36px; margin-top: var(--fs-space-2); }
-.spark polyline { fill: none; stroke: var(--fs-info); stroke-width: 2; }
-
-.history__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.metric-card__spark polyline {
+  fill: none;
+  stroke: var(--fs-primary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
+.metric-card[data-status='warn'] .metric-card__spark polyline { stroke: var(--fs-warning); }
+.metric-card[data-status='crit'] .metric-card__spark polyline { stroke: var(--fs-danger); }
 
+/* ---- History ---- */
+.history__head { margin-bottom: var(--fs-space-4); }
 .history__box {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--fs-space-3);
-  background: var(--fs-info-bg);
-  border: 1px solid var(--fs-border);
+  gap: var(--fs-space-4);
+  padding: var(--fs-space-4);
+  background: var(--fs-bg);
   border-radius: var(--fs-radius-md);
-  padding: 14px var(--fs-space-3);
-  margin-top: var(--fs-space-2);
+  flex-wrap: wrap;
 }
+.history__date { display: block; font-size: var(--fs-font-size-md); margin-top: 2px; }

@@ -28,6 +28,9 @@ export class FoodInventoryView implements OnInit {
     selectedState = 'All';
     selectedCategory = 'All';
 
+    loading = true;
+    readonly skeletons = [0, 1, 2, 3, 4, 5];
+
     selectedProduct: Product | null = null;
 
     private destroyRef = inject(DestroyRef);
@@ -56,10 +59,12 @@ export class FoodInventoryView implements OnInit {
                     quantity: typeof p.quantity === 'number' ? p.quantity : 0
                 }));
                 this.filteredProducts = [...this.products];
+                this.loading = false;
             },
             error: () => {
                 this.products = [];
                 this.filteredProducts = [];
+                this.loading = false;
             }
         });
     }

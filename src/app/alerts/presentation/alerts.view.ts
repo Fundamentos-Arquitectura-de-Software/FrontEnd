@@ -16,7 +16,7 @@ interface AlertCard {
     state: State;
     title: string;
     message: string;
-    source: 'Temp' | 'Humidity' | 'Ethylene' | 'Cleanliness' | 'Oxygen';
+    source: string;
     timeAgo: string;
 }
 
@@ -32,22 +32,15 @@ export class AlertsView implements OnInit {
     private api = inject(AlertsApi);
     private destroyRef = inject(DestroyRef);
 
-    // Todas las alertas (mock + api)
     private _all = signal<AlertCard[]>([]);
+    loading = signal(true);
 
-    // Tabs
-    tabs = [
-        { key:'active' as State,   label:'Active' },
-        { key:'muted' as State,    label:'Muted' },
-        { key:'resolved' as State, label:'Resolved' },
-        { key:'all' as const,      label:'All' },
-    ];
-
-    activeTab = signal<State | 'all'>('active');
-    query = signal('');
+    // Filters (all dropdown-driven)
+    stateFilter = signal<State | 'all'>('active');
     sevFilter = signal<Severity | 'all'>('all');
+    query = signal('');
 
-    // Modal
+    // Detail modal
     openId = signal<string | null>(null);
 
     ngOnInit(): void {
@@ -55,32 +48,27 @@ export class AlertsView implements OnInit {
         this.loadApiAlerts();
     }
 
-    /**
-     * LOAD MOCK ALERTS (optional)
-     */
     private loadMockAlerts() {
         const mock: AlertCard[] = [
-            { id:'1', severity:'warning',  state:'active',   title:'High ethylene level', message:'Ethylene exceeded 0.5ppm', source:'Ethylene', timeAgo:'2m ago' },
-            { id:'2', severity:'info',     state:'active',   title:'High temperature',    message:'Temperature above 6° C',  source:'Temp',     timeAgo:'2m ago' },
-            { id:'3', severity:'critical', state:'muted',    title:'Critical temperature',message:'Freezer above 10° C',    source:'Temp',     timeAgo:'1h ago' },
-            { id:'4', severity:'warning',  state:'resolved', title:'Cleanliness low',     message:'Below 80% threshold',     source:'Cleanliness', timeAgo:'Yesterday' },
+            { id: '1', severity: 'info',     state: 'active',   title: 'High temperature',     message: 'Temperature above 6 °C',     source: 'Temperature', timeAgo: '2m ago' },
+            { id: '2', severity: 'warning',  state: 'active',   title: 'Humidity out of range', message: 'Humidity above 80%',        source: 'Humidity',    timeAgo: '8m ago' },
+            { id: '3', severity: 'critical', state: 'muted',    title: 'Critical temperature',  message: 'Freezer above 10 °C',        source: 'Temperature', timeAgo: '1h ago' },
+            { id: '4', severity: 'warning',  state: 'resolved', title: 'Low humidity',          message: 'Humidity below 50%',         source: 'Humidity',    timeAgo: 'Yesterday' },
         ];
         this._all.set(mock);
     }
 
-    /**
-     * LOAD API ALERTS
-     */
     private loadApiAlerts() {
-        this.api.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data: AlertDto[]) => {
-            const converted = data.map(this.fromDto);
-            this._all.set([...this._all(), ...converted]); // merge mock + API
+        this.api.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: (data: AlertDto[]) => {
+                const converted = data.map(this.fromDto);
+                this._all.set([...this._all(), ...converted]);
+                this.loading.set(false);
+            },
+            error: () => this.loading.set(false),
         });
     }
 
-    /**
-     * Converter: DTO → UI model
-     */
     private fromDto(dto: AlertDto): AlertCard {
         return {
             id: String(dto.id),
@@ -88,14 +76,11 @@ export class AlertsView implements OnInit {
             state: dto.state as State,
             title: dto.title,
             message: dto.message,
-            source: dto.source as AlertCard['source'],
+            source: dto.source,
             timeAgo: dto.timeAgo
         };
     }
 
-    /**
-     * Converter: UI → DTO (for PUT update)
-     */
     private toDto(a: AlertCard): AlertDto {
         return {
             id: Number(a.id),
@@ -108,44 +93,34 @@ export class AlertsView implements OnInit {
         };
     }
 
-    /**
-     * Visible alerts (filters)
-     */
     visible = computed(() => {
         const q = this.query().toLowerCase();
-        const tab = this.activeTab();
+        const state = this.stateFilter();
         const sev = this.sevFilter();
 
         return this._all().filter(a => {
-            const okTab = tab === 'all' ? true : a.state === tab;
+            const okState = state === 'all' ? true : a.state === state;
             const okSev = sev === 'all' ? true : a.severity === sev;
             const okQ = !q || a.title.toLowerCase().includes(q) || a.message.toLowerCase().includes(q);
-            return okTab && okSev && okQ;
+            return okState && okSev && okQ;
         });
     });
 
-    /**
-     * Resolve alert (UI + API)
-     */
     resolve(a: AlertCard) {
         a.state = 'resolved';
         this._all.set([...this._all()]);
         this.api.update(Number(a.id), this.toDto(a)).subscribe();
     }
 
-    /**
-     * Mute alert (UI + API)
-     */
     mute(a: AlertCard) {
         a.state = 'muted';
         this._all.set([...this._all()]);
         this.api.update(Number(a.id), this.toDto(a)).subscribe();
     }
 
-    /**
-     * Modal controls
-     */
     open(a: AlertCard) { this.openId.set(a.id); }
     close() { this.openId.set(null); }
     isOpen(a: AlertCard) { return this.openId() === a.id; }
+
+    readonly skeletons = [0, 1, 2];
 }

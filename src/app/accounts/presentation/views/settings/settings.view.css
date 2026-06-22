@@ -5,12 +5,16 @@
 .head-actions { display: flex; gap: var(--fs-space-3); align-items: center; }
 
 .dirty {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: var(--fs-warning-bg);
   color: var(--fs-warning);
   padding: 6px var(--fs-space-3);
-  border-radius: var(--fs-radius-sm);
+  border-radius: var(--fs-radius-pill);
   border: 1px solid rgba(217,119,6,0.2);
   font-size: var(--fs-font-size-sm);
+  font-weight: 600;
 }
 
 .layout { display: grid; grid-template-columns: 240px 1fr; gap: var(--fs-space-4); }
@@ -44,7 +48,8 @@
 .side-item:hover { background: var(--fs-primary-light); color: var(--fs-primary-dark); }
 .side-item.active { background: var(--fs-primary); color: #fff; border-color: var(--fs-primary); }
 
-.ico { width: 22px; text-align: center; }
+.ico { display: inline-flex; align-items: center; justify-content: center; width: 22px; }
+.side-item.active .ico .fs-icon { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 
 .content { display: flex; flex-direction: column; gap: var(--fs-space-4); }
 

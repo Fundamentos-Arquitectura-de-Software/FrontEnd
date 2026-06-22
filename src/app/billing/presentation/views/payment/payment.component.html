@@ -1,37 +1,55 @@
-<div class="payment-container">
-    <div class="banner-section">
-        <img src="/banneralimentos.jpg" alt="{{ 'billing.payment.bannerAlt' | translate }}" />
+<div class="billing-page">
+  <header class="billing-topbar">
+    <div class="brand">
+      <span class="brand-icon"><span class="fs-icon fs-icon--fill">eco</span></span>
+      <span class="brand-name">FreshSense</span>
     </div>
+  </header>
 
-    <div class="payment-section">
-        <div class="form-box">
-            <h2>{{ 'billing.payment.title' | translate }}</h2>
+  <main class="payment-section">
+    <div class="card payment-card">
+      <header class="payment-card__head">
+        <h1>{{ 'billing.payment.title' | translate }}</h1>
+        <p class="muted">{{ 'billing.payment.subtitle' | translate }}</p>
+      </header>
 
-            <form (ngSubmit)="pay()" #paymentForm="ngForm">
-                <div class="input-group">
-                    <label for="cardName">{{ 'billing.payment.cardName' | translate }}</label>
-                    <input type="text" id="cardName" name="cardName" required ngModel>
-                </div>
-
-                <div class="input-group">
-                    <label for="cardNumber">{{ 'billing.payment.cardNumber' | translate }}</label>
-                    <input type="text" id="cardNumber" name="cardNumber" maxlength="16" required ngModel>
-                </div>
-
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="expiry">{{ 'billing.payment.expiry' | translate }}</label>
-                        <input type="text" id="expiry" name="expiry" placeholder="MM/AA" required ngModel>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="cvv">{{ 'billing.payment.cvv' | translate }}</label>
-                        <input type="password" id="cvv" name="cvv" maxlength="4" required ngModel>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-pay">{{ 'billing.payment.pay' | translate }}</button>
-            </form>
+      <form (ngSubmit)="pay()" #paymentForm="ngForm" class="payment-form">
+        <div class="form-field">
+          <label for="cardName">{{ 'billing.payment.cardName' | translate }}</label>
+          <input type="text" id="cardName" name="cardName" class="input-field" required ngModel autocomplete="cc-name">
         </div>
+
+        <div class="form-field">
+          <label for="cardNumber">{{ 'billing.payment.cardNumber' | translate }}</label>
+          <div class="input-icon">
+            <span class="fs-icon">credit_card</span>
+            <input type="text" id="cardNumber" name="cardNumber" class="input-field" maxlength="16"
+                   inputmode="numeric" placeholder="1234 5678 9012 3456" required ngModel autocomplete="cc-number">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="expiry">{{ 'billing.payment.expiry' | translate }}</label>
+            <input type="text" id="expiry" name="expiry" class="input-field" placeholder="MM/YY" required ngModel autocomplete="cc-exp">
+          </div>
+          <div class="form-field">
+            <label for="cvv">{{ 'billing.payment.cvv' | translate }}</label>
+            <input type="password" id="cvv" name="cvv" class="input-field" maxlength="4"
+                   inputmode="numeric" placeholder="•••" required ngModel autocomplete="cc-csc">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" [disabled]="paymentForm.invalid">
+          <span class="fs-icon fs-icon--sm">lock</span>
+          {{ 'billing.payment.pay' | translate }}
+        </button>
+
+        <p class="payment-secure">
+          <span class="fs-icon fs-icon--sm">verified_user</span>
+          {{ 'billing.payment.secure' | translate }}
+        </p>
+      </form>
     </div>
+  </main>
 </div>

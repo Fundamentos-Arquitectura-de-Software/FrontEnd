@@ -1,61 +1,87 @@
-<div class="dashboard">
+<div class="dashboard wrap">
 
   <!-- HEADER -->
-  <div class="dash-header">
-    <div>
-      <p class="dash-date">{{ today }}</p>
-      <h1 class="dash-greeting">{{ 'home.heroTitle' | translate:{ name: name } }}</h1>
+  <header class="page-header">
+    <div class="page-header__titles">
+      <span class="page-header__eyebrow">{{ today }}</span>
+      <h1>{{ 'home.heroTitle' | translate:{ name: name } }}</h1>
+      <p class="page-header__subtitle">{{ 'home.subtitle' | translate }}</p>
     </div>
-  </div>
+  </header>
 
   <!-- ROW 1: score + kpis -->
   <div class="row-top">
 
     <!-- Freshness score -->
-    <div class="block-score">
+    <div class="card block-score">
       <span class="score-label">{{ 'home.freshness' | translate }}</span>
-      <span class="score-number">{{ freshnessScore() }}</span>
-      <span class="score-total">/100</span>
-      <span class="score-verdict" [ngClass]="{
-        'verdict--ok':   freshnessScore() >= 70,
-        'verdict--warn': freshnessScore() >= 40 && freshnessScore() < 70,
-        'verdict--crit': freshnessScore() < 40 && totalProducts() > 0,
-        'verdict--off':  totalProducts() === 0
-      }">{{ scoreVerdict() | translate }}</span>
+      <ng-container *ngIf="!loading(); else scoreSkeleton">
+        <div class="score-figure">
+          <span class="score-number">{{ freshnessScore() }}</span>
+          <span class="score-total">/100</span>
+        </div>
+        <div class="score-meter">
+          <span class="score-meter__fill" [style.width.%]="freshnessScore()"
+                [ngClass]="{
+                  'fill--ok':   freshnessScore() >= 70,
+                  'fill--warn': freshnessScore() >= 40 && freshnessScore() < 70,
+                  'fill--crit': freshnessScore() < 40 && totalProducts() > 0
+                }"></span>
+        </div>
+        <span class="badge score-verdict" [ngClass]="{
+          'badge-success': freshnessScore() >= 70,
+          'badge-warning': freshnessScore() >= 40 && freshnessScore() < 70,
+          'badge-danger':  freshnessScore() < 40 && totalProducts() > 0,
+          'badge-neutral': totalProducts() === 0
+        }">{{ scoreVerdict() | translate }}</span>
+      </ng-container>
+      <ng-template #scoreSkeleton>
+        <div class="skeleton" style="height:48px;width:120px;margin:8px 0"></div>
+        <div class="skeleton" style="height:8px;width:100%;margin:8px 0"></div>
+        <div class="skeleton skeleton--pill"></div>
+      </ng-template>
     </div>
 
     <!-- Secondary KPIs -->
     <div class="block-kpis">
 
-      <div class="kpi">
-        <span class="kpi-val">{{ totalProducts() }}</span>
-        <span class="kpi-name">{{ 'home.kpi.products' | translate }}</span>
+      <div class="card kpi">
+        <span class="kpi-icon"><span class="fs-icon">inventory_2</span></span>
+        <div>
+          <span class="kpi-val">{{ totalProducts() }}</span>
+          <span class="kpi-name">{{ 'home.kpi.products' | translate }}</span>
+        </div>
       </div>
 
-      <div class="kpi" [class.kpi--alert]="criticalCount() > 0">
-        <span class="kpi-val">{{ activeAlerts().length }}</span>
-        <span class="kpi-name">{{ 'home.kpi.activeAlerts' | translate }}</span>
-        <span class="kpi-sub" *ngIf="criticalCount() > 0">{{ criticalCount() }} {{ 'home.kpi.critical' | translate }}</span>
+      <div class="card kpi" [class.kpi--alert]="criticalCount() > 0">
+        <span class="kpi-icon"><span class="fs-icon">warning</span></span>
+        <div>
+          <span class="kpi-val">{{ activeAlerts().length }}</span>
+          <span class="kpi-name">{{ 'home.kpi.activeAlerts' | translate }}</span>
+          <span class="kpi-sub" *ngIf="criticalCount() > 0">{{ criticalCount() }} {{ 'home.kpi.critical' | translate }}</span>
+        </div>
       </div>
 
-      <div class="kpi">
-        <span class="kpi-val" [ngClass]="'val--' + tempStatus()">
-          {{ fmt(sensorData()?.temperature ?? null) }}<small>°C</small>
-        </span>
-        <span class="kpi-name">{{ 'home.kpi.temperature' | translate }}</span>
-        <span class="kpi-sub kpi-sub--status" [ngClass]="'status--' + tempStatus()">
-          {{ 'home.sensor.' + tempStatus() | translate }}
-        </span>
+      <div class="card kpi">
+        <span class="kpi-icon" [ngClass]="'icon--' + tempStatus()"><span class="fs-icon">thermostat</span></span>
+        <div>
+          <span class="kpi-val">{{ fmt(sensorData()?.temperature ?? null) }}<small>°C</small></span>
+          <span class="kpi-name">{{ 'home.kpi.temperature' | translate }}</span>
+          <span class="kpi-sub kpi-sub--status" [ngClass]="'status--' + tempStatus()">
+            {{ 'home.sensor.' + tempStatus() | translate }}
+          </span>
+        </div>
       </div>
 
-      <div class="kpi">
-        <span class="kpi-val" [ngClass]="'val--' + humidityStatus()">
-          {{ fmt(sensorData()?.humidity ?? null, 0) }}<small>%</small>
-        </span>
-        <span class="kpi-name">{{ 'home.kpi.humidity' | translate }}</span>
-        <span class="kpi-sub kpi-sub--status" [ngClass]="'status--' + humidityStatus()">
-          {{ 'home.sensor.' + humidityStatus() | translate }}
-        </span>
+      <div class="card kpi">
+        <span class="kpi-icon" [ngClass]="'icon--' + humidityStatus()"><span class="fs-icon">humidity_percentage</span></span>
+        <div>
+          <span class="kpi-val">{{ fmt(sensorData()?.humidity ?? null, 0) }}<small>%</small></span>
+          <span class="kpi-name">{{ 'home.kpi.humidity' | translate }}</span>
+          <span class="kpi-sub kpi-sub--status" [ngClass]="'status--' + humidityStatus()">
+            {{ 'home.sensor.' + humidityStatus() | translate }}
+          </span>
+        </div>
       </div>
 
     </div>
@@ -65,42 +91,42 @@
   <div class="row-bottom">
 
     <!-- Sensor readings -->
-    <div class="block block--sensors">
-      <h2 class="block-title">{{ 'home.sensor.title' | translate }}</h2>
-      <table class="sensor-table">
-        <tr>
-          <td class="sensor-name">{{ 'home.sensor.ethylene' | translate }}</td>
-          <td class="sensor-val">{{ fmt(sensorData()?.ethyleneLevel ?? null) }} ppm</td>
-          <td><span class="sdot" [ngClass]="'sdot--' + ethyleneStatus()"></span></td>
-        </tr>
-        <tr>
-          <td class="sensor-name">{{ 'home.sensor.cleanliness' | translate }}</td>
-          <td class="sensor-val">{{ fmt(cleanliness(), 0) }}%</td>
-          <td><span class="sdot" [ngClass]="'sdot--' + cleanlinessStatus()"></span></td>
-        </tr>
-        <tr>
-          <td class="sensor-name">{{ 'home.sensor.oxygen' | translate }}</td>
-          <td class="sensor-val">{{ fmt(sensorData()?.oxygenLevel ?? null) }}%</td>
-          <td><span class="sdot sdot--ok"></span></td>
-        </tr>
-        <tr>
-          <td class="sensor-name">{{ 'home.sensor.ripeness' | translate }}</td>
-          <td class="sensor-val">{{ fmt(sensorData()?.ripeness ?? null, 0) }}%</td>
-          <td><span class="sdot sdot--ok"></span></td>
-        </tr>
-      </table>
+    <div class="card block block--sensors">
+      <header class="block-head">
+        <div>
+          <h2 class="block-title">{{ 'home.sensor.title' | translate }}</h2>
+          <p class="muted text-sm">{{ 'home.sensor.subtitle' | translate }}</p>
+        </div>
+        <a class="block-link" routerLink="/monitoring">{{ 'home.alerts.viewAll' | translate }}</a>
+      </header>
+
+      <ul class="sensor-list">
+        <li class="sensor-row">
+          <span class="sensor-ico"><span class="fs-icon">thermostat</span></span>
+          <span class="sensor-name">{{ 'home.sensor.temperature' | translate }}</span>
+          <span class="sensor-val">{{ fmt(sensorData()?.temperature ?? null) }} °C</span>
+          <span class="sdot" [ngClass]="'sdot--' + tempStatus()"></span>
+        </li>
+        <li class="sensor-row">
+          <span class="sensor-ico"><span class="fs-icon">humidity_percentage</span></span>
+          <span class="sensor-name">{{ 'home.sensor.humidity' | translate }}</span>
+          <span class="sensor-val">{{ fmt(sensorData()?.humidity ?? null, 0) }} %</span>
+          <span class="sdot" [ngClass]="'sdot--' + humidityStatus()"></span>
+        </li>
+      </ul>
     </div>
 
     <!-- Recent alerts -->
-    <div class="block block--alerts">
-      <div class="block-head">
+    <div class="card block block--alerts">
+      <header class="block-head">
         <h2 class="block-title">{{ 'home.alerts.recent' | translate }}</h2>
         <a class="block-link" routerLink="/alerts">{{ 'home.alerts.viewAll' | translate }}</a>
-      </div>
+      </header>
 
-      <p class="alerts-empty" *ngIf="recentAlerts().length === 0">
-        {{ 'home.alerts.none' | translate }}
-      </p>
+      <div class="empty-state" *ngIf="recentAlerts().length === 0">
+        <span class="empty-state__icon"><span class="fs-icon">check_circle</span></span>
+        <p>{{ 'home.alerts.none' | translate }}</p>
+      </div>
 
       <div class="alert-row" *ngFor="let a of recentAlerts()">
         <span class="sev" [ngClass]="'sev--' + a.severity"></span>

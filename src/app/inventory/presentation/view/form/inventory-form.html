@@ -1,67 +1,80 @@
 <section class="inventory-add wrap">
-    <h2 class="section-title">{{ 'inventory.add.title' | translate }}</h2>
 
-    <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="form">
-        <div class="form-group form-group--with-tools">
-            <label for="name">{{ 'inventory.add.name' | translate }}</label>
-            <div class="input-with-tools">
-                <input type="text" id="name" name="name" [(ngModel)]="product.name" required />
+  <header class="page-header">
+    <div class="page-header__titles">
+      <span class="page-header__eyebrow">{{ 'nav.inventory' | translate }}</span>
+      <h1>{{ 'inventory.add.title' | translate }}</h1>
+      <p class="page-header__subtitle">{{ 'inventory.add.subtitle' | translate }}</p>
+    </div>
+  </header>
 
-                <button type="button"
-                        class="icon-btn"
-                        [disabled]="recording"
-                        (click)="startVoice()"
-                        [attr.aria-label]="'inventory.add.voiceStartAria' | translate">
-                    🎤
-                </button>
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="card form-card">
 
-                <button type="button"
-                        class="icon-btn"
-                        [disabled]="!recording"
-                        (click)="stopVoice()"
-                        [attr.aria-label]="'inventory.add.voiceStopAria' | translate">
-                    ⏹
-                </button>
+    <div class="form-field">
+      <label for="name">{{ 'inventory.add.name' | translate }} <span class="req">*</span></label>
+      <div class="input-with-tools">
+        <input type="text" id="name" name="name" class="input-field"
+               [(ngModel)]="product.name" #nameRef="ngModel" required />
+        <button type="button" class="icon-btn" [class.icon-btn--active]="recording"
+                [disabled]="recording" (click)="startVoice()"
+                [attr.aria-label]="'inventory.add.voiceStart' | translate"
+                [title]="'inventory.add.voiceStart' | translate">
+          <span class="fs-icon fs-icon--sm">mic</span>
+        </button>
+        <button type="button" class="icon-btn" [disabled]="!recording" (click)="stopVoice()"
+                [attr.aria-label]="'inventory.add.voiceStop' | translate"
+                [title]="'inventory.add.voiceStop' | translate">
+          <span class="fs-icon fs-icon--sm">stop</span>
+        </button>
+        <button type="button" class="icon-btn" disabled
+                [title]="'inventory.add.scan' | translate"
+                [attr.aria-label]="'inventory.add.scan' | translate">
+          <span class="fs-icon fs-icon--sm">photo_camera</span>
+        </button>
+      </div>
+      <small class="form-hint" *ngIf="voiceHint">{{ voiceHint }}</small>
+      <small class="form-error" *ngIf="nameRef.invalid && nameRef.touched">
+        <span class="fs-icon fs-icon--sm">error</span>{{ 'inventory.form.requiredFields' | translate }}
+      </small>
+    </div>
 
-                <button type="button"
-                        class="icon-btn"
-                        disabled
-                        title="{{ 'inventory.add.scanSoon' | translate }}">
-                    📷
-                </button>
-            </div>
+    <div class="form-field">
+      <label for="description">{{ 'inventory.add.description' | translate }}</label>
+      <textarea id="description" name="description" class="textarea-field"
+                [(ngModel)]="product.description" rows="3"></textarea>
+    </div>
 
-            <small class="muted" *ngIf="voiceHint">
-                {{ voiceHint }}
-            </small>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="category">{{ 'inventory.add.category' | translate }} <span class="req">*</span></label>
+        <div class="select-field">
+          <select id="category" name="category" [(ngModel)]="product.category" required>
+            <option value="" disabled>{{ 'inventory.add.selectCategory' | translate }}</option>
+            <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+          </select>
         </div>
+      </div>
 
-        <div class="form-group">
-            <label for="description">{{ 'inventory.add.description' | translate }}</label>
-            <textarea id="description" name="description" [(ngModel)]="product.description" rows="3"></textarea>
-        </div>
+      <div class="form-field">
+        <label for="quantity">{{ 'inventory.add.quantity' | translate }}</label>
+        <input type="number" id="quantity" name="quantity" class="input-field"
+               [(ngModel)]="product.quantity" min="0" />
+      </div>
+    </div>
 
-        <div class="form-group">
-            <label for="category">{{ 'inventory.add.category' | translate }}</label>
-            <select id="category" name="category" [(ngModel)]="product.category" required>
-                <option value="" disabled>{{ 'inventory.add.selectCategory' | translate }}</option>
-                <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
-            </select>
-        </div>
+    <div class="form-field">
+      <label for="image">{{ 'inventory.add.image' | translate }}</label>
+      <input type="url" id="image" name="imageUrl" class="input-field"
+             [(ngModel)]="product.imageUrl" placeholder="https://example.com/product.jpg" />
+    </div>
 
-        <div class="form-group">
-            <label for="quantity">{{ 'inventory.add.quantity' | translate }}</label>
-            <input type="number" id="quantity" name="quantity" [(ngModel)]="product.quantity" min="0" />
-        </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+      <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">
+        <span class="fs-icon fs-icon--sm">add</span>
+        {{ 'inventory.add.cta' | translate }}
+      </button>
+    </div>
 
-        <div class="form-group">
-            <label for="image">{{ 'inventory.add.image' | translate }}</label>
-            <input type="url" id="image" name="imageUrl" [(ngModel)]="product.imageUrl" placeholder="https://example.com/product.jpg" />
-        </div>
-
-        <div class="form-actions">
-            <button type="submit" class="btn" [disabled]="productForm.invalid">{{ 'common.save' | translate }}</button>
-            <button type="button" class="btn-outline" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
-        </div>
-    </form>
+  </form>
 </section>

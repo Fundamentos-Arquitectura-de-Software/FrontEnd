@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, computed, inject, DestroyRef } from '@angular/core';
 import { NgFor, NgIf, NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SocialShareService } from '../application/social-share.service';
@@ -26,17 +27,17 @@ function toStatus(pct: number): AchievementStatus {
 
 function iconFor(name: string): string {
     const map: Record<string, string> = {
-        'Primer inicio de sesión': '🔑',
-        'Completar perfil': '👤',
-        'Primera acción en la app': '⚡',
+        'Primer inicio de sesión': 'login',
+        'Completar perfil': 'badge',
+        'Primera acción en la app': 'bolt',
     };
-    return map[name] ?? '🏅';
+    return map[name] ?? 'military_tech';
 }
 
 @Component({
     selector: 'fs-achievements-view',
     standalone: true,
-    imports: [NgFor, NgIf, NgClass, TranslateModule],
+    imports: [NgFor, NgIf, NgClass, FormsModule, TranslateModule],
     templateUrl: './achievements.view.html',
     styleUrl: './achievements.view.css'
 })

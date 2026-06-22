@@ -29,22 +29,19 @@ export class HomeView implements OnInit {
     name = '';
     today = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
 
+    loading = signal(true);
     totalProducts = signal(0);
     freshnessScore = signal(0);
 
     private _alerts = signal<Alert[]>([]);
     activeAlerts = computed(() => this._alerts().filter(a => a.state === 'active'));
     criticalCount = computed(() => this.activeAlerts().filter(a => a.severity === 'critical').length);
-    warningCount = computed(() => this.activeAlerts().filter(a => a.severity === 'warning').length);
     recentAlerts = computed(() => this.activeAlerts().slice(0, 4));
 
     sensorData = signal<MonitoringReading | null>(null);
 
-    tempStatus = computed(() => this.classifyLinear(this.sensorData()?.temperature ?? null, 6, 10));
+    tempStatus = computed(() => this.classifyLinear(this.sensorData()?.temperature ?? null, 6, 8));
     humidityStatus = computed(() => this.classifyHumidity(this.sensorData()?.humidity ?? null));
-    ethyleneStatus = computed(() => this.classifyLinear(this.sensorData()?.ethyleneLevel ?? null, 0.5, 1.0));
-    cleanliness = computed(() => this.sensorData()?.cleanliness ?? null);
-    cleanlinessStatus = computed(() => this.classifyInverse(this.cleanliness(), 80, 60));
 
     ngOnInit(): void {
         const user = this.accountStore.getCurrentUser();
@@ -65,8 +62,9 @@ export class HomeView implements OnInit {
                         ? products.reduce((s, p) => s + (p.quantity ?? 0), 0) / products.length
                         : 0;
                     this.freshnessScore.set(Math.min(Math.round((avg / 10) * 100), 100));
+                    this.loading.set(false);
                 },
-                error: () => {},
+                error: () => this.loading.set(false),
             });
     }
 
@@ -95,13 +93,6 @@ export class HomeView implements OnInit {
         if (val === null) return 'off';
         if (val > 90 || val < 50) return 'crit';
         if (val > 80 || val < 60) return 'warn';
-        return 'ok';
-    }
-
-    private classifyInverse(val: number | null, warn: number, crit: number): SensorStatus {
-        if (val === null) return 'off';
-        if (val <= crit) return 'crit';
-        if (val <= warn) return 'warn';
         return 'ok';
     }
 

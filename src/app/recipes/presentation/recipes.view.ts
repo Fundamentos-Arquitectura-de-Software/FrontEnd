@@ -22,6 +22,9 @@ export class RecipesView implements OnInit {
     selectedLevel = 'All';
     selectedType = 'All';
 
+    loading = true;
+    readonly skeletons = [0, 1, 2, 3, 4, 5];
+
     modalOpen = false;
     active: Recipe | null = null;
 
@@ -39,11 +42,13 @@ export class RecipesView implements OnInit {
             next: (data) => {
                 this.recipes = data ?? [];
                 this.filteredRecipes = [...this.recipes];
+                this.loading = false;
             },
             error: (err) => {
                 console.error('Error loading recipes from backend', err);
                 this.recipes = [];
                 this.filteredRecipes = [];
+                this.loading = false;
             },
         });
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, computed, inject, DestroyRef } from '@angular/core';
-import { NgFor, NgIf, NgClass, DatePipe } from '@angular/common';
+import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationsApi } from '../infrastructure/notifications-api';
@@ -8,7 +8,7 @@ import { Notification } from '../domain/notification.model';
 @Component({
     selector: 'fs-notifications-view',
     standalone: true,
-    imports: [NgFor, NgIf, NgClass, DatePipe, TranslateModule],
+    imports: [NgFor, NgIf, DatePipe, TranslateModule],
     templateUrl: './notifications.view.html',
     styleUrls: ['./notifications.view.css'],
 })

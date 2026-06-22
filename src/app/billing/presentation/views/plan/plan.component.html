@@ -1,32 +1,48 @@
-<div class="plan-container">
-    <div class="banner-section">
-        <img src="/banneralimentos.jpg" alt="{{ 'plans.bannerAlt' | translate }}" />
+<div class="billing-page">
+  <header class="billing-topbar">
+    <div class="brand">
+      <span class="brand-icon"><span class="fs-icon fs-icon--fill">eco</span></span>
+      <span class="brand-name">FreshSense</span>
+    </div>
+  </header>
+
+  <main class="plans-section">
+    <div class="plans-intro">
+      <h1>{{ 'plans.title' | translate }}</h1>
+      <p class="muted">{{ 'plans.subtitle' | translate }}</p>
     </div>
 
-    <div class="plans-section">
-        <h2>{{ 'plans.title' | translate }}</h2>
-
-        <div class="plans-grid">
-            <div class="plan-card">
-                <h3>{{ 'plans.basic.title' | translate }}</h3>
-                <p>{{ 'plans.basic.desc' | translate }}</p>
-                <h4>{{ 'plans.basic.price' | translate }}</h4>
-                <button (click)="selectPlan('basic')">{{ 'plans.select' | translate }}</button>
-            </div>
-
-            <div class="plan-card featured">
-                <h3>{{ 'plans.premium.title' | translate }}</h3>
-                <p>{{ 'plans.premium.desc' | translate }}</p>
-                <h4>{{ 'plans.premium.price' | translate }}</h4>
-                <button (click)="selectPlan('premium')">{{ 'plans.select' | translate }}</button>
-            </div>
-
-            <div class="plan-card">
-                <h3>{{ 'plans.family.title' | translate }}</h3>
-                <p>{{ 'plans.family.desc' | translate }}</p>
-                <h4>{{ 'plans.family.price' | translate }}</h4>
-                <button (click)="selectPlan('family')">{{ 'plans.select' | translate }}</button>
-            </div>
+    <div class="plans-grid">
+      <article class="plan-card card">
+        <div class="plan-card__head">
+          <span class="plan-card__icon"><span class="fs-icon">person</span></span>
+          <h3>{{ 'plans.basic.title' | translate }}</h3>
         </div>
+        <div class="plan-card__price">{{ 'plans.basic.price' | translate }}</div>
+        <p class="plan-card__desc muted">{{ 'plans.basic.desc' | translate }}</p>
+        <button class="btn btn-outline btn-block" (click)="selectPlan('basic')">{{ 'plans.select' | translate }}</button>
+      </article>
+
+      <article class="plan-card card featured">
+        <span class="plan-card__tag">{{ 'plans.popular' | translate }}</span>
+        <div class="plan-card__head">
+          <span class="plan-card__icon"><span class="fs-icon">workspace_premium</span></span>
+          <h3>{{ 'plans.premium.title' | translate }}</h3>
+        </div>
+        <div class="plan-card__price">{{ 'plans.premium.price' | translate }}</div>
+        <p class="plan-card__desc muted">{{ 'plans.premium.desc' | translate }}</p>
+        <button class="btn btn-primary btn-block" (click)="selectPlan('premium')">{{ 'plans.select' | translate }}</button>
+      </article>
+
+      <article class="plan-card card">
+        <div class="plan-card__head">
+          <span class="plan-card__icon"><span class="fs-icon">groups</span></span>
+          <h3>{{ 'plans.family.title' | translate }}</h3>
+        </div>
+        <div class="plan-card__price">{{ 'plans.family.price' | translate }}</div>
+        <p class="plan-card__desc muted">{{ 'plans.family.desc' | translate }}</p>
+        <button class="btn btn-outline btn-block" (click)="selectPlan('family')">{{ 'plans.select' | translate }}</button>
+      </article>
     </div>
+  </main>
 </div>

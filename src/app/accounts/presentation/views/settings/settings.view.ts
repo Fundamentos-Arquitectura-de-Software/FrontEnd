@@ -13,7 +13,7 @@ interface Integration { key: string; name: string; connected: boolean; note?: st
 interface Profile { name: string; email: string; phone: string; org: string; avatarUrl: string; }
 interface Prefs { language: string; timezone: string; units: 'metric'|'imperial'; dateFormat: string; weekStartsOn: 'mon'|'sun'; }
 interface Theme { mode: 'light'|'dark'|'system'; primary: string; rounded: boolean; density: 'comfortable'|'compact'; }
-interface Notif { email: boolean; push: boolean; weeklyReport: boolean; criticalOnly: boolean; ethyleneThreshold: number; tempThreshold: number; }
+interface Notif { email: boolean; push: boolean; weeklyReport: boolean; criticalOnly: boolean; humidityThreshold: number; tempThreshold: number; }
 
 // ---- US24: tipos de preferencias granulares de notificaciones
 type Channel = 'inapp'|'push'|'email';
@@ -34,12 +34,12 @@ export class SettingsView {
 
     // Tabs
     tabs: { key: TabKey; label: string; icon: string }[] = [
-        { key: 'profile',       label: 'Profile',       icon: '👤' },
-        { key: 'preferences',   label: 'Preferences',   icon: '⚙️' },
-        { key: 'theme',         label: 'Theme',         icon: '🎨' },
-        { key: 'notifications', label: 'Notifications', icon: '🔔' },
-        { key: 'security',      label: 'Security',      icon: '🔒' },
-        { key: 'integrations',  label: 'Integrations',  icon: '🔗' },
+        { key: 'profile',       label: 'Profile',       icon: 'person' },
+        { key: 'preferences',   label: 'Preferences',   icon: 'tune' },
+        { key: 'theme',         label: 'Theme',         icon: 'palette' },
+        { key: 'notifications', label: 'Notifications', icon: 'notifications' },
+        { key: 'security',      label: 'Security',      icon: 'lock' },
+        { key: 'integrations',  label: 'Integrations',  icon: 'hub' },
     ];
     active = signal<TabKey>('profile');
     setTab(k: TabKey){ this.active.set(k); }
@@ -55,7 +55,7 @@ export class SettingsView {
     });
 
     constructor() {
-        // 👉 aquí leemos al usuario actual del AccountStore / localStorage
+        // Leemos al usuario actual del AccountStore / localStorage
         const current = this.accountStore.getCurrentUser();
         if (current) {
             this.profile.set({
@@ -112,7 +112,7 @@ export class SettingsView {
         push: false,
         weeklyReport: true,
         criticalOnly: true,
-        ethyleneThreshold: 0.5,
+        humidityThreshold: 80,
         tempThreshold: 6,
     });
     setNotif<K extends keyof Notif>(k: K, v: Notif[K]) {
@@ -120,7 +120,7 @@ export class SettingsView {
         this.markDirty();
     }
     resetNotif(){
-        this.notif.set({ email:true, push:false, weeklyReport:true, criticalOnly:true, ethyleneThreshold:0.5, tempThreshold:6 });
+        this.notif.set({ email:true, push:false, weeklyReport:true, criticalOnly:true, humidityThreshold:80, tempThreshold:6 });
     }
 
     // ---- US24: Notificaciones personalizadas (granulares)
@@ -154,7 +154,7 @@ export class SettingsView {
         if (!('Notification' in window)) { this.toast.warning('Notifications API not available'); return; }
         if (Notification.permission === 'default') await Notification.requestPermission();
         if (Notification.permission === 'granted') {
-            new Notification('FreshSense', { body: 'Test notification ✅' });
+            new Notification('FreshSense', { body: 'Test notification sent successfully.' });
         }
     }
 

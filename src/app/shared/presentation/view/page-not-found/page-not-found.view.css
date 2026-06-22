@@ -1,0 +1,29 @@
+:host { display: block; }
+
+.notfound {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--fs-space-6);
+  background: var(--fs-bg);
+}
+.notfound__card {
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--fs-space-3);
+  padding: var(--fs-space-10) var(--fs-space-8);
+}
+.notfound__code {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--fs-primary);
+  line-height: 1;
+}
+.notfound h1 { font-size: var(--fs-font-size-lg); font-weight: 700; }
+.notfound .btn { margin-top: var(--fs-space-3); }

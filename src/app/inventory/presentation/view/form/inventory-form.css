@@ -1,76 +1,33 @@
-.inventory-add {
-  max-width: 600px;
-  margin: var(--fs-space-6) auto;
-  padding: var(--fs-space-5);
-  background: var(--fs-surface);
-  border: 1px solid var(--fs-border);
-  border-radius: var(--fs-radius-lg);
-  box-shadow: var(--fs-shadow-sm);
-}
+:host { display: block; }
 
-.section-title {
-  font-size: var(--fs-font-size-xl);
-  font-weight: 700;
-  color: var(--fs-text);
-  margin-bottom: var(--fs-space-4);
-}
+.inventory-add { max-width: 640px; margin: 0 auto; }
 
-.form-group {
+.form-card {
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--fs-space-4);
+  gap: var(--fs-space-5);
+  padding: var(--fs-space-6);
 }
 
-label {
-  font-weight: 600;
-  color: var(--fs-text-secondary);
-  margin-bottom: 6px;
-  font-size: var(--fs-font-size-sm);
-}
+.req { color: var(--fs-danger); }
 
-input, select, textarea {
-  border: 1.5px solid var(--fs-border);
-  border-radius: var(--fs-radius-md);
-  padding: 10px var(--fs-space-3);
-  font-size: var(--fs-font-size-base);
-  color: var(--fs-text);
-  background: var(--fs-surface);
-  outline: none;
-  transition: border-color var(--fs-dur) var(--fs-ease),
-              box-shadow var(--fs-dur) var(--fs-ease);
+.input-with-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--fs-space-2);
 }
-
-input:focus, select:focus, textarea:focus {
-  border-color: var(--fs-primary);
-  box-shadow: 0 0 0 3px var(--fs-primary-muted);
-}
-
-input::placeholder, textarea::placeholder { color: var(--fs-text-muted); }
+.input-with-tools .input-field { flex: 1; }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--fs-space-3);
-  margin-top: var(--fs-space-5);
-}
-
-.form-group--with-tools .input-with-tools {
-  display: flex;
   gap: var(--fs-space-2);
-  align-items: center;
+  padding-top: var(--fs-space-2);
+  border-top: 1px solid var(--fs-border);
+  margin-top: var(--fs-space-1);
 }
 
-.input-with-tools input { flex: 1; }
-
-.icon-btn {
-  border: 1px solid var(--fs-border);
-  background: var(--fs-surface);
-  border-radius: var(--fs-radius-md);
-  padding: 6px var(--fs-space-2);
-  cursor: pointer;
-  transition: background var(--fs-dur) var(--fs-ease);
+@media (max-width: 520px) {
+  .form-actions { flex-direction: column-reverse; }
+  .form-actions .btn { width: 100%; justify-content: center; }
 }
-
-.icon-btn:hover:not(:disabled) { background: var(--fs-bg); }
-.icon-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.muted { color: var(--fs-text-muted); }

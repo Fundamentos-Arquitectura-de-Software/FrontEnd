@@ -1,20 +1,10 @@
 {
   "home": {
     "heroTitle": "Hi {{name}}, welcome to FreshSense",
+    "subtitle": "Here is the freshness overview for your inventory",
     "freshness": "General Freshness Level",
     "foodAlt": "Food",
-    "weeklyStats": "Weekly Statistics",
-    "stock": "STOCK",
-    "level": "LEVEL",
-    "gain": "GAIN",
-    "loss": "LOSS",
-    "challengesTitle": "Meet these challenges",
     "na": "N/A",
-    "tags": {
-      "salad": "Salad",
-      "bowl": "Bowl",
-      "yogurt": "Yogurt"
-    },
     "kpi": {
       "products": "Products in Stock",
       "activeAlerts": "Active Alerts",
@@ -24,11 +14,10 @@
       "noProducts": "Add products to your inventory to see the freshness score."
     },
     "sensor": {
-      "title": "Sensor Readings",
-      "ethylene": "Ethylene",
-      "cleanliness": "Cleanliness",
-      "oxygen": "Oxygen",
-      "ripeness": "Ripeness",
+      "title": "Live Sensor Readings",
+      "subtitle": "Latest values from your storage environment",
+      "temperature": "Temperature",
+      "humidity": "Humidity",
       "ok": "Normal",
       "warn": "Warning",
       "crit": "Critical",
@@ -64,7 +53,13 @@
     "achievements": "Achievements",
     "challenges": "Challenges",
     "notifications": "Notifications",
-    "settings": "Settings"
+    "settings": "Settings",
+    "sections": {
+      "overview": "Overview",
+      "operations": "Operations",
+      "engagement": "Engagement",
+      "account": "Account"
+    }
   },
   "auth": {
     "brandAlt": "FreshSense logo",
@@ -112,6 +107,7 @@
   },
   "settings": {
     "title": "Settings",
+    "subtitle": "Manage your account, preferences and integrations",
     "unsaved": "Unsaved changes",
     "saveAll": "Save All",
     "tabs": {
@@ -162,7 +158,7 @@
       "push": "Push",
       "weeklyReport": "Weekly report",
       "criticalOnly": "Only critical",
-      "ethyleneThreshold": "Ethylene threshold (ppm)",
+      "humidityThreshold": "Humidity threshold (%)",
       "temperatureThreshold": "Temperature threshold (°C)",
       "reset": "Reset",
       "save": "Save notifications"
@@ -184,7 +180,7 @@
       "connect": "Connect",
       "disconnect": "Disconnect",
       "smartFridges": {
-        "title": "Integrations: Smart fridges",
+        "title": "Smart fridges",
         "desc": "Connect your fridge to import items and expirations.",
         "sync": "Sync now",
         "lastSync": "Last sync",
@@ -205,6 +201,7 @@
   },
   "achievements": {
     "title": "Achievements",
+    "subtitle": "Track your progress and unlock rewards",
     "congratsTitle": "Congratulations! New Achievement!",
     "completed": "Completed",
     "locked": "Locked",
@@ -212,7 +209,9 @@
     "sharing": "Sharing...",
     "shared": "Shared successfully!",
     "sharedFallback": "A sharing link was opened.",
-    "shareFailed": "Could not share."
+    "shareFailed": "Could not share.",
+    "filterLabel": "Show",
+    "empty": "No achievements in this category yet."
   },
   "tabs": {
     "In-Progress": "In-Progress",
@@ -222,9 +221,17 @@
   },
   "alerts": {
     "title": "Alerts",
+    "subtitle": "Temperature and humidity alerts from your sensors",
     "searchPlaceholder": "Search alerts…",
+    "results": "{{count}} alerts",
     "filters": {
-      "severityAll": "All Severity",
+      "stateLabel": "Status",
+      "severityLabel": "Severity",
+      "stateAll": "All",
+      "stateActive": "Active",
+      "stateMuted": "Muted",
+      "stateResolved": "Resolved",
+      "severityAll": "All severities",
       "severityCritical": "Critical",
       "severityWarning": "Warning",
       "severityInfo": "Info"
@@ -243,24 +250,28 @@
     },
     "empty": {
       "title": "No alerts found",
-      "hint": "Try changing the tab, severity filter or your search."
+      "hint": "Try changing the status, severity filter or your search."
     }
   },
   "billing": {
     "payment": {
       "bannerAlt": "Payment banner",
       "title": "Payment Method",
+      "subtitle": "Enter your card details to complete the purchase",
       "cardName": "Name on card",
       "cardNumber": "Card number",
       "expiry": "Expires",
       "cvv": "CVV",
-      "pay": "Pay"
+      "pay": "Pay",
+      "secure": "Secure, encrypted payment"
     }
   },
   "plans": {
     "bannerAlt": "Plans banner",
     "title": "Choose your Plan",
+    "subtitle": "Pick the plan that fits how you manage freshness",
     "select": "Select",
+    "popular": "Most popular",
     "basic": {
       "title": "Basic Plan",
       "desc": "Ideal for individuals who want to reduce waste at home.",
@@ -279,19 +290,28 @@
   },
   "inventory": {
     "title": "Food Inventory",
+    "subtitle": "Manage the products stored in your fridge",
+    "searchPlaceholder": "Search products…",
+    "results": "{{count}} products",
     "add": {
       "title": "Add New Product",
-      "name": "Product Name *",
+      "subtitle": "Register a product to start tracking its freshness",
+      "name": "Product Name",
       "description": "Description",
-      "category": "Category *",
+      "category": "Category",
       "selectCategory": "Select category",
       "quantity": "Quantity",
       "image": "Image URL",
-      "cta": "Add Product"
+      "cta": "Add Product",
+      "voiceStart": "Voice input",
+      "voiceStop": "Stop",
+      "scan": "Scan (coming soon)"
     },
-    "state": "State",
+    "state": "Condition",
     "category": "Category",
     "uncategorized": "Uncategorized",
+    "allStates": "All conditions",
+    "allCategories": "All categories",
     "openDetailsAria": "Open product details for",
     "details": {
       "description": "Description",
@@ -301,6 +321,7 @@
       "quantity": "Quantity"
     },
     "searchAria": "Search products",
+    "empty": "No products found. Try adjusting your filters or add a new product.",
     "form": {
       "speechNotSupported": "Speech recognition not supported in this browser.",
       "speechError": "Could not understand, please try again.",
@@ -312,11 +333,13 @@
   },
   "reports": {
     "title": "Reports",
+    "subtitle": "Waste, consumption and environment trends",
     "from": "From",
     "to": "To",
     "apply": "Apply",
     "weeklyWaste": "Weekly Food Waste",
-    "trends": "Trends",
+    "trends": "Temperature & Humidity Trends",
+    "noTrends": "No sensor trend data available yet.",
     "vsLastWeek": "vs last week",
     "mtd": "month to date",
     "kpi": {
@@ -335,11 +358,13 @@
       "consume": "Consume",
       "discard": "Discard",
       "add": "Added",
-      "exportCsv": "Export CSV"
+      "exportCsv": "Export CSV",
+      "categoryPlaceholder": "Fruit, Meat, Dairy…"
     }
   },
   "recipes": {
     "title": "Recipes",
+    "subtitle": "Discover recipes to make the most of your food",
     "searchPlaceholder": "Search recipe...",
     "level": "Level",
     "type": "Food type",
@@ -348,6 +373,7 @@
     "imageAlt": "Recipe image",
     "ingredients": "Ingredients",
     "steps": "Steps",
+    "results": "{{count}} recipes",
     "empty": "No recipes found. Try changing filters or your search.",
     "filters": {
       "allLevels": "All levels",
@@ -364,32 +390,43 @@
     "temperature": "Temperature",
     "humidity": "Humidity",
     "title": "Food Monitoring",
+    "subtitle": "Real-time temperature and humidity readings",
     "status": {
-      "healthy": "Sensors status: Healthy"
+      "healthy": "All sensors healthy",
+      "offline": "Sensors offline"
     },
     "lastSync": "Last sync {{minutes}} min ago",
-    "category": "Category",
     "kpi": {
-      "openIssues": "Open issues",
       "avgHumidity": "Avg Humidity",
-      "avgTemp": "Avg Temp"
+      "avgTemp": "Avg Temperature",
+      "status": "System Status"
+    },
+    "card": {
+      "healthyRange": "Healthy range",
+      "updated": "Updated"
     },
     "history": {
       "title": "History",
-      "last": "Last monitoring {{date}}"
+      "last": "Last reading {{date}}"
     },
     "exportCsv": "Export CSV",
-    "viewLast": "View last monitoring"
+    "viewLast": "View last reading",
+    "empty": "No sensor data available yet."
   },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
     "close": "Close",
     "search": "Search",
-    "all": "All"
+    "all": "All",
+    "loading": "Loading…",
+    "apply": "Apply",
+    "export": "Export",
+    "results": "results"
   },
   "challenges": {
     "title": "Challenges",
+    "subtitle": "Join challenges and climb the leaderboard",
     "tabs": {
       "active": "Active",
       "enrolled": "My challenges",
@@ -401,12 +438,14 @@
     "leaderboard": "Leaderboard",
     "player": "Player",
     "points": "Points",
-    "period": "From {{start}} to {{end}}"
+    "period": "From {{start}} to {{end}}",
+    "empty": "No challenges to show here yet."
   },
   "notifications": {
     "title": "Notifications",
     "inbox": {
       "title": "Notifications Inbox",
+      "subtitle": "Stay up to date with your latest activity",
       "empty": "No notifications.",
       "markRead": "Mark as read",
       "markAllRead": "Mark all as read"

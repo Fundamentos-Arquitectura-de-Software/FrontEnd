@@ -1,9 +1,17 @@
 <section class="wrap">
-    <header class="head">
-        <h2 class="title">{{ 'settings.title' | translate }}</h2>
-        <div class="head-actions">
-            <span class="dirty" *ngIf="dirty()">{{ 'settings.unsaved' | translate }}</span>
-            <button class="btn primary" (click)="saveAll()">{{ 'settings.saveAll' | translate }}</button>
+    <header class="page-header">
+        <div class="page-header__titles">
+            <span class="page-header__eyebrow">{{ 'nav.settings' | translate }}</span>
+            <h1>{{ 'settings.title' | translate }}</h1>
+            <p class="page-header__subtitle">{{ 'settings.subtitle' | translate }}</p>
+        </div>
+        <div class="page-header__actions">
+            <span class="dirty" *ngIf="dirty()">
+                <span class="fs-icon fs-icon--sm">edit</span>{{ 'settings.unsaved' | translate }}
+            </span>
+            <button class="btn btn-primary" (click)="saveAll()">
+                <span class="fs-icon fs-icon--sm">save</span>{{ 'settings.saveAll' | translate }}
+            </button>
         </div>
     </header>
 
@@ -14,7 +22,7 @@
                     *ngFor="let t of tabs"
                     [class.active]="isActive(t.key)"
                     (click)="setTab(t.key)">
-                <span class="ico">{{ t.icon }}</span> {{ ('settings.tabs.' + t.key) | translate }}
+                <span class="ico"><span class="fs-icon fs-icon--sm">{{ t.icon }}</span></span> {{ ('settings.tabs.' + t.key) | translate }}
             </button>
         </nav>
 
@@ -165,17 +173,17 @@
 
                 <div class="sliders">
                     <label class="field">
-                        <span>{{ 'settings.notifications.ethyleneThreshold' | translate }}</span>
-                        <input type="range" min="0" max="2" step="0.05"
-                               [ngModel]="notif().ethyleneThreshold" (ngModelChange)="setNotif('ethyleneThreshold', $event)">
-                        <b>{{ notif().ethyleneThreshold }}</b>
-                    </label>
-
-                    <label class="field">
                         <span>{{ 'settings.notifications.temperatureThreshold' | translate }}</span>
                         <input type="range" min="-5" max="15" step="0.5"
                                [ngModel]="notif().tempThreshold" (ngModelChange)="setNotif('tempThreshold', $event)">
-                        <b>{{ notif().tempThreshold }}</b>
+                        <b>{{ notif().tempThreshold }} °C</b>
+                    </label>
+
+                    <label class="field">
+                        <span>{{ 'settings.notifications.humidityThreshold' | translate }}</span>
+                        <input type="range" min="0" max="100" step="1"
+                               [ngModel]="notif().humidityThreshold" (ngModelChange)="setNotif('humidityThreshold', $event)">
+                        <b>{{ notif().humidityThreshold }} %</b>
                     </label>
                 </div>
 

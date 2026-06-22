@@ -1,134 +1,138 @@
-<section class="wrap">
-    <header class="head">
-        <h2 class="h1">{{ 'alerts.title' | translate }}</h2>
+<section class="wrap alerts">
 
-        <div class="filters">
-            <div class="tabs">
-                <button
-                        class="tab"
-                        *ngFor="let t of tabs"
-                        [class.active]="activeTab() === t.key"
-                        (click)="activeTab.set(t.key)"
-                >
-                    {{ t.label | translate }}
-                </button>
-            </div>
+  <header class="page-header">
+    <div class="page-header__titles">
+      <span class="page-header__eyebrow">{{ 'nav.alerts' | translate }}</span>
+      <h1>{{ 'alerts.title' | translate }}</h1>
+      <p class="page-header__subtitle">{{ 'alerts.subtitle' | translate }}</p>
+    </div>
+  </header>
 
-            <div class="row">
-                <input
-                        class="search"
-                        type="search"
-                        [placeholder]="'alerts.searchPlaceholder' | translate"
-                        [ngModel]="query()"
-                        (ngModelChange)="query.set($event)"
-                />
-
-                <select
-                        class="select"
-                        [ngModel]="sevFilter()"
-                        (ngModelChange)="sevFilter.set($event)"
-                >
-                    <option value="all">
-                        {{ 'alerts.filters.severityAll' | translate }}
-                    </option>
-                    <option value="critical">
-                        {{ 'alerts.filters.severityCritical' | translate }}
-                    </option>
-                    <option value="warning">
-                        {{ 'alerts.filters.severityWarning' | translate }}
-                    </option>
-                    <option value="info">
-                        {{ 'alerts.filters.severityInfo' | translate }}
-                    </option>
-                </select>
-            </div>
-        </div>
-    </header>
-
-    <!-- LISTA DE ALERTAS -->
-    <div class="list" *ngIf="visible().length; else empty">
-
-        <article
-                class="alert-card"
-                *ngFor="let a of visible()"
-                [ngClass]="[
-                    a.severity.toLowerCase(),
-                    (a.state || '').toLowerCase()
-                ]"
-
-        >
-
-            <!-- IZQUIERDA -->
-            <div class="alert__left">
-                <div class="badge" [ngClass]="a.severity.toLowerCase()">
-                    {{ a.severity.toLowerCase() }}
-                </div>
-                <div class="source chip">
-                    {{ a.source }}
-                </div>
-            </div>
-
-            <!-- CUERPO -->
-            <div class="alert__body">
-                <div class="title-row">
-                    <h3 class="title">{{ a.title }}</h3>
-                    <div class="time muted">{{ a.timeAgo }}</div>
-                </div>
-
-                <p class="msg">{{ a.message }}</p>
-
-                <div class="actions">
-                    <button class="btn outline" (click)="mute(a)">
-                        {{ 'alerts.actions.mute' | translate }}
-                    </button>
-                    <button class="btn" (click)="resolve(a)">
-                        {{ 'alerts.actions.resolve' | translate }}
-                    </button>
-                    <button class="btn ghost" (click)="open(a)">
-                        {{ 'alerts.actions.details' | translate }}
-                    </button>
-                </div>
-
-                <!-- DETALLES -->
-                <div class="drawer" *ngIf="isOpen(a)">
-                    <div class="drawer__row">
-                        <span>{{ 'alerts.columns.source' | translate }}</span>
-                        <b>{{ a.source }}</b>
-                    </div>
-
-                    <div class="drawer__row">
-                        <span>{{ 'alerts.columns.severity' | translate }}</span>
-                        <b class="cap">{{ a.severity.toLowerCase() }}</b>
-                    </div>
-
-                    <div class="drawer__row">
-                        <span>{{ 'alerts.columns.status' | translate }}</span>
-                        <b class="cap">{{ (a.state || '').toLowerCase() }}</b>
-                    </div>
-
-                    <div class="drawer__row">
-                        <span>{{ 'alerts.columns.createdAt' | translate }}</span>
-                        <b>{{ a.timeAgo }}</b>
-                    </div>
-
-                    <div class="drawer__foot">
-                        <button class="btn ghost" (click)="close()">
-                            {{ 'common.close' | translate }}
-                        </button>
-                        <button class="btn" (click)="resolve(a)">
-                            {{ 'alerts.actions.markResolved' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </article>
+  <!-- FILTER TOOLBAR (all dropdown selects) -->
+  <div class="toolbar">
+    <div class="toolbar__search">
+      <div class="input-icon">
+        <span class="fs-icon">search</span>
+        <input
+          class="input-field"
+          type="search"
+          [placeholder]="'alerts.searchPlaceholder' | translate"
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)" />
+      </div>
     </div>
 
-    <!-- VACÍO -->
-    <ng-template #empty>
-        <div class="empty card">
-            <h3>{{ 'alerts.empty.title' | translate }}</h3>
-            <p class="muted">{{ 'alerts.empty.hint' | translate }}</p>
+    <div class="filter-control">
+      <span class="filter-control__label">{{ 'alerts.filters.stateLabel' | translate }}</span>
+      <div class="select-field filter-select filter-select--sm">
+        <select [ngModel]="stateFilter()" (ngModelChange)="stateFilter.set($event)">
+          <option value="all">{{ 'alerts.filters.stateAll' | translate }}</option>
+          <option value="active">{{ 'alerts.filters.stateActive' | translate }}</option>
+          <option value="muted">{{ 'alerts.filters.stateMuted' | translate }}</option>
+          <option value="resolved">{{ 'alerts.filters.stateResolved' | translate }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filter-control">
+      <span class="filter-control__label">{{ 'alerts.filters.severityLabel' | translate }}</span>
+      <div class="select-field filter-select">
+        <select [ngModel]="sevFilter()" (ngModelChange)="sevFilter.set($event)">
+          <option value="all">{{ 'alerts.filters.severityAll' | translate }}</option>
+          <option value="critical">{{ 'alerts.filters.severityCritical' | translate }}</option>
+          <option value="warning">{{ 'alerts.filters.severityWarning' | translate }}</option>
+          <option value="info">{{ 'alerts.filters.severityInfo' | translate }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKELETON -->
+  <div class="list" *ngIf="loading()">
+    <article class="skeleton-card" *ngFor="let s of skeletons">
+      <div class="skeleton skeleton--pill" style="margin-bottom:14px"></div>
+      <div class="skeleton skeleton--title"></div>
+      <div class="skeleton skeleton--text"></div>
+      <div class="skeleton skeleton--text skeleton--line-sm"></div>
+    </article>
+  </div>
+
+  <!-- LIST -->
+  <ng-container *ngIf="!loading()">
+    <div class="list" *ngIf="visible().length; else empty">
+      <article class="alert-card card" *ngFor="let a of visible()" [ngClass]="a.severity">
+        <div class="alert-card__bar"></div>
+
+        <div class="alert-card__main">
+          <div class="alert-card__top">
+            <span class="badge" [ngClass]="{
+              'badge-danger':  a.severity==='critical',
+              'badge-warning': a.severity==='warning',
+              'badge-info':    a.severity==='info'
+            }">{{ a.severity }}</span>
+            <span class="badge badge-neutral source-badge">
+              <span class="fs-icon fs-icon--sm">{{ a.source === 'Humidity' ? 'humidity_percentage' : 'thermostat' }}</span>
+              {{ a.source }}
+            </span>
+            <span class="alert-card__time muted text-sm">{{ a.timeAgo }}</span>
+          </div>
+
+          <h3 class="alert-card__title">{{ a.title }}</h3>
+          <p class="alert-card__msg">{{ a.message }}</p>
+
+          <div class="alert-card__actions">
+            <button class="btn btn-ghost btn-sm" (click)="mute(a)" [disabled]="a.state==='muted'">
+              <span class="fs-icon fs-icon--sm">notifications_off</span>
+              {{ 'alerts.actions.mute' | translate }}
+            </button>
+            <button class="btn btn-primary btn-sm" (click)="resolve(a)" [disabled]="a.state==='resolved'">
+              <span class="fs-icon fs-icon--sm">check</span>
+              {{ 'alerts.actions.resolve' | translate }}
+            </button>
+            <button class="btn btn-ghost btn-sm" (click)="open(a)">
+              {{ 'alerts.actions.details' | translate }}
+            </button>
+          </div>
         </div>
+      </article>
+    </div>
+
+    <ng-template #empty>
+      <div class="card">
+        <div class="empty-state">
+          <span class="empty-state__icon"><span class="fs-icon">notifications_paused</span></span>
+          <h3>{{ 'alerts.empty.title' | translate }}</h3>
+          <p>{{ 'alerts.empty.hint' | translate }}</p>
+        </div>
+      </div>
     </ng-template>
+  </ng-container>
+
+  <!-- DETAIL MODAL -->
+  <div class="modal-backdrop" *ngIf="openId() as id" (click)="close()">
+    <div class="modal-panel alert-modal" (click)="$event.stopPropagation()">
+      <ng-container *ngFor="let a of visible()">
+        <ng-container *ngIf="a.id === id">
+          <header class="alert-modal__head">
+            <h2>{{ a.title }}</h2>
+            <button class="icon-btn" (click)="close()" [attr.aria-label]="'common.close' | translate">
+              <span class="fs-icon fs-icon--sm">close</span>
+            </button>
+          </header>
+          <p class="alert-modal__msg">{{ a.message }}</p>
+          <dl class="detail-list">
+            <div><dt>{{ 'alerts.columns.source' | translate }}</dt><dd>{{ a.source }}</dd></div>
+            <div><dt>{{ 'alerts.columns.severity' | translate }}</dt><dd class="cap">{{ a.severity }}</dd></div>
+            <div><dt>{{ 'alerts.columns.status' | translate }}</dt><dd class="cap">{{ a.state }}</dd></div>
+            <div><dt>{{ 'alerts.columns.createdAt' | translate }}</dt><dd>{{ a.timeAgo }}</dd></div>
+          </dl>
+          <footer class="alert-modal__foot">
+            <button class="btn btn-ghost" (click)="close()">{{ 'common.close' | translate }}</button>
+            <button class="btn btn-primary" (click)="resolve(a); close()">{{ 'alerts.actions.markResolved' | translate }}</button>
+          </footer>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
 </section>

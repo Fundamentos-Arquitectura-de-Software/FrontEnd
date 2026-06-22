@@ -1,81 +1,95 @@
-<section class="grid">
-    <article class="card highlight" *ngIf="latestCompleted() as last">
-        <div class="badge">🎉</div>
-        <div>
-            <h3 class="title">{{ 'achievements.congratsTitle' | translate }}</h3>
-            <p class="muted">
-                <strong>{{ last.title }}</strong>: {{ last.desc }}
-            </p>
-            <div class="points won">+ {{ pts(last.pts) }}</div>
+<section class="wrap achievements">
+
+  <header class="page-header">
+    <div class="page-header__titles">
+      <span class="page-header__eyebrow">{{ 'nav.achievements' | translate }}</span>
+      <h1>{{ 'achievements.title' | translate }}</h1>
+      <p class="page-header__subtitle">{{ 'achievements.subtitle' | translate }}</p>
+    </div>
+  </header>
+
+  <!-- HIGHLIGHT -->
+  <article class="card highlight" *ngIf="!loading() && latestCompleted() as last">
+    <span class="highlight__icon"><span class="fs-icon fs-icon--xl fs-icon--fill">emoji_events</span></span>
+    <div class="highlight__body">
+      <span class="highlight__eyebrow">{{ 'achievements.congratsTitle' | translate }}</span>
+      <h3 class="highlight__title">{{ last.title }}</h3>
+      <p class="muted">{{ last.desc }}</p>
+    </div>
+    <span class="highlight__pts">+{{ pts(last.pts) }}</span>
+  </article>
+
+  <!-- PANEL -->
+  <article class="card panel">
+    <header class="panel__head">
+      <h2 class="panel__title">{{ 'achievements.title' | translate }}</h2>
+      <div class="filter-control">
+        <div class="select-field filter-select">
+          <select [ngModel]="activeTab()" (ngModelChange)="setTab($event)">
+            <option *ngFor="let t of tabs" [value]="t.key">{{ t.label | translate }}</option>
+          </select>
         </div>
-        <div class="trophy" aria-hidden="true">🏆</div>
-    </article>
+      </div>
+    </header>
 
-    <article class="card panel">
-        <header class="panel__head">
-            <h4 class="h2">{{ 'achievements.title' | translate }}</h4>
-            <div class="tabs">
-                <button *ngFor="let t of tabs"
-                        class="tab"
-                        [class.active]="activeTab() === t.key"
-                        (click)="setTab(t.key)">
-                    {{ t.label | translate }}
-                    <span class="pill"
-                          [ngClass]="{
-                  'is-progress': t.key==='in-progress',
-                  'is-pending':  t.key==='pending',
-                  'is-completed':t.key==='completed'
-                }">
-            {{
-                            t.key==='in-progress' ? count.inProgress() :
-                                t.key==='pending'     ? count.pending()   :
-                                    t.key==='completed'   ? count.completed() :
-                                        count.all()
-                        }}
-          </span>
-                </button>
+    <!-- SKELETON -->
+    <ul class="items" *ngIf="loading()">
+      <li class="item" *ngFor="let s of [0,1,2,3]">
+        <div class="skeleton skeleton--circle" style="width:44px;height:44px"></div>
+        <div style="flex:1">
+          <div class="skeleton skeleton--text" style="width:40%"></div>
+          <div class="skeleton skeleton--text skeleton--line-sm"></div>
+        </div>
+      </li>
+    </ul>
+
+    <!-- LIST -->
+    <ng-container *ngIf="!loading()">
+      <ul class="items" *ngIf="visible().length; else empty">
+        <li class="item" *ngFor="let a of visible()" #card>
+          <div class="item__icon" [class.done]="a.status==='completed'">
+            <span class="fs-icon">{{ a.icon }}</span>
+          </div>
+
+          <div class="item__body">
+            <div class="item__row">
+              <strong>{{ a.title }}</strong>
+              <span class="badge" [ngClass]="a.status==='completed' ? 'badge-success' : 'badge-neutral'">
+                {{ a.status==='completed' ? ('achievements.completed' | translate) : pts(a.pts) }}
+              </span>
             </div>
-        </header>
+            <p class="muted text-sm">{{ a.desc }}</p>
 
-        <ul class="items">
-            <li class="item" *ngFor="let a of visible(); let i = index" #card>
-                <div class="icon" [class.done]="a.status==='completed'">{{ a.icon }}</div>
+            <div class="item__progress" *ngIf="a.status==='in-progress'">
+              <div class="progress-track"><span [style.width.%]="a.progress ?? 0"></span></div>
+              <em>{{ a.progress }}%</em>
+            </div>
 
-                <div class="body">
-                    <div class="title-row">
-                        <strong>{{ a.title }}</strong>
-                        <span class="badge-pts" [class.done]="a.status==='completed'">
-              {{ a.status==='completed' ? ('achievements.completed' | translate) : pts(a.pts) }}
+            <span class="item__locked" *ngIf="a.status==='pending'">
+              <span class="fs-icon fs-icon--sm">lock</span>{{ 'achievements.locked' | translate }}
             </span>
-                    </div>
-                    <p class="muted">{{ a.desc }}</p>
 
-                    <div class="progress" *ngIf="a.status==='in-progress'">
-                        <span [style.width.%]="a.progress ?? 0"></span>
-                        <em>{{ a.progress }}%</em>
-                    </div>
+            <div class="item__actions">
+              <button class="btn btn-ghost btn-sm" [disabled]="sharingId === a.id" (click)="share(a, card)">
+                <span class="fs-icon fs-icon--sm">share</span>
+                {{ sharingId === a.id ? ('achievements.sharing' | translate) : ('achievements.share' | translate) }}
+              </button>
+              <span class="share-msg" *ngIf="lastShareMsg?.id === a.id"
+                    [class.ok]="lastShareMsg?.ok" [class.err]="!lastShareMsg?.ok">
+                {{ lastShareMsg?.text }}
+              </span>
+            </div>
+          </div>
+        </li>
+      </ul>
 
-                    <div class="locked" *ngIf="a.status==='pending'">
-                        <span>{{ 'achievements.locked' | translate }}</span>
-                    </div>
+      <ng-template #empty>
+        <div class="empty-state">
+          <span class="empty-state__icon"><span class="fs-icon">military_tech</span></span>
+          <p>{{ 'achievements.empty' | translate }}</p>
+        </div>
+      </ng-template>
+    </ng-container>
+  </article>
 
-                    <!-- Compartir logro -->
-                    <div class="actions">
-                        <button class="btn-share"
-                                [disabled]="sharingId === a.id"
-                                (click)="share(a, card)">
-                            {{ sharingId === a.id ? ('achievements.sharing' | translate) : ('achievements.share' | translate) }}
-                        </button>
-                    </div>
-
-                    <!-- FIX: null-safety -->
-                    <p class="muted"
-                       *ngIf="lastShareMsg?.id === a.id"
-                       [style.color]="(lastShareMsg?.ok ? '#19924f' : '#b42318')">
-                        {{ lastShareMsg?.text }}
-                    </p>
-                </div>
-            </li>
-        </ul>
-    </article>
 </section>

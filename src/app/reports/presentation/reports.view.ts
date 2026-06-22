@@ -1,6 +1,6 @@
 import { Component, signal, computed, DestroyRef, inject } from '@angular/core';
 // signal/computed used for _days and days()
-import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { NgIf, NgFor, NgClass, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 @Component({
     selector: 'fs-reports-view',
     standalone: true,
-    imports: [NgIf, NgFor, FormsModule, TranslateModule, DatePipe],
+    imports: [NgIf, NgFor, NgClass, FormsModule, TranslateModule, DatePipe],
     templateUrl: './reports.view.html',
     styleUrls: ['./reports.view.css']
 })

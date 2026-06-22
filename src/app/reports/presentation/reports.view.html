@@ -1,124 +1,148 @@
-<section class="wrap">
-    <header class="head">
-        <h2 class="h1">{{ 'reports.title' | translate }}</h2>
+<section class="wrap reports">
 
-        <div class="filters">
-            <label class="input">
-                <span>{{ 'reports.from' | translate }}</span>
-                <input type="date" [(ngModel)]="fromDate">
-            </label>
-            <label class="input">
-                <span>{{ 'reports.to' | translate }}</span>
-                <input type="date" [(ngModel)]="toDate">
-            </label>
-            <button class="btn" (click)="applyRange()">{{ 'reports.apply' | translate }}</button>
-        </div>
-    </header>
-
-    <div class="grid">
-        <article class="card span-8">
-            <h3 class="h2">{{ 'reports.weeklyWaste' | translate }}</h3>
-            <div class="bars">
-                <div class="bar" *ngFor="let d of days()" [style.height.%]="(d.wasteKg / maxWaste) * 100">
-                    <span class="bar__value">{{ d.wasteKg }}</span>
-                    <span class="bar__label">{{ d.label }}</span>
-                </div>
-            </div>
-        </article>
-
-        <article class="card span-4">
-            <div class="kpis">
-                <div class="kpi">
-                    <strong>{{ 'reports.kpi.gain' | translate }}</strong>
-                    <div class="kpi__value pos">+{{ gainPct }}%</div>
-                    <small class="muted">{{ 'reports.vsLastWeek' | translate }}</small>
-                </div>
-                <div class="kpi">
-                    <strong>{{ 'reports.kpi.loss' | translate }}</strong>
-                    <div class="kpi__value neg">-{{ lossPct }}%</div>
-                    <small class="muted">{{ 'reports.vsLastWeek' | translate }}</small>
-                </div>
-                <div class="kpi">
-                    <strong>{{ 'reports.kpi.improvement' | translate }}</strong>
-                    <div class="kpi__value pos">+{{ improvementPct }}%</div>
-                    <small class="muted">{{ 'reports.mtd' | translate }}</small>
-                </div>
-            </div>
-        </article>
-
-        <article class="card span-12">
-            <h3 class="h2">{{ 'reports.trends' | translate }}</h3>
-            <div class="legend">
-                <span class="dot blue"></span> {{ 'monitoring.temperature' | translate }}
-                <span class="dot red"></span> {{ 'monitoring.humidity' | translate }}
-            </div>
-
-            <svg class="chart" [attr.viewBox]="'0 0 ' + width + ' ' + height" role="img" [attr.aria-label]="'reports.trends' | translate">
-                <g class="gridlines" *ngFor="let y of [0,25,50,75,100]">
-                    <line [attr.x1]="pad" [attr.x2]="width-pad" [attr.y1]="yScale(y)" [attr.y2]="yScale(y)"></line>
-                </g>
-                <polyline class="hum" [attr.points]="polyline(humidity)"></polyline>
-                <polyline class="temp" [attr.points]="polyline(temperature)"></polyline>
-                <g *ngFor="let d of days(); let i = index">
-                    <text class="tick" [attr.x]="xScale(i)" [attr.y]="height-6">{{ d.label[0] }}</text>
-                </g>
-            </svg>
-        </article>
-
-        <article class="card span-12">
-            <h3 class="h2">{{ 'reports.history.title' | translate }}</h3>
-
-            <div class="filters history-filters">
-                <label class="input">
-                    <span>{{ 'reports.from' | translate }}</span>
-                    <input type="date" [(ngModel)]="hFrom" (change)="applyHistoryFilters()">
-                </label>
-                <label class="input">
-                    <span>{{ 'reports.to' | translate }}</span>
-                    <input type="date" [(ngModel)]="hTo" (change)="applyHistoryFilters()">
-                </label>
-                <label class="input">
-                    <span>{{ 'reports.history.action' | translate }}</span>
-                    <select [(ngModel)]="hAction" (change)="applyHistoryFilters()">
-                        <option value="">{{ 'common.all' | translate }}</option>
-                        <option value="consume">{{ 'reports.history.consume' | translate }}</option>
-                        <option value="discard">{{ 'reports.history.discard' | translate }}</option>
-                        <option value="add">{{ 'reports.history.add' | translate }}</option>
-                    </select>
-                </label>
-                <label class="input">
-                    <span>{{ 'reports.history.category' | translate }}</span>
-                    <input type="text" [(ngModel)]="hCategory" (input)="applyHistoryFilters()" placeholder="Fruit, Meat, Dairy…">
-                </label>
-                <button class="btn" (click)="exportCSV()">{{ 'reports.history.exportCsv' | translate }}</button>
-            </div>
-
-            <div class="table-wrap" *ngIf="filtered.length; else noData">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>{{ 'reports.history.date' | translate }}</th>
-                        <th>{{ 'reports.history.action' | translate }}</th>
-                        <th>{{ 'reports.history.product' | translate }}</th>
-                        <th>{{ 'reports.history.category' | translate }}</th>
-                        <th>{{ 'reports.history.qty' | translate }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let e of filtered">
-                        <td>{{ e.date | date:'yyyy-MM-dd HH:mm' }}</td>
-                        <td>{{ e.action }}</td>
-                        <td>{{ e.productName }}</td>
-                        <td>{{ e.category }}</td>
-                        <td>{{ e.quantity }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <ng-template #noData>
-                <p class="muted">{{ 'reports.history.empty' | translate }}</p>
-            </ng-template>
-        </article>
+  <header class="page-header">
+    <div class="page-header__titles">
+      <span class="page-header__eyebrow">{{ 'nav.reports' | translate }}</span>
+      <h1>{{ 'reports.title' | translate }}</h1>
+      <p class="page-header__subtitle">{{ 'reports.subtitle' | translate }}</p>
     </div>
+    <div class="page-header__actions">
+      <button class="btn btn-outline" (click)="exportCSV()">
+        <span class="fs-icon fs-icon--sm">download</span>
+        {{ 'reports.history.exportCsv' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <!-- KPI STATS -->
+  <div class="stats-row">
+    <article class="card stat-card">
+      <div class="stat__label">{{ 'reports.kpi.gain' | translate }}</div>
+      <div class="stat__value pos">+{{ gainPct }}%</div>
+      <small class="muted">{{ 'reports.vsLastWeek' | translate }}</small>
+    </article>
+    <article class="card stat-card">
+      <div class="stat__label">{{ 'reports.kpi.loss' | translate }}</div>
+      <div class="stat__value neg">-{{ lossPct }}%</div>
+      <small class="muted">{{ 'reports.vsLastWeek' | translate }}</small>
+    </article>
+    <article class="card stat-card">
+      <div class="stat__label">{{ 'reports.kpi.improvement' | translate }}</div>
+      <div class="stat__value pos">+{{ improvementPct }}%</div>
+      <small class="muted">{{ 'reports.mtd' | translate }}</small>
+    </article>
+  </div>
+
+  <!-- WASTE + TRENDS -->
+  <div class="charts-grid">
+    <article class="card">
+      <h3 class="card-title">{{ 'reports.weeklyWaste' | translate }}</h3>
+      <div class="bars">
+        <div class="bar-col" *ngFor="let d of days()">
+          <div class="bar-track">
+            <div class="bar-fill" [style.height.%]="(d.wasteKg / maxWaste) * 100">
+              <span class="bar-value" *ngIf="d.wasteKg">{{ d.wasteKg }}</span>
+            </div>
+          </div>
+          <span class="bar-label">{{ d.label }}</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <h3 class="card-title">{{ 'reports.trends' | translate }}</h3>
+      <div class="legend">
+        <span class="legend-item"><span class="dot dot--temp"></span>{{ 'monitoring.temperature' | translate }}</span>
+        <span class="legend-item"><span class="dot dot--hum"></span>{{ 'monitoring.humidity' | translate }}</span>
+      </div>
+
+      <svg *ngIf="hasTrends(); else noTrends" class="chart"
+           [attr.viewBox]="'0 0 ' + width + ' ' + height" role="img"
+           [attr.aria-label]="'reports.trends' | translate">
+        <g class="gridlines" *ngFor="let y of [0,25,50,75,100]">
+          <line [attr.x1]="pad" [attr.x2]="width-pad" [attr.y1]="yScale(y)" [attr.y2]="yScale(y)"></line>
+        </g>
+        <polyline class="hum" [attr.points]="polyline(humidity)"></polyline>
+        <polyline class="temp" [attr.points]="polyline(temperature)"></polyline>
+        <g *ngFor="let d of days(); let i = index">
+          <text class="tick" [attr.x]="xScale(i)" [attr.y]="height-6">{{ d.label[0] }}</text>
+        </g>
+      </svg>
+      <ng-template #noTrends>
+        <div class="empty-state">
+          <span class="empty-state__icon"><span class="fs-icon">show_chart</span></span>
+          <p>{{ 'reports.noTrends' | translate }}</p>
+        </div>
+      </ng-template>
+    </article>
+  </div>
+
+  <!-- HISTORY -->
+  <article class="card">
+    <h3 class="card-title">{{ 'reports.history.title' | translate }}</h3>
+
+    <div class="toolbar">
+      <div class="filter-control">
+        <span class="filter-control__label">{{ 'reports.from' | translate }}</span>
+        <input type="date" class="input-field date-input" [(ngModel)]="hFrom" (change)="applyHistoryFilters()">
+      </div>
+      <div class="filter-control">
+        <span class="filter-control__label">{{ 'reports.to' | translate }}</span>
+        <input type="date" class="input-field date-input" [(ngModel)]="hTo" (change)="applyHistoryFilters()">
+      </div>
+      <div class="filter-control">
+        <span class="filter-control__label">{{ 'reports.history.action' | translate }}</span>
+        <div class="select-field filter-select filter-select--sm">
+          <select [(ngModel)]="hAction" (change)="applyHistoryFilters()">
+            <option value="">{{ 'common.all' | translate }}</option>
+            <option value="consume">{{ 'reports.history.consume' | translate }}</option>
+            <option value="discard">{{ 'reports.history.discard' | translate }}</option>
+            <option value="add">{{ 'reports.history.add' | translate }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-control">
+        <span class="filter-control__label">{{ 'reports.history.category' | translate }}</span>
+        <input type="text" class="input-field" [(ngModel)]="hCategory" (input)="applyHistoryFilters()"
+               [placeholder]="'reports.history.categoryPlaceholder' | translate">
+      </div>
+    </div>
+
+    <div class="table-wrap" *ngIf="filtered.length; else noData">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>{{ 'reports.history.date' | translate }}</th>
+            <th>{{ 'reports.history.action' | translate }}</th>
+            <th>{{ 'reports.history.product' | translate }}</th>
+            <th>{{ 'reports.history.category' | translate }}</th>
+            <th class="num">{{ 'reports.history.qty' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of filtered">
+            <td>{{ e.date | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-success': e.action==='consume',
+                'badge-danger':  e.action==='discard',
+                'badge-info':    e.action==='add'
+              }">{{ e.action }}</span>
+            </td>
+            <td>{{ e.productName }}</td>
+            <td>{{ e.category }}</td>
+            <td class="num">{{ e.quantity }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noData>
+      <div class="empty-state">
+        <span class="empty-state__icon"><span class="fs-icon">receipt_long</span></span>
+        <p>{{ 'reports.history.empty' | translate }}</p>
+      </div>
+    </ng-template>
+  </article>
+
 </section>
