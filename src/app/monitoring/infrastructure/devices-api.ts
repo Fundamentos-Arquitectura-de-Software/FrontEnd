@@ -3,12 +3,20 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
+/** Dispositivo listado (sin secretos). */
 export interface DeviceResponse {
     id: number;
     deviceId: string;
     name?: string;
-    secretKey?: string;
     registeredAt: string;
+}
+
+/** Respuesta al registrar: código de emparejamiento (no la clave secreta). */
+export interface DeviceRegistrationResponse {
+    deviceId: string;
+    name?: string;
+    pairingCode: string;
+    pairingExpiresAt: string;
 }
 
 const opts = { withCredentials: true };
@@ -19,8 +27,8 @@ export class DevicesApi {
 
     constructor(private http: HttpClient) {}
 
-    register(deviceId: string, name: string): Observable<DeviceResponse> {
-        return this.http.post<DeviceResponse>(this.base, { deviceId, name }, opts);
+    register(deviceId: string, name: string): Observable<DeviceRegistrationResponse> {
+        return this.http.post<DeviceRegistrationResponse>(this.base, { deviceId, name }, opts);
     }
 
     list(): Observable<DeviceResponse[]> {

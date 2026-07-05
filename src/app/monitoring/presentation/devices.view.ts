@@ -2,8 +2,7 @@ import { Component, OnInit, signal, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DevicesApi, DeviceResponse } from '../infrastructure/devices-api';
-import { environment } from '../../../environments/environment';
+import { DevicesApi, DeviceResponse, DeviceRegistrationResponse } from '../infrastructure/devices-api';
 
 @Component({
     selector: 'fs-devices-view',
@@ -26,20 +25,15 @@ import { environment } from '../../../environments/environment';
         <p *ngIf="error()" style="color:#c0392b;">{{ error() }}</p>
 
         <div *ngIf="lastRegistered() as d" style="border:1px solid #1f9c59;border-radius:8px;padding:1rem;margin-bottom:1rem;background:#f3fbf6;">
-            <strong>Dispositivo registrado.</strong> Guarda la clave: solo se muestra ahora.
-            <p>X-Device-Key: <code>{{ d.secretKey }}</code></p>
-            <p style="margin-top:.5rem;">El Edge debe llamar así (ejemplo para el informe):</p>
-            <pre style="background:#0f172a;color:#e2e8f0;padding:.75rem;border-radius:6px;overflow:auto;">POST {{ edgeUrl }}
-Content-Type: application/json
-X-Device-Key: {{ d.secretKey }}
-
-&#123;
-  "deviceId": "{{ d.deviceId }}",
-  "temperature": 24,
-  "humidity": 40,
-  "time": "21/06/2026 10:48",
-  "id": "34c0c05ad9f7e4397335"
-&#125;</pre>
+            <strong>Dispositivo registrado.</strong>
+            <p style="margin:.5rem 0;">Ve al <strong>Edge</strong> (página de vinculación) e introduce este
+               <strong>código de emparejamiento</strong>. Es de un solo uso y caduca en 10 minutos.</p>
+            <p style="font-size:1.6rem;letter-spacing:.25rem;margin:.5rem 0;">
+               <code>{{ d.pairingCode }}</code>
+            </p>
+            <p style="margin-top:.5rem;">Abre en el Edge: <code>http://&lt;ip-del-edge&gt;:5000/edge/setup</code>,
+               pega el código y pulsa <em>Vincular</em>. No necesitas copiar ninguna clave secreta:
+               el Edge la obtiene solo y la guarda de forma segura.</p>
         </div>
 
         <h3>Mis dispositivos</h3>
@@ -56,14 +50,12 @@ export class DevicesView implements OnInit {
     private api = inject(DevicesApi);
     private destroyRef = inject(DestroyRef);
 
-    readonly edgeUrl = `${environment.apiBaseUrl}/edge/readings`;
-
     deviceId = '';
     name = '';
     submitting = signal(false);
     error = signal<string | null>(null);
     devices = signal<DeviceResponse[]>([]);
-    lastRegistered = signal<DeviceResponse | null>(null);
+    lastRegistered = signal<DeviceRegistrationResponse | null>(null);
 
     ngOnInit(): void {
         this.load();

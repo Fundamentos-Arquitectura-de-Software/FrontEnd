@@ -11,12 +11,6 @@ import { Product } from '../../../domain/product.model';
 import { environment } from '../../../../../environments/environment';
 import { MonitoringApi } from '../../../../monitoring/infrastructure/monitoring-api';
 
-interface CategoryThreshold {
-    category: string;
-    tempMin: number; tempMax: number;
-    humidityMin: number; humidityMax: number;
-}
-
 @Component({
     selector: 'fs-inventory',
     standalone: true,
@@ -43,9 +37,9 @@ export class FoodInventoryView implements OnInit {
 
     private destroyRef = inject(DestroyRef);
     private readonly historyUrl = `${environment.apiBaseUrl}/history`;
-    private thresholds: CategoryThreshold[] = [];
-    private lastTemp: number | null = null;
-    private lastHumidity: number | null = null;
+    // Frescura ya clasificada por el Edge (semáforo) en la última lectura.
+    private lastStatus: string | null = null;
+    private lastCategory: string | null = null;
 
     constructor(
         private inventoryApi: InventoryApi,
@@ -55,20 +49,15 @@ export class FoodInventoryView implements OnInit {
     ) {}
 
     ngOnInit() {
-        // Carga umbrales y última lectura del sensor; luego los productos (para calcular su frescura).
-        this.http.get<CategoryThreshold[]>(`${environment.apiBaseUrl}/thresholds`)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: (t) => { this.thresholds = t ?? []; this.loadLatestThenProducts(); },
-                error: () => this.loadLatestThenProducts()
-            });
+        // La frescura ya viene clasificada por el Edge en la última lectura; aquí solo la mostramos.
+        this.loadLatestThenProducts();
     }
 
     private loadLatestThenProducts() {
         this.monitoringApi.getLatest()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: (r) => { this.lastTemp = r?.temperature ?? null; this.lastHumidity = r?.humidity ?? null; this.loadProducts(); },
+                next: (r) => { this.lastStatus = r?.status ?? null; this.lastCategory = r?.category ?? null; this.loadProducts(); },
                 error: () => this.loadProducts()
             });
     }
@@ -103,30 +92,19 @@ export class FoodInventoryView implements OnInit {
     }
 
     /**
-     * Estado de frescura derivado de la última lectura del sensor vs. el umbral de la categoría.
-     * Sin lectura o sin umbral → 'No sensor data' (en vez de fingir "buen estado").
+     * Estado de frescura del producto según la última lectura del Edge.
+     * El Edge ya clasificó el semáforo contra la categoría de su dispositivo; aquí solo
+     * mostramos ese estado a los productos de esa misma categoría. El resto: 'No sensor data'.
      */
     private computeState(category?: string): string {
-        if (this.lastTemp === null && this.lastHumidity === null) return 'No sensor data';
-        const th = this.thresholds.find(t => t.category.toLowerCase() === (category ?? '').toLowerCase());
-        if (!th) return 'No sensor data';
-
-        const within = (v: number | null, min: number, max: number) => v !== null && v >= min && v <= max;
-        const near = (v: number | null, min: number, max: number) => {
-            if (v === null) return false;
-            const margin = (max - min) * 0.15;
-            return (v >= min - margin && v < min) || (v > max && v <= max + margin);
-        };
-
-        const tempOk = within(this.lastTemp, th.tempMin, th.tempMax);
-        const humOk = within(this.lastHumidity, th.humidityMin, th.humidityMax);
-        if (tempOk && humOk) return 'In good condition';
-
-        const tempNear = tempOk || near(this.lastTemp, th.tempMin, th.tempMax);
-        const humNear = humOk || near(this.lastHumidity, th.humidityMin, th.humidityMax);
-        if (tempNear && humNear) return 'Regular condition';
-
-        return 'Bad condition';
+        if (!this.lastStatus || !this.lastCategory) return 'No sensor data';
+        if ((category ?? '').toLowerCase() !== this.lastCategory.toLowerCase()) return 'No sensor data';
+        switch (this.lastStatus) {
+            case 'GREEN':  return 'In good condition';
+            case 'YELLOW': return 'Regular condition';
+            case 'RED':    return 'Bad condition';
+            default:       return 'No sensor data'; // UNKNOWN u otro
+        }
     }
 
     filterProducts() {

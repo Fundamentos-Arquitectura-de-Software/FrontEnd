@@ -11,4 +11,8 @@ export interface MonitoringReading {
   temperature: number;
   humidity: number;
   recordedAt: string;
+  /** Estado de frescura ya clasificado por el Edge: GREEN | YELLOW | RED | UNKNOWN. */
+  status?: string;
+  /** Categoría contra la que el Edge clasificó la lectura (etiqueta de referencia). */
+  category?: string;
 }
