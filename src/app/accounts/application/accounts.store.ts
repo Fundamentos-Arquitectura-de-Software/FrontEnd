@@ -41,6 +41,27 @@ export class AccountStore {
         console.warn('[AccountStore] markAsPaid not implemented. Email:', email);
     }
 
+    /** Actualiza el nombre del perfil en el backend y refresca el usuario guardado. */
+    async updateProfile(fullName: string): Promise<{ ok: boolean; message?: string }> {
+        try {
+            const resp = await lastValueFrom(this.api.updateProfile(fullName));
+            this.saveSession(resp);
+            return { ok: true };
+        } catch (err: any) {
+            return { ok: false, message: err?.error?.message };
+        }
+    }
+
+    /** Cambia la contraseña del usuario autenticado. */
+    async changePassword(currentPassword: string, newPassword: string): Promise<{ ok: boolean; message?: string }> {
+        try {
+            await lastValueFrom(this.api.changePassword(currentPassword, newPassword));
+            return { ok: true };
+        } catch (err: any) {
+            return { ok: false, message: err?.error?.message };
+        }
+    }
+
     private saveSession(resp: AuthResponse): void {
         // El token NO se guarda en localStorage: viaja solo en la cookie HttpOnly (seguro ante XSS).
         const userInfo = {

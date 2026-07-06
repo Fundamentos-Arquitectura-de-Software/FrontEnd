@@ -6,4 +6,5 @@ export const AccountApiEndpoints = {
     logout: `${environment.apiBaseUrl}/accounts/logout`,
     refresh: `${environment.apiBaseUrl}/accounts/refresh`,
     me: `${environment.apiBaseUrl}/accounts/me`,
+    changePassword: `${environment.apiBaseUrl}/accounts/change-password`,
 };

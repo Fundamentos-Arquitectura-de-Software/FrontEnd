@@ -7,7 +7,7 @@
       <p class="page-header__subtitle">{{ 'monitoring.subtitle' | translate }}</p>
     </div>
     <div class="page-header__actions">
-      <button class="btn btn-ghost" type="button">
+      <button class="btn btn-ghost" type="button" [disabled]="exporting()" (click)="exportCsv()">
         <span class="fs-icon fs-icon--sm">download</span>
         {{ 'monitoring.exportCsv' | translate }}
       </button>
@@ -103,11 +103,35 @@
         <span class="muted text-sm">{{ 'monitoring.history.last' | translate:{ date: lastReadingDate } }}</span>
         <strong class="history__date">{{ lastReadingDate }}</strong>
       </div>
-      <button class="btn btn-outline" type="button">
+      <button class="btn btn-outline" type="button" (click)="openLast()">
         <span class="fs-icon fs-icon--sm">visibility</span>
         {{ 'monitoring.viewLast' | translate }}
       </button>
     </div>
   </article>
+
+  <!-- MODAL: última lectura -->
+  <div class="modal-overlay" *ngIf="showDetail() && latest() as r" (click)="closeDetail()">
+    <div class="modal-card card" (click)="$event.stopPropagation()">
+      <header class="modal-card__head">
+        <h2>{{ 'monitoring.viewLast' | translate }}</h2>
+        <button class="icon-btn" type="button" (click)="closeDetail()" aria-label="Cerrar">
+          <span class="fs-icon">close</span>
+        </button>
+      </header>
+      <dl class="reading-detail">
+        <div><dt>{{ 'monitoring.temperature' | translate }}</dt><dd>{{ r.temperature }} °C</dd></div>
+        <div><dt>{{ 'monitoring.humidity' | translate }}</dt><dd>{{ r.humidity }} %</dd></div>
+        <div><dt>{{ 'monitoring.detail.freshness' | translate }}</dt>
+          <dd><span class="badge" [ngClass]="{
+              'badge-success': r.status==='GREEN',
+              'badge-warning': r.status==='YELLOW',
+              'badge-danger':  r.status==='RED'
+            }">{{ freshnessLabel(r.status) | translate }}</span></dd></div>
+        <div *ngIf="r.category"><dt>{{ 'monitoring.detail.category' | translate }}</dt><dd>{{ r.category }}</dd></div>
+        <div><dt>{{ 'monitoring.detail.recordedAt' | translate }}</dt><dd>{{ lastReadingDate }}</dd></div>
+      </dl>
+    </div>
+  </div>
 
 </section>

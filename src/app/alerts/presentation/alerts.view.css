@@ -9,10 +9,9 @@
   padding: 0;
   overflow: hidden;
 }
-.alert-card__bar { width: 4px; flex-shrink: 0; background: var(--fs-info); }
-.alert-card.critical .alert-card__bar { background: var(--fs-danger); }
-.alert-card.warning  .alert-card__bar { background: var(--fs-warning); }
-.alert-card.info     .alert-card__bar { background: var(--fs-info); }
+/* Barra de color lateral eliminada a pedido: las cards ya no tienen aristas de color.
+   La severidad se comunica con el badge del encabezado. */
+.alert-card__bar { display: none; }
 
 .alert-card__main { flex: 1; padding: var(--fs-space-4) var(--fs-space-5); min-width: 0; }
 

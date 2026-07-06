@@ -5,6 +5,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AccountStore } from '../../../application/accounts.store';
 import { ToastService } from '../../../../shared/application/toast.service';
 import { NotificationsApi } from '../../../../notifications/infrastructure/notifications-api';
+import { LanguageService } from '../../../../core/i18n/language.service';
+
+const PREFS_KEY = 'fs.prefs';
 
 
 type TabKey = 'profile' | 'preferences' | 'theme' | 'notifications' | 'security' | 'integrations';
@@ -33,6 +36,13 @@ export class SettingsView {
     private readonly toast = inject(ToastService);
     private readonly translate = inject(TranslateService);
     private readonly notificationsApi = inject(NotificationsApi);
+    private readonly languageService = inject(LanguageService);
+
+    // Cambio de contraseña
+    pwCurrent = '';
+    pwNew = '';
+    pwSubmitting = signal(false);
+    profileSubmitting = signal(false);
 
     // Tabs
     tabs: { key: TabKey; label: string; icon: string }[] = [
@@ -75,6 +85,17 @@ export class SettingsView {
             }),
             error: () => { /* usa los valores por defecto */ },
         });
+
+        // Preferencias locales (idioma / zona / unidades) desde el dispositivo.
+        this.prefs.set({ ...this.prefs(), ...this.loadPrefs(), language: this.languageService.current() });
+    }
+
+    private loadPrefs(): Partial<Prefs> {
+        try {
+            const raw = localStorage.getItem(PREFS_KEY);
+            if (raw) return JSON.parse(raw) as Partial<Prefs>;
+        } catch {}
+        return {};
     }
 
     /** Persiste las preferencias de notificación en el backend (US09/US24). */
@@ -93,27 +114,48 @@ export class SettingsView {
         this.profile.set({ ...this.profile(), [k]: v });
         this.markDirty();
     }
-    saveProfile(){ this.toast.success(this.translate.instant('settings.profile.save')); }
+
+    /** Guarda el nombre del perfil en el backend. */
+    async saveProfile(){
+        const name = this.profile().name.trim();
+        if (!name) { this.toast.warning(this.translate.instant('settings.profile.name')); return; }
+        this.profileSubmitting.set(true);
+        const res = await this.accountStore.updateProfile(name);
+        this.profileSubmitting.set(false);
+        if (res.ok) {
+            this.dirty.set(false);
+            this.toast.success(this.translate.instant('settings.profile.save'));
+        } else {
+            this.toast.error(res.message ?? this.translate.instant('settings.profile.saveError'));
+        }
+    }
 
     // Preferences
     prefs = signal<Prefs>({
-        language: 'en',
+        language: 'es',
         timezone: 'America/Lima',
         units: 'metric',
         dateFormat: 'DD/MM/YYYY',
         weekStartsOn: 'mon',
     });
-    languages = ['en','es','pt','fr'];
+    // Solo idiomas realmente soportados (con traducciones).
+    languages = ['es','en'];
     timezones = ['America/Lima','America/Mexico_City','America/Bogota','UTC'];
     setPrefs<K extends keyof Prefs>(k: K, v: Prefs[K]) {
         this.prefs.set({ ...this.prefs(), [k]: v });
+        // El idioma se aplica al instante.
+        if (k === 'language' && (v === 'es' || v === 'en')) {
+            this.languageService.use(v as 'en' | 'es');
+        }
         this.markDirty();
     }
 
-    // Guarda preferencias granulares (US24) y las básicas en el backend (US09)
+    // Guarda preferencias (locales + notificaciones granulares US24 + básicas en backend US09)
     savePrefs(){
+        localStorage.setItem(PREFS_KEY, JSON.stringify(this.prefs()));
         localStorage.setItem('fs.notify.prefs', JSON.stringify(this.notifyPrefs));
         this.persistNotificationPrefs();
+        this.dirty.set(false);
         this.toast.success(this.translate.instant('settings.preferences.save'));
     }
 
@@ -188,7 +230,29 @@ export class SettingsView {
     sessions = signal<SessionInfo[]>([
         { device: 'Esta sesión', ip: '—', lastActive: 'Ahora', current: true },
     ]);
-    changePassword(){ this.toast.info(this.translate.instant('settings.security.changePassword')); }
+    /** Cambia la contraseña contra el backend (verifica la actual). */
+    async changePassword(){
+        const current = this.pwCurrent.trim();
+        const next = this.pwNew.trim();
+        if (!current || !next) {
+            this.toast.warning(this.translate.instant('settings.security.passwordRequired'));
+            return;
+        }
+        if (next.length < 8 || !/[A-Z]/.test(next) || !/\d/.test(next)) {
+            this.toast.warning(this.translate.instant('settings.security.passwordWeak'));
+            return;
+        }
+        this.pwSubmitting.set(true);
+        const res = await this.accountStore.changePassword(current, next);
+        this.pwSubmitting.set(false);
+        if (res.ok) {
+            this.pwCurrent = '';
+            this.pwNew = '';
+            this.toast.success(this.translate.instant('settings.security.passwordChanged'));
+        } else {
+            this.toast.error(res.message ?? this.translate.instant('settings.security.passwordError'));
+        }
+    }
     toggle2FA(){ this.twoFA.set(!this.twoFA()); }
     revokeSession(i: number){
         const arr = this.sessions().slice();

@@ -126,7 +126,8 @@
       "email": "Correo",
       "phone": "Teléfono",
       "organization": "Organización",
-      "save": "Guardar perfil"
+      "save": "Guardar perfil",
+      "saveError": "No se pudo guardar el perfil"
     },
     "preferences": {
       "title": "Preferencias",
@@ -174,7 +175,13 @@
       "twoFactorHint": "Agrega una capa extra de seguridad.",
       "activeSessions": "Sesiones activas",
       "revoke": "Revocar",
-      "current": "Actual"
+      "current": "Actual",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "passwordRequired": "Completa ambos campos",
+      "passwordWeak": "La nueva contraseña debe tener 8+ caracteres, una mayúscula y un número",
+      "passwordChanged": "Contraseña actualizada",
+      "passwordError": "No se pudo cambiar la contraseña"
     },
     "integrations": {
       "title": "Integraciones",
@@ -322,7 +329,10 @@
       "quantity": "Cantidad"
     },
     "searchAria": "Buscar productos",
-    "empty": "No se encontraron productos. Ajusta los filtros o agrega un producto nuevo.",
+    "empty": {
+      "title": "No se encontraron productos",
+      "hint": "Agrega tu primer producto para comenzar."
+    },
     "form": {
       "speechNotSupported": "Reconocimiento de voz no compatible en este navegador.",
       "speechError": "No pude escuchar bien, intenta de nuevo.",
@@ -333,10 +343,6 @@
       "voiceStartAria": "Iniciar entrada de voz",
       "voiceStopAria": "Detener entrada de voz",
       "scanSoon": "Escaneo de código de barras próximamente"
-    },
-    "empty": {
-      "title": "No se encontraron productos",
-      "hint": "Agrega tu primer producto para comenzar."
     }
   },
   "reports": {
@@ -419,7 +425,18 @@
     },
     "exportCsv": "Exportar CSV",
     "viewLast": "Ver última lectura",
-    "empty": "Aún no hay datos de sensores."
+    "empty": "Aún no hay datos de sensores.",
+    "freshness": {
+      "green": "Buen estado",
+      "yellow": "Estado regular",
+      "red": "Mal estado",
+      "unknown": "Sin datos"
+    },
+    "detail": {
+      "freshness": "Frescura",
+      "category": "Categoría",
+      "recordedAt": "Fecha de lectura"
+    }
   },
   "common": {
     "save": "Guardar",

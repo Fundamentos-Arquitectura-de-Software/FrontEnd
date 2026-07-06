@@ -9,10 +9,7 @@
   gap: var(--fs-space-5);
   flex-wrap: wrap;
   margin-bottom: var(--fs-space-5);
-  border-left: 3px solid var(--fs-success);
 }
-.status-bar.is-warn { border-left-color: var(--fs-warning); }
-.status-bar.is-crit { border-left-color: var(--fs-danger); }
 
 .status-bar__main { display: flex; align-items: center; gap: var(--fs-space-3); }
 
@@ -39,15 +36,6 @@
 }
 
 .metric-card { position: relative; overflow: hidden; }
-.metric-card::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: var(--fs-success);
-}
-.metric-card[data-status='warn']::before { background: var(--fs-warning); }
-.metric-card[data-status='crit']::before { background: var(--fs-danger); }
 
 .metric-card__head {
   display: flex;
@@ -116,3 +104,49 @@
   flex-wrap: wrap;
 }
 .history__date { display: block; font-size: var(--fs-font-size-md); margin-top: 2px; }
+
+/* ---- Modal última lectura ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 35, 27, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--fs-space-4);
+  z-index: 1000;
+}
+.modal-card {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--fs-space-6);
+}
+.modal-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--fs-space-4);
+}
+.modal-card__head h2 { font-size: var(--fs-font-size-lg); font-weight: 700; }
+.icon-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--fs-text-muted);
+  display: inline-flex;
+  padding: 4px;
+  border-radius: var(--fs-radius-sm);
+}
+.icon-btn:hover { background: var(--fs-bg); color: var(--fs-text); }
+
+.reading-detail { display: flex; flex-direction: column; }
+.reading-detail > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid var(--fs-border);
+}
+.reading-detail > div:first-child { border-top: none; }
+.reading-detail dt { color: var(--fs-text-muted); font-size: var(--fs-font-size-sm); }
+.reading-detail dd { font-weight: 600; }

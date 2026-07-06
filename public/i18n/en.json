@@ -126,7 +126,8 @@
       "email": "Email",
       "phone": "Phone",
       "organization": "Organization",
-      "save": "Save profile"
+      "save": "Save profile",
+      "saveError": "Could not save profile"
     },
     "preferences": {
       "title": "Preferences",
@@ -174,7 +175,13 @@
       "twoFactorHint": "Add an extra layer of security.",
       "activeSessions": "Active Sessions",
       "revoke": "Revoke",
-      "current": "Current"
+      "current": "Current",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "passwordRequired": "Fill in both fields",
+      "passwordWeak": "New password must have 8+ chars, one uppercase and one number",
+      "passwordChanged": "Password updated",
+      "passwordError": "Could not change password"
     },
     "integrations": {
       "title": "Integrations",
@@ -322,7 +329,10 @@
       "quantity": "Quantity"
     },
     "searchAria": "Search products",
-    "empty": "No products found. Try adjusting your filters or add a new product.",
+    "empty": {
+      "title": "No products found",
+      "hint": "Add your first product to get started."
+    },
     "form": {
       "speechNotSupported": "Speech recognition not supported in this browser.",
       "speechError": "Could not understand, please try again.",
@@ -333,10 +343,6 @@
       "voiceStartAria": "Start voice input",
       "voiceStopAria": "Stop voice input",
       "scanSoon": "Barcode scan coming soon"
-    },
-    "empty": {
-      "title": "No products found",
-      "hint": "Add your first product to get started."
     }
   },
   "reports": {
@@ -419,7 +425,18 @@
     },
     "exportCsv": "Export CSV",
     "viewLast": "View last reading",
-    "empty": "No sensor data available yet."
+    "empty": "No sensor data available yet.",
+    "freshness": {
+      "green": "Good condition",
+      "yellow": "Regular condition",
+      "red": "Bad condition",
+      "unknown": "No data"
+    },
+    "detail": {
+      "freshness": "Freshness",
+      "category": "Category",
+      "recordedAt": "Recorded at"
+    }
   },
   "common": {
     "save": "Save",

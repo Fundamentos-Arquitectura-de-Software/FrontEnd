@@ -35,6 +35,11 @@ export class MonitoringView implements OnInit {
 
     loading = signal(true);
     noData = signal(false);
+    exporting = signal(false);
+
+    // Última lectura cruda (para el modal de detalle).
+    latest = signal<MonitoringReading | null>(null);
+    showDetail = signal(false);
 
     private cards = signal<MetricCard[]>([]);
     metrics = computed(() => this.cards());
@@ -57,6 +62,7 @@ export class MonitoringView implements OnInit {
             next: (data: MonitoringReading) => {
                 if (!data) { this.loading.set(false); this.noData.set(true); return; }
 
+                this.latest.set(data);
                 this._lastSyncMinutes = data.recordedAt ? this.minutesAgo(data.recordedAt) : 0;
                 this.lastReadingDate = data.recordedAt
                     ? new Date(data.recordedAt).toLocaleString()
@@ -116,5 +122,52 @@ export class MonitoringView implements OnInit {
         const x = (i: number) => pad + i * ((w - pad * 2) / (arr.length - 1 || 1));
         const y = (val: number) => h - pad - ((val - min) / (max - min || 1)) * (h - pad * 2);
         return arr.map((v, i) => `${x(i)},${y(v)}`).join(' ');
+    }
+
+    // ---- Modal de última lectura ----
+    openLast(): void { if (this.latest()) this.showDetail.set(true); }
+    closeDetail(): void { this.showDetail.set(false); }
+
+    /** Etiqueta legible del semáforo que ya viene clasificado del Edge. */
+    freshnessLabel(status?: string): string {
+        switch (status) {
+            case 'GREEN':  return 'monitoring.freshness.green';
+            case 'YELLOW': return 'monitoring.freshness.yellow';
+            case 'RED':    return 'monitoring.freshness.red';
+            default:       return 'monitoring.freshness.unknown';
+        }
+    }
+
+    // ---- Exportar CSV ----
+    exportCsv(): void {
+        if (this.exporting()) return;
+        this.exporting.set(true);
+        this.api.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: (rows) => {
+                this.downloadCsv(rows ?? []);
+                this.exporting.set(false);
+            },
+            error: () => this.exporting.set(false),
+        });
+    }
+
+    private downloadCsv(rows: MonitoringReading[]): void {
+        const header = ['recordedAt', 'temperature', 'humidity', 'status', 'category'];
+        const escape = (v: unknown) => {
+            const s = v === null || v === undefined ? '' : String(v);
+            return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+        };
+        const lines = [
+            header.join(','),
+            ...rows.map(r => [r.recordedAt, r.temperature, r.humidity, r.status ?? '', r.category ?? '']
+                .map(escape).join(',')),
+        ];
+        const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `freshsense-monitoreo-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
     }
 }

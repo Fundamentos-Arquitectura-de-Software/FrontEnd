@@ -1,0 +1,85 @@
+<section class="wrap devices">
+  <header class="page-header">
+    <div class="page-header__titles">
+      <span class="page-header__eyebrow">Dispositivos</span>
+      <h1>Dispositivos IoT</h1>
+      <p class="page-header__subtitle">
+        Registra tu sensor (ESP32) para asociar sus lecturas a tu cuenta. Flujo:
+        <strong>IoT → Edge → Backend → App</strong>.
+      </p>
+    </div>
+  </header>
+
+  <div class="devices__grid">
+    <!-- Registrar -->
+    <article class="card device-form">
+      <h3 class="card-title">Registrar un dispositivo</h3>
+      <p class="muted">Introduce el identificador de tu sensor y un nombre para reconocerlo.</p>
+
+      <form (ngSubmit)="register()">
+        <label class="field">
+          <span>Identificador del dispositivo</span>
+          <input class="input-field" [(ngModel)]="deviceId" name="deviceId"
+                 placeholder="esp32-freshsense-1" required>
+        </label>
+        <label class="field">
+          <span>Nombre <small class="muted">(opcional)</small></span>
+          <input class="input-field" [(ngModel)]="name" name="name"
+                 placeholder="Refrigerador cocina">
+        </label>
+
+        <p class="form-error" *ngIf="error()">{{ error() }}</p>
+
+        <button class="btn btn-primary" type="submit" [disabled]="submitting()">
+          <span class="fs-icon fs-icon--sm">add</span>
+          {{ submitting() ? 'Registrando…' : 'Registrar dispositivo' }}
+        </button>
+      </form>
+
+      <!-- Código de emparejamiento -->
+      <div class="pairing" *ngIf="lastRegistered() as d">
+        <div class="pairing__head">
+          <span class="fs-icon">check_circle</span>
+          <strong>Dispositivo registrado</strong>
+        </div>
+        <p class="muted">
+          Ve al Edge (página de vinculación) e introduce este código. Es de un solo uso y
+          caduca en 10 minutos. No necesitas copiar ninguna clave secreta.
+        </p>
+        <div class="pairing__code">
+          <code>{{ d.pairingCode }}</code>
+          <button class="btn btn-outline btn-sm" type="button" (click)="copyCode(d.pairingCode)">
+            <span class="fs-icon fs-icon--sm">content_copy</span>
+            {{ copied() ? 'Copiado' : 'Copiar' }}
+          </button>
+        </div>
+        <p class="pairing__hint muted">
+          Ábrelo en el Edge: <code class="url">http://&lt;ip-del-edge&gt;:5000/edge/setup</code>
+        </p>
+      </div>
+    </article>
+
+    <!-- Lista -->
+    <article class="card device-list">
+      <h3 class="card-title">Mis dispositivos</h3>
+
+      <ul class="device-items" *ngIf="devices().length; else empty">
+        <li class="device-item" *ngFor="let d of devices()">
+          <span class="device-item__avatar">{{ initial(d.name || d.deviceId) }}</span>
+          <div class="device-item__info">
+            <strong>{{ d.name || 'Sin nombre' }}</strong>
+            <span class="muted">{{ d.deviceId }}</span>
+          </div>
+          <span class="chip chip--ok">Registrado</span>
+        </li>
+      </ul>
+
+      <ng-template #empty>
+        <div class="device-empty">
+          <span class="fs-icon">sensors</span>
+          <p class="muted">Aún no has registrado dispositivos.</p>
+        </div>
+      </ng-template>
+    </article>
+  </div>
+</section>

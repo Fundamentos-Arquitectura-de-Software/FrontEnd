@@ -44,7 +44,7 @@
                         </label>
                         <label class="field">
                             <span>{{ 'settings.profile.email' | translate }}</span>
-                            <input type="email" [ngModel]="profile().email" (ngModelChange)="setProfile('email', $event)">
+                            <input type="email" [ngModel]="profile().email" name="email" readonly disabled>
                         </label>
                         <label class="field">
                             <span>{{ 'settings.profile.phone' | translate }}</span>
@@ -226,7 +226,17 @@
                     <div class="box">
                         <h4>{{ 'settings.security.password' | translate }}</h4>
                         <p class="muted">{{ 'settings.security.passwordHint' | translate }}</p>
-                        <button class="btn" (click)="changePassword()">{{ 'settings.security.changePassword' | translate }}</button>
+                        <label class="field">
+                            <span>{{ 'settings.security.currentPassword' | translate }}</span>
+                            <input type="password" [(ngModel)]="pwCurrent" name="pwCurrent" autocomplete="current-password">
+                        </label>
+                        <label class="field">
+                            <span>{{ 'settings.security.newPassword' | translate }}</span>
+                            <input type="password" [(ngModel)]="pwNew" name="pwNew" autocomplete="new-password">
+                        </label>
+                        <button class="btn" [disabled]="pwSubmitting()" (click)="changePassword()">
+                            {{ 'settings.security.changePassword' | translate }}
+                        </button>
                     </div>
 
                     <div class="box">

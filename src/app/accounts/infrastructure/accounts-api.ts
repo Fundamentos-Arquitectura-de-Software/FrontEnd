@@ -27,4 +27,16 @@ export class AccountApis {
     refresh(): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(AccountApiEndpoints.refresh, {}, { withCredentials: true });
     }
+
+    updateProfile(fullName: string): Observable<AuthResponse> {
+        return this.http.put<AuthResponse>(AccountApiEndpoints.me, { fullName }, { withCredentials: true });
+    }
+
+    changePassword(currentPassword: string, newPassword: string): Observable<void> {
+        return this.http.post<void>(
+            AccountApiEndpoints.changePassword,
+            { currentPassword, newPassword },
+            { withCredentials: true }
+        );
+    }
 }
