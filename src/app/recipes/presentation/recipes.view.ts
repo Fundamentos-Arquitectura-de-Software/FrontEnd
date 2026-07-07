@@ -27,7 +27,6 @@ export class RecipesView implements OnInit {
     recipes: Recipe[] = [];
     filteredRecipes: Recipe[] = [];
 
-    /** Recetas cuyos ingredientes coinciden con el inventario del usuario, mejores primero. */
     recommended: Recipe[] = [];
     showAll = false;
     private matchCount = new Map<number, number>();
@@ -37,6 +36,7 @@ export class RecipesView implements OnInit {
     selectedType = 'All';
 
     loading = true;
+    generating = false; // loading específico para la generación con IA
     readonly skeletons = [0, 1, 2, 3, 4, 5];
 
     modalOpen = false;
@@ -65,10 +65,27 @@ export class RecipesView implements OnInit {
             .subscribe(({ recipes, products }) => {
                 this.recipes = recipes ?? [];
                 this.filteredRecipes = [...this.recipes];
+                this.matchCount.clear();
                 this.buildRecommendations(products ?? []);
-                // Sin coincidencias (o sin inventario): mostrar directamente el catálogo completo.
                 this.showAll = this.recommended.length === 0;
                 this.loading = false;
+            });
+    }
+
+    /** Se llama al presionar el botón: genera un catálogo nuevo con IA y recarga la vista. */
+    generateNewRecipes(): void {
+        this.generating = true;
+
+        this.http
+            .post<Recipe[]>(`${this.apiUrl}/generate-batch`, {}, { withCredentials: true })
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                catchError(() => of(null)),
+            )
+            .subscribe(() => {
+                this.generating = false;
+                this.loading = true;
+                this.loadRecipes();
             });
     }
 
