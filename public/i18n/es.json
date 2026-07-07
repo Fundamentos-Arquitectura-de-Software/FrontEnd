@@ -398,6 +398,13 @@
       "breakfast": "Desayuno",
       "meals": "Comidas",
       "snacks": "Snacks"
+    },
+    "recommended": {
+      "title": "Recomendadas para ti",
+      "subtitle": "Elegidas según los alimentos de tu inventario",
+      "showAll": "Ver todas las recetas",
+      "back": "Ver recomendadas",
+      "matches": "de tu inventario"
     }
   },
   "monitoring": {

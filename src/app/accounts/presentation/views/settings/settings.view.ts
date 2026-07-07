@@ -21,7 +21,7 @@ interface Notif { email: boolean; push: boolean; weeklyReport: boolean; critical
 
 // ---- US24: tipos de preferencias granulares de notificaciones
 type Channel = 'inapp'|'push'|'email';
-type NotifyKey = 'inventory.low' | 'inventory.expiring' | 'recipes.new' | 'achievements.unlocked';
+type NotifyKey = 'inventory.low' | 'inventory.expiring' | 'recipes.new';
 type NotifyPrefs = Record<NotifyKey, { enabled:boolean; channels: Channel[] }>;
 
 @Component({
@@ -193,8 +193,7 @@ export class SettingsView {
     private defaultNotify: NotifyPrefs = {
         'inventory.low':        { enabled: true,  channels: ['inapp'] },
         'inventory.expiring':   { enabled: true,  channels: ['inapp','push'] },
-        'recipes.new':          { enabled: false, channels: ['inapp'] },
-        'achievements.unlocked':{ enabled: true,  channels: ['inapp'] }
+        'recipes.new':          { enabled: false, channels: ['inapp'] }
     };
     notifyPrefs: NotifyPrefs = this.loadNotifyPrefs();
     prefKeys: NotifyKey[] = Object.keys(this.notifyPrefs) as NotifyKey[];
@@ -202,7 +201,15 @@ export class SettingsView {
     private loadNotifyPrefs(): NotifyPrefs {
         try {
             const raw = localStorage.getItem('fs.notify.prefs');
-            if (raw) return JSON.parse(raw) as NotifyPrefs;
+            if (raw) {
+                const saved = JSON.parse(raw) as Partial<NotifyPrefs>;
+                // Solo claves vigentes: descarta preferencias guardadas de features retiradas.
+                const merged = structuredClone(this.defaultNotify);
+                (Object.keys(merged) as NotifyKey[]).forEach(k => {
+                    if (saved[k]) merged[k] = saved[k]!;
+                });
+                return merged;
+            }
         } catch {}
         return structuredClone(this.defaultNotify);
     }

@@ -79,18 +79,6 @@ export const routes: Routes = [
                         .then(m => m.ReportsView),
             },
             {
-                path: 'achievements',
-                loadComponent: () =>
-                    import('./achievements/presentation/achievements.view')
-                        .then(m => m.AchievementsView),
-            },
-            {
-                path: 'challenges',
-                loadComponent: () =>
-                    import('./challenges/presentation/challenges.view')
-                        .then(m => m.ChallengesView),
-            },
-            {
                 path: 'notifications',
                 loadComponent: () =>
                     import('./notifications/presentation/notifications.view')

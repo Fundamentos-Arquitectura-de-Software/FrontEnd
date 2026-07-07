@@ -72,3 +72,9 @@
 .recipe-dialog__list li { font-size: var(--fs-font-size-sm); }
 .recipe-dialog__list--ol { list-style: decimal; }
 .recipe-dialog__list:not(.recipe-dialog__list--ol) { list-style: disc; }
+
+/* Recomendadas según inventario */
+.recipes-mode { display: flex; align-items: center; justify-content: space-between; gap: var(--fs-space-4); flex-wrap: wrap; }
+.recipes-mode__info { display: flex; flex-direction: column; gap: 2px; }
+.recipes-mode__title { font-size: var(--fs-font-size-lg); font-weight: 600; }
+.recipe-card__match { position: absolute; top: 10px; right: 10px; }

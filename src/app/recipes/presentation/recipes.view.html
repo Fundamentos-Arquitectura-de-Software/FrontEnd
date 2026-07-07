@@ -8,8 +8,22 @@
     </div>
   </header>
 
-  <!-- TOOLBAR: search + dropdown filters -->
-  <div class="toolbar">
+  <!-- MODO: recomendadas según inventario / catálogo completo -->
+  <div class="toolbar recipes-mode" *ngIf="!loading && recommended.length">
+    <div class="recipes-mode__info" *ngIf="!showAll">
+      <h2 class="recipes-mode__title">{{ 'recipes.recommended.title' | translate }}</h2>
+      <p class="muted">{{ 'recipes.recommended.subtitle' | translate }}</p>
+    </div>
+    <button class="btn btn-outline" *ngIf="!showAll" (click)="toggleShowAll(true)">
+      {{ 'recipes.recommended.showAll' | translate }} ({{ recipes.length }})
+    </button>
+    <button class="btn btn-outline" *ngIf="showAll" (click)="toggleShowAll(false)">
+      {{ 'recipes.recommended.back' | translate }}
+    </button>
+  </div>
+
+  <!-- TOOLBAR: search + dropdown filters (solo en el catálogo completo) -->
+  <div class="toolbar" *ngIf="showAll">
     <div class="toolbar__search">
       <div class="input-icon">
         <span class="fs-icon">search</span>
@@ -60,11 +74,14 @@
 
   <!-- LIST -->
   <ng-container *ngIf="!loading">
-    <div class="recipes-grid" *ngIf="filteredRecipes.length; else empty">
-      <article class="recipe-card card" *ngFor="let r of filteredRecipes" (click)="openModal(r)">
+    <div class="recipes-grid" *ngIf="visibleRecipes.length; else empty">
+      <article class="recipe-card card" *ngFor="let r of visibleRecipes" (click)="openModal(r)">
         <div class="recipe-card__media">
           <img [src]="imageFor(r)" [alt]="r.title" (error)="onImgError($event)" loading="lazy" />
           <span class="recipe-card__level badge badge-neutral" *ngIf="r.level">{{ r.level }}</span>
+          <span class="recipe-card__match badge badge-success" *ngIf="!showAll && matchesFor(r)">
+            {{ matchesFor(r) }} {{ 'recipes.recommended.matches' | translate }}
+          </span>
         </div>
         <div class="recipe-card__body">
           <h3 class="recipe-card__title">{{ r.title }}</h3>

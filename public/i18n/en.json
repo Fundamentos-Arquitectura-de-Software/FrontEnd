@@ -398,6 +398,13 @@
       "breakfast": "Breakfast",
       "meals": "Meals",
       "snacks": "Snacks"
+    },
+    "recommended": {
+      "title": "Recommended for you",
+      "subtitle": "Picked from the food in your inventory",
+      "showAll": "See all recipes",
+      "back": "See recommended",
+      "matches": "from your inventory"
     }
   },
   "monitoring": {
