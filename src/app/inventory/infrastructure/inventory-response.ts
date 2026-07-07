@@ -5,6 +5,8 @@ export interface ProductResponse {
     category: string;
     quantity: number;
     imageUrl: string;
+    expirationDate: string | null;
+    createdAt: string | null;
 }
 
 export interface CreateProductRequest {
@@ -13,8 +15,10 @@ export interface CreateProductRequest {
     category: string;
     quantity: number;
     imageUrl: string;
+    expirationDate: string;
 }
 
 export interface UpdateProductRequest {
-    quantity: number;
+    quantity?: number;
+    expirationDate?: string;
 }

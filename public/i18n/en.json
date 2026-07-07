@@ -309,6 +309,8 @@
       "category": "Category",
       "selectCategory": "Select category",
       "quantity": "Quantity",
+      "expiration": "Expiration date",
+      "expirationHint": "Combined with the sensor to compute freshness and warn you in time.",
       "image": "Image URL",
       "cta": "Add Product",
       "voiceStart": "Voice input",
@@ -326,7 +328,16 @@
       "noDescription": "No description available.",
       "state": "Condition",
       "notSpecified": "Not specified",
-      "quantity": "Quantity"
+      "quantity": "Quantity",
+      "expiration": "Expiration",
+      "added": "Added"
+    },
+    "expiry": {
+      "none": "No expiration date",
+      "expired": "Expired {{days}} day(s) ago",
+      "today": "Expires today",
+      "tomorrow": "Expires tomorrow",
+      "inDays": "Expires in {{days}} days"
     },
     "searchAria": "Search products",
     "empty": {

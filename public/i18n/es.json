@@ -309,6 +309,8 @@
       "category": "Categoría",
       "selectCategory": "Selecciona categoría",
       "quantity": "Cantidad",
+      "expiration": "Fecha de vencimiento",
+      "expirationHint": "Se combina con el sensor para calcular la frescura y avisarte a tiempo.",
       "image": "URL de imagen",
       "cta": "Agregar producto",
       "voiceStart": "Entrada por voz",
@@ -326,7 +328,16 @@
       "noDescription": "Sin descripción.",
       "state": "Condición",
       "notSpecified": "No especificado",
-      "quantity": "Cantidad"
+      "quantity": "Cantidad",
+      "expiration": "Vencimiento",
+      "added": "Agregado"
+    },
+    "expiry": {
+      "none": "Sin fecha de vencimiento",
+      "expired": "Vencido hace {{days}} día(s)",
+      "today": "Vence hoy",
+      "tomorrow": "Vence mañana",
+      "inDays": "Vence en {{days}} días"
     },
     "searchAria": "Buscar productos",
     "empty": {

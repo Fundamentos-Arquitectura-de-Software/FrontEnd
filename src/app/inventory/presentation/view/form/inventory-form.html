@@ -122,6 +122,16 @@
     </div>
 
     <div class="form-field">
+      <label for="expirationDate">{{ 'inventory.add.expiration' | translate }} <span class="req">*</span></label>
+      <input type="date" id="expirationDate" name="expirationDate" class="input-field"
+             [(ngModel)]="product.expirationDate" #expirationRef="ngModel" required />
+      <small class="form-hint">{{ 'inventory.add.expirationHint' | translate }}</small>
+      <small class="form-error" *ngIf="expirationRef.invalid && expirationRef.touched">
+        <span class="fs-icon fs-icon--sm">error</span>{{ 'inventory.form.requiredFields' | translate }}
+      </small>
+    </div>
+
+    <div class="form-field">
       <label for="image">{{ 'inventory.add.image' | translate }}</label>
       <input type="url" id="image" name="imageUrl" class="input-field"
              [(ngModel)]="product.imageUrl" placeholder="https://example.com/product.jpg" />

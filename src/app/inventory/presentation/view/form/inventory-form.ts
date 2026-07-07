@@ -35,7 +35,7 @@ type PartialProduct = { name?: string; quantity?: number; category?: string; };
     styleUrls: ['./inventory-form.css'],
 })
 export class InventoryAddComponent implements OnInit {
-    product = { name: '', description: '', category: '', quantity: 0, imageUrl: '' };
+    product = { name: '', description: '', category: '', quantity: 0, imageUrl: '', expirationDate: '' };
     // Las 7 categorías de umbrales del Edge: cualquier otra no tendría semáforo de frescura.
     categories = ['Frutas', 'Verduras', 'Lácteos', 'Carnes', 'Proteínas', 'Panadería', 'Snacks'];
 
@@ -82,6 +82,7 @@ export class InventoryAddComponent implements OnInit {
             category: item.category,
             quantity: 1,
             imageUrl: item.imageUrl ?? '',
+            expirationDate: '',
         };
         this.pickedFrom = item.name;
         this.mode = 'manual';
@@ -148,7 +149,7 @@ export class InventoryAddComponent implements OnInit {
     private toTitle(s: string) { return s.replace(/\w\S*/g, (w) => w[0].toUpperCase() + w.slice(1)); }
 
     onSubmit() {
-        if (!this.product.name || !this.product.category) {
+        if (!this.product.name || !this.product.category || !this.product.expirationDate) {
             this.toast.error(this.translate.instant('inventory.form.requiredFields'));
             return;
         }

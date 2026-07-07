@@ -6,4 +6,6 @@ export interface Product {
   category?: string;
   description?: string;
   quantity?: number;
+  expirationDate?: string | null;
+  createdAt?: string | null;
 }

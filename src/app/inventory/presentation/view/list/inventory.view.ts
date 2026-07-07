@@ -69,10 +69,12 @@ export class FoodInventoryView implements OnInit {
                     id: p.id,
                     name: p.name,
                     image: p.imageUrl,
-                    state: this.computeState(p.category),
+                    state: this.computeState(p.category, p.expirationDate),
                     category: p.category,
                     description: p.description,
-                    quantity: typeof p.quantity === 'number' ? p.quantity : 0
+                    quantity: typeof p.quantity === 'number' ? p.quantity : 0,
+                    expirationDate: p.expirationDate,
+                    createdAt: p.createdAt
                 }));
                 this.rebuildCategories();
                 this.filteredProducts = [...this.products];
@@ -92,19 +94,59 @@ export class FoodInventoryView implements OnInit {
     }
 
     /**
-     * Estado de frescura del producto según la última lectura del Edge.
-     * El Edge ya clasificó el semáforo contra la categoría de su dispositivo; aquí solo
-     * mostramos ese estado a los productos de esa misma categoría. El resto: 'No sensor data'.
+     * Estado de frescura combinado: manda el peor entre el semáforo del Edge (lectura
+     * más reciente para la categoría del producto) y la cercanía de la fecha de
+     * vencimiento (vencido = malo; vence en ≤2 días = al menos regular).
+     * Sin sensor NI fecha: 'No sensor data'.
      */
-    private computeState(category?: string): string {
-        if (!this.lastStatus || !this.lastCategory) return 'No sensor data';
-        if ((category ?? '').toLowerCase() !== this.lastCategory.toLowerCase()) return 'No sensor data';
-        switch (this.lastStatus) {
-            case 'GREEN':  return 'In good condition';
-            case 'YELLOW': return 'Regular condition';
-            case 'RED':    return 'Bad condition';
-            default:       return 'No sensor data'; // UNKNOWN u otro
+    private computeState(category?: string, expirationDate?: string | null): string {
+        const levels: number[] = [];
+
+        // Semáforo del Edge (solo aplica a la categoría de la última lectura).
+        if (this.lastStatus && this.lastCategory &&
+            (category ?? '').toLowerCase() === this.lastCategory.toLowerCase()) {
+            const sensor: Record<string, number> = { GREEN: 0, YELLOW: 1, RED: 2 };
+            if (this.lastStatus in sensor) levels.push(sensor[this.lastStatus]);
         }
+
+        // Cercanía de la fecha de vencimiento.
+        const days = this.daysToExpiry(expirationDate);
+        if (days !== null) {
+            if (days < 0) levels.push(2);
+            else if (days <= 2) levels.push(1);
+            else levels.push(0);
+        }
+
+        if (!levels.length) return 'No sensor data';
+        switch (Math.max(...levels)) {
+            case 0:  return 'In good condition';
+            case 1:  return 'Regular condition';
+            default: return 'Bad condition';
+        }
+    }
+
+    /** Días hasta el vencimiento (negativo = vencido); null si el producto no tiene fecha. */
+    daysToExpiry(expirationDate?: string | null): number | null {
+        if (!expirationDate) return null;
+        const exp = new Date(`${expirationDate}T00:00:00`);
+        if (isNaN(exp.getTime())) return null;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return Math.round((exp.getTime() - today.getTime()) / 86400000);
+    }
+
+    /** Clave i18n del estado de vencimiento, para el detalle de la card. */
+    expiryKey(p: Product): string {
+        const days = this.daysToExpiry(p.expirationDate);
+        if (days === null) return 'inventory.expiry.none';
+        if (days < 0)  return 'inventory.expiry.expired';
+        if (days === 0) return 'inventory.expiry.today';
+        if (days === 1) return 'inventory.expiry.tomorrow';
+        return 'inventory.expiry.inDays';
+    }
+
+    expiryDays(p: Product): number {
+        return Math.abs(this.daysToExpiry(p.expirationDate) ?? 0);
     }
 
     filterProducts() {

@@ -89,6 +89,17 @@
             <span class="detail-label">{{ 'inventory.details.state' | translate }}</span>
             <span class="detail-val">{{ p.state || ('inventory.details.notSpecified' | translate) }}</span>
           </div>
+          <div class="detail-row">
+            <span class="detail-label">{{ 'inventory.details.expiration' | translate }}</span>
+            <span class="detail-val" *ngIf="p.expirationDate">
+              {{ p.expirationDate | date:'dd/MM/yyyy' }} · {{ expiryKey(p) | translate: { days: expiryDays(p) } }}
+            </span>
+            <span class="detail-val" *ngIf="!p.expirationDate">{{ 'inventory.expiry.none' | translate }}</span>
+          </div>
+          <div class="detail-row" *ngIf="p.createdAt">
+            <span class="detail-label">{{ 'inventory.details.added' | translate }}</span>
+            <span class="detail-val">{{ p.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
           <div class="detail-actions">
             <button class="btn btn-outline btn-sm" (click)="logAction(p, 'consume')">
               <span class="fs-icon fs-icon--sm">restaurant</span>
