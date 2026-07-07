@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InventoryApiEndpoints } from './inventory-api-endpoints';
 import { CreateProductRequest, ProductResponse, UpdateProductRequest } from './inventory-response';
+import { CatalogItem } from '../domain/catalog-item.model';
 
 const opts = { withCredentials: true };
 
@@ -12,6 +13,10 @@ export class InventoryApi {
 
     getProducts(): Observable<ProductResponse[]> {
         return this.http.get<ProductResponse[]>(InventoryApiEndpoints.base, opts);
+    }
+
+    getCatalog(): Observable<CatalogItem[]> {
+        return this.http.get<CatalogItem[]>(InventoryApiEndpoints.catalog, opts);
     }
 
     createProduct(payload: CreateProductRequest): Observable<ProductResponse> {

@@ -343,6 +343,16 @@
       "voiceStartAria": "Iniciar entrada de voz",
       "voiceStopAria": "Detener entrada de voz",
       "scanSoon": "Escaneo de código de barras próximamente"
+    },
+    "catalog": {
+      "tab": "Elegir del catálogo",
+      "manualTab": "Agregar manualmente",
+      "searchPlaceholder": "Buscar alimento…",
+      "allCategories": "Todas las categorías",
+      "loading": "Cargando catálogo…",
+      "empty": "No encontramos ese alimento en el catálogo.",
+      "addManually": "Agregarlo manualmente",
+      "pickedHint": "Cargado del catálogo: {{name}}. Ajusta la cantidad y guarda."
     }
   },
   "reports": {

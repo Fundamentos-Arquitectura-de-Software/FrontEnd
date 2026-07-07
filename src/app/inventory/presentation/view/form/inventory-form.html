@@ -8,7 +8,66 @@
     </div>
   </header>
 
-  <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="card form-card">
+  <!-- Selector de modo: elegir del catálogo o escribir a mano -->
+  <div class="mode-tabs" role="tablist">
+    <button type="button" class="mode-tab" role="tab" [class.mode-tab--active]="mode === 'catalog'"
+            [attr.aria-selected]="mode === 'catalog'" (click)="setMode('catalog')">
+      <span class="fs-icon fs-icon--sm">grid_view</span>
+      {{ 'inventory.catalog.tab' | translate }}
+    </button>
+    <button type="button" class="mode-tab" role="tab" [class.mode-tab--active]="mode === 'manual'"
+            [attr.aria-selected]="mode === 'manual'" (click)="setMode('manual')">
+      <span class="fs-icon fs-icon--sm">edit</span>
+      {{ 'inventory.catalog.manualTab' | translate }}
+    </button>
+  </div>
+
+  <!-- PANEL CATÁLOGO -->
+  <div class="card form-card" *ngIf="mode === 'catalog'">
+    <div class="catalog-toolbar">
+      <div class="input-icon catalog-toolbar__search">
+        <span class="fs-icon">search</span>
+        <input type="search" class="input-field" [(ngModel)]="catalogSearch"
+               [placeholder]="'inventory.catalog.searchPlaceholder' | translate" name="catalogSearch" />
+      </div>
+      <div class="select-field catalog-toolbar__cat">
+        <select [(ngModel)]="catalogCategory" name="catalogCategory">
+          <option value="All">{{ 'inventory.catalog.allCategories' | translate }}</option>
+          <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="muted" *ngIf="catalogLoading">{{ 'inventory.catalog.loading' | translate }}</p>
+
+    <ng-container *ngIf="!catalogLoading">
+      <div class="catalog-grid" *ngIf="filteredCatalog.length; else catalogEmpty">
+        <button type="button" class="catalog-item" *ngFor="let item of filteredCatalog" (click)="pick(item)">
+          <img class="catalog-item__img" [src]="item.imageUrl" [alt]="item.name"
+               (error)="onCatalogImgError($event)" loading="lazy" />
+          <span class="catalog-item__name">{{ item.name }}</span>
+          <span class="catalog-item__cat badge badge-neutral">{{ item.category }}</span>
+        </button>
+      </div>
+      <ng-template #catalogEmpty>
+        <div class="empty-state">
+          <span class="empty-state__icon"><span class="fs-icon">search_off</span></span>
+          <p>{{ 'inventory.catalog.empty' | translate }}</p>
+          <button type="button" class="btn btn-outline" (click)="setMode('manual')">
+            {{ 'inventory.catalog.addManually' | translate }}
+          </button>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+
+  <!-- PANEL FORMULARIO (manual o precargado del catálogo) -->
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="card form-card" *ngIf="mode === 'manual'">
+
+    <div class="picked-hint" *ngIf="pickedFrom">
+      <span class="fs-icon fs-icon--sm">check_circle</span>
+      {{ 'inventory.catalog.pickedHint' | translate: { name: pickedFrom } }}
+    </div>
 
     <div class="form-field">
       <label for="name">{{ 'inventory.add.name' | translate }} <span class="req">*</span></label>

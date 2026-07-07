@@ -343,6 +343,16 @@
       "voiceStartAria": "Start voice input",
       "voiceStopAria": "Stop voice input",
       "scanSoon": "Barcode scan coming soon"
+    },
+    "catalog": {
+      "tab": "Pick from catalog",
+      "manualTab": "Add manually",
+      "searchPlaceholder": "Search food…",
+      "allCategories": "All categories",
+      "loading": "Loading catalog…",
+      "empty": "We could not find that food in the catalog.",
+      "addManually": "Add it manually",
+      "pickedHint": "Loaded from catalog: {{name}}. Adjust the quantity and save."
     }
   },
   "reports": {

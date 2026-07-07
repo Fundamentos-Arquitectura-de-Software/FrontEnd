@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { InventoryApi } from '../../../infrastructure/inventory-api';
+import { CatalogItem } from '../../../domain/catalog-item.model';
 import { ToastService } from '../../../../shared/application/toast.service';
 
 declare global {
@@ -33,9 +34,18 @@ type PartialProduct = { name?: string; quantity?: number; category?: string; };
     templateUrl: './inventory-form.html',
     styleUrls: ['./inventory-form.css'],
 })
-export class InventoryAddComponent {
+export class InventoryAddComponent implements OnInit {
     product = { name: '', description: '', category: '', quantity: 0, imageUrl: '' };
-    categories = ['Fruit', 'Vegetable', 'Dairy', 'Grain', 'Meat', 'Snack'];
+    // Las 7 categorías de umbrales del Edge: cualquier otra no tendría semáforo de frescura.
+    categories = ['Frutas', 'Verduras', 'Lácteos', 'Carnes', 'Proteínas', 'Panadería', 'Snacks'];
+
+    // Catálogo general: elegir de la lista precarga el formulario (opción manual como respaldo).
+    mode: 'catalog' | 'manual' = 'catalog';
+    catalog: CatalogItem[] = [];
+    catalogLoading = true;
+    catalogSearch = '';
+    catalogCategory = 'All';
+    pickedFrom = '';
 
     private recognition?: SpeechRecognition;
     recording = false;
@@ -48,6 +58,51 @@ export class InventoryAddComponent {
         private toast: ToastService,
         private translate: TranslateService
     ) {}
+
+    ngOnInit(): void {
+        this.inventoryApi.getCatalog().subscribe({
+            next: (items) => { this.catalog = items ?? []; this.catalogLoading = false; },
+            error: () => { this.catalog = []; this.catalogLoading = false; this.mode = 'manual'; },
+        });
+    }
+
+    get filteredCatalog(): CatalogItem[] {
+        const term = this.normalize(this.catalogSearch.trim());
+        return this.catalog.filter((i) => {
+            const matchesTerm = !term || this.normalize(i.name).includes(term);
+            const matchesCat = this.catalogCategory === 'All' || i.category === this.catalogCategory;
+            return matchesTerm && matchesCat;
+        });
+    }
+
+    pick(item: CatalogItem): void {
+        this.product = {
+            name: item.name,
+            description: item.description ?? '',
+            category: item.category,
+            quantity: 1,
+            imageUrl: item.imageUrl ?? '',
+        };
+        this.pickedFrom = item.name;
+        this.mode = 'manual';
+    }
+
+    setMode(mode: 'catalog' | 'manual'): void {
+        this.mode = mode;
+        if (mode === 'catalog') this.pickedFrom = '';
+    }
+
+    onCatalogImgError(event: Event): void {
+        const img = event.target as HTMLImageElement | null;
+        if (img) img.style.display = 'none';
+    }
+
+    private normalize(text: string): string {
+        return text
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[̀-ͯ]/g, '');
+    }
 
     private ensureRecognition() {
         if (this.recognition) return;
@@ -76,7 +131,7 @@ export class InventoryAddComponent {
         const mNum = t.match(/\b(\d+)\b/);
         if (mNum) qty = parseInt(mNum[1], 10);
         else { const found = Object.entries(numbers).find(([w]) => t.includes(w)); if (found) qty = found[1]; }
-        const catMap: Record<string, string> = { fruta:'Fruit',frutas:'Fruit',fruit:'Fruit',vegetal:'Vegetable',verdura:'Vegetable',vegetable:'Vegetable','lácteos':'Dairy',lacteos:'Dairy',yogurt:'Dairy',queso:'Dairy',carne:'Meat',pollo:'Meat',res:'Meat',pavo:'Meat',grano:'Grain',arroz:'Grain',pan:'Grain',cereal:'Grain',snack:'Snack' };
+        const catMap: Record<string, string> = { fruta:'Frutas',frutas:'Frutas',fruit:'Frutas',vegetal:'Verduras',verdura:'Verduras',verduras:'Verduras',vegetable:'Verduras','lácteos':'Lácteos',lacteos:'Lácteos',yogurt:'Lácteos',queso:'Lácteos',leche:'Lácteos',carne:'Carnes',pollo:'Carnes',res:'Carnes',pavo:'Carnes',pescado:'Carnes',huevo:'Proteínas',huevos:'Proteínas',pan:'Panadería','panadería':'Panadería',panaderia:'Panadería',snack:'Snacks',snacks:'Snacks' };
         let category: string | undefined;
         for (const k of Object.keys(catMap)) { if (t.includes(k)) { category = catMap[k]; break; } }
         let name = t.replace(/\b(\d+|uno|una|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\b/g,'').replace(/\b(fruta|frutas|fruit|vegetal|verdura|vegetable|lácteos|lacteos|carne|grano|snack|category)\b/g,'').trim();

@@ -31,3 +31,39 @@
   .form-actions { flex-direction: column-reverse; }
   .form-actions .btn { width: 100%; justify-content: center; }
 }
+
+/* Pestañas catálogo / manual */
+.mode-tabs { display: flex; gap: 8px; margin-bottom: var(--fs-space-4); }
+.mode-tab {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--fs-border); background: var(--fs-surface);
+  color: var(--fs-text-secondary); font-size: var(--fs-font-size-sm); font-weight: 500;
+}
+.mode-tab--active { background: var(--fs-primary); border-color: var(--fs-primary); color: #fff; }
+
+/* Buscador y grid del catálogo */
+.catalog-toolbar { display: flex; gap: var(--fs-space-3); flex-wrap: wrap; margin-bottom: var(--fs-space-4); }
+.catalog-toolbar__search { flex: 1; min-width: 220px; }
+.catalog-toolbar__cat { min-width: 170px; }
+.catalog-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--fs-space-3);
+}
+.catalog-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: var(--fs-space-3); border: 1px solid var(--fs-border); border-radius: 12px;
+  background: var(--fs-surface); cursor: pointer; text-align: center;
+  transition: border-color 0.15s var(--fs-ease), transform 0.15s var(--fs-ease);
+}
+.catalog-item:hover { border-color: var(--fs-primary); transform: translateY(-2px); }
+.catalog-item__img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; background: var(--fs-bg); }
+.catalog-item__name { font-size: var(--fs-font-size-sm); font-weight: 600; }
+
+/* Aviso "cargado del catálogo" en el formulario */
+.picked-hint {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; margin-bottom: var(--fs-space-4);
+  border-radius: 10px; background: var(--fs-success-bg); color: var(--fs-success);
+  font-size: var(--fs-font-size-sm);
+}
