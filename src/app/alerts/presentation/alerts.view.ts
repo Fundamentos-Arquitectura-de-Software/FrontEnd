@@ -44,25 +44,14 @@ export class AlertsView implements OnInit {
     openId = signal<string | null>(null);
 
     ngOnInit(): void {
-        this.loadMockAlerts();
         this.loadApiAlerts();
     }
 
-    private loadMockAlerts() {
-        const mock: AlertCard[] = [
-            { id: '1', severity: 'info',     state: 'active',   title: 'High temperature',     message: 'Temperature above 6 °C',     source: 'Temperature', timeAgo: '2m ago' },
-            { id: '2', severity: 'warning',  state: 'active',   title: 'Humidity out of range', message: 'Humidity above 80%',        source: 'Humidity',    timeAgo: '8m ago' },
-            { id: '3', severity: 'critical', state: 'muted',    title: 'Critical temperature',  message: 'Freezer above 10 °C',        source: 'Temperature', timeAgo: '1h ago' },
-            { id: '4', severity: 'warning',  state: 'resolved', title: 'Low humidity',          message: 'Humidity below 50%',         source: 'Humidity',    timeAgo: 'Yesterday' },
-        ];
-        this._all.set(mock);
-    }
-
+    // Solo alertas reales del backend (las genera el job de frescura: vencimiento + sensor).
     private loadApiAlerts() {
         this.api.getAll().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (data: AlertDto[]) => {
-                const converted = data.map(this.fromDto);
-                this._all.set([...this._all(), ...converted]);
+                this._all.set(data.map(this.fromDto));
                 this.loading.set(false);
             },
             error: () => this.loading.set(false),
