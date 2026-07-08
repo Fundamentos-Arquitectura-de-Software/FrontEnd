@@ -1,12 +1,26 @@
 <section class="wrap recipes-page">
 
-  <header class="page-header">
-    <div class="page-header__titles">
-      <span class="page-header__eyebrow">{{ 'nav.recipes' | translate }}</span>
-      <h1>{{ 'recipes.title' | translate }}</h1>
-      <p class="page-header__subtitle">{{ 'recipes.subtitle' | translate }}</p>
+    <header class="page-header">
+        <div class="page-header__titles">
+            <span class="page-header__eyebrow">{{ 'nav.recipes' | translate }}</span>
+            <h1>{{ 'recipes.title' | translate }}</h1>
+            <p class="page-header__subtitle">{{ 'recipes.subtitle' | translate }}</p>
+        </div>
+
+        <button
+                class="btn btn-primary generate-recipes-btn"
+                (click)="generateNewRecipes()"
+                [disabled]="generating"
+                [attr.aria-label]="'recipes.generate' | translate">
+            <span class="fs-icon" *ngIf="!generating">auto_awesome</span>
+            <span class="spinner spinner--sm" *ngIf="generating"></span>
+            {{ generating ? ('recipes.generating' | translate) : ('recipes.generate' | translate) }}
+        </button>
+    </header>
+    <div class="toolbar generating-banner" *ngIf="generating">
+        <span class="fs-icon">auto_awesome</span>
+        {{ 'recipes.generatingHint' | translate }}
     </div>
-  </header>
 
   <!-- MODO: recomendadas según inventario / catálogo completo -->
   <div class="toolbar recipes-mode" *ngIf="!loading && recommended.length">

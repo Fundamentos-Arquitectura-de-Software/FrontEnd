@@ -23,4 +23,8 @@ export class RecipesApi {
     create(recipe: Omit<Recipe, 'id'>): Observable<Recipe> {
         return this.http.post<Recipe>(this.base, recipe, opts);
     }
+
+    generateBatch(): Observable<Recipe[]> {
+        return this.http.post<Recipe[]>(`${this.base}/generate-batch`, {}, opts);
+    }
 }
