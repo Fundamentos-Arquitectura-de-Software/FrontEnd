@@ -400,6 +400,9 @@
   "recipes": {
     "title": "Recetas",
     "subtitle": "Descubre recetas para aprovechar al máximo tus alimentos",
+    "generate": "Generar recetas con IA",
+    "generating": "Generando…",
+    "generatingHint": "La IA está creando recetas nuevas con sus imágenes. Esto puede tardar 1-2 minutos.",
     "searchPlaceholder": "Buscar receta...",
     "level": "Nivel",
     "type": "Tipo de comida",

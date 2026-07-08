@@ -400,6 +400,9 @@
   "recipes": {
     "title": "Recipes",
     "subtitle": "Discover recipes to make the most of your food",
+    "generate": "Generate recipes with AI",
+    "generating": "Generating…",
+    "generatingHint": "The AI is creating new recipes with their images. This may take 1-2 minutes.",
     "searchPlaceholder": "Search recipe...",
     "level": "Level",
     "type": "Food type",
